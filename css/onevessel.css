@@ -1,4 +1,4 @@
-/* OneVessel — folha de componentes compartilhada (v3).
+/* OneVessel — folha de componentes compartilhada (v3.1).
    Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
    Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
    Tema: [data-theme="claro"] na raiz; sem atributo = escuro. */
@@ -6,7 +6,7 @@
 /* ---------- Base ---------- */
 body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
 *, *::before, *::after { box-sizing: border-box; }
-a { color: var(--ov-acao); text-decoration: none; }
+a { color: var(--ov-acao-texto); text-decoration: none; }
 a:hover { color: var(--ov-acao-hover); }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
@@ -35,7 +35,7 @@ button { font: inherit; color: inherit; }
 .ov-nav { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); text-align: left; cursor: pointer; white-space: nowrap; }
 .ov-nav:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
 .ov-nav[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
-.ov-nav[aria-current="page"] svg { color: var(--ov-acao); }
+.ov-nav[aria-current="page"] svg { color: var(--ov-acao-texto); }
 .ov-nav-cont { margin-left: auto; font-size: 12px; color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
 .ov-busca-gatilho { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 8px 0 10px; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-sm); background: var(--ov-superficie); color: var(--ov-texto-terciario); font: 400 14px/20px var(--font-sans); cursor: pointer; }
 .ov-conteudo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -50,7 +50,7 @@ button { font: inherit; color: inherit; }
 .ov-barra-inferior { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); padding: 6px 8px env(safe-area-inset-bottom, 0px); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: var(--ov-fundo); border-top: 1px solid var(--ov-borda); }
 .ov-barra-inferior a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: var(--ov-altura-toque); font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); }
 .ov-barra-inferior a[aria-current="page"] { color: var(--ov-texto); }
-.ov-barra-inferior a[aria-current="page"] svg { color: var(--ov-acao); }
+.ov-barra-inferior a[aria-current="page"] svg { color: var(--ov-acao-texto); }
 
 /* ---------- Botões ---------- */
 .ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }

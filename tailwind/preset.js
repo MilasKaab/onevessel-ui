@@ -50,10 +50,14 @@ module.exports = {
       borderRadius: semPrefixo(tokens.radius.tokens, 'ov-raio-'),
       boxShadow: semPrefixo(tokens.shadow.tokens, 'ov-sombra-'),
       zIndex: semPrefixo(tokens.zIndex.tokens, 'ov-z-'),
-      fontFamily: {
-        sans: ['IBM Plex Sans', 'Segoe UI', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'ui-monospace', 'Consolas', 'monospace'],
-      },
+      // Sai do tokens.json para não divergir dele: interface na fonte do
+      // sistema, `font-rel-sans`/`font-rel-mono` (IBM Plex) no que é impresso.
+      fontFamily: Object.fromEntries(
+        Object.entries(tokens.type.families).map(([nome, pilha]) => [
+          nome,
+          pilha.split(',').map((f) => f.trim().replace(/^["']|["']$/g, '')),
+        ])
+      ),
       fontSize,
       height: semPrefixo(tokens.tamanho.tokens, 'ov-altura-'),
       minHeight: semPrefixo(tokens.tamanho.tokens, 'ov-altura-'),

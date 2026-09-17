@@ -9,8 +9,8 @@
   "start_url": "/status-tt/?origem=pwa",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#0b0f14",
-  "background_color": "#0b0f14",
+  "theme_color": "#040a12",
+  "background_color": "#040a12",
   "icons": [
     {
       "src": "/status-tt/icones/icone-192.png",

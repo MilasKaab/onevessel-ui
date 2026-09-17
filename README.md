@@ -11,17 +11,26 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
 | `css/onevessel.css` | Classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, `ov-dialogo`, `ov-toast`, timbre de relatório…) |
-| `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts |
+| `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
 | `fonts/` | Os `.woff2` do subconjunto latino (400, 500, 600) |
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
 | `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas |
 
+## Cor e tipografia, em uma linha
+
+Duas identidades, e nunca se misturam:
+
+- **Interface dos apps** — paleta petrol/ciano da Bram Power sobre o navy `#040a12`: `--ov-acao` é o petrol `#0e7490`, igual nos dois temas; `--ov-acao-hover` e `--ov-foco` são o ciano `#22d3ee` no escuro e o petrol escurecido `#0a5f77` no claro. Tipografia é a **fonte do sistema** (`--font-sans`): a bordo a conexão cai e o app tem que abrir sem esperar download nenhum.
+- **Tudo que é impresso** — timbre da BRAM: `--rel-*` (marinho `#0d4b88` e laranja `#ec6a3b`) e **IBM Plex** (`--font-rel-sans`, `--font-rel-mono`), servida em woff2 pelo próprio app. É o que as classes `.rel-*` usam.
+
+Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduzem o anexo do órgão e não recebem nada daqui.
+
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:<org>/onevessel-ui#v2.0.0"
+npm i "onevessel-ui@github:<org>/onevessel-ui#v3.0.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -90,9 +99,10 @@ O Tailwind 4 não usa preset. Importe os tokens e repasse as variáveis no `@the
   --color-erro: var(--ov-erro);
   --radius-md: var(--ov-raio-md);
   --radius-lg: var(--ov-raio-lg);
+  --color-foco: var(--ov-foco);
   /* sem var(--font-sans) aqui: o nome seria igual ao da variável e viraria um laço */
-  --font-sans: 'IBM Plex Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 ```
 

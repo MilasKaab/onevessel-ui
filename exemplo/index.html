@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="escuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OneVessel — exemplo</title>
+<link rel="stylesheet" href="../css/fontes.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/onevessel.css">
+<style>
+  .pagina { max-width: var(--ov-conteudo-max); margin: 0 auto; padding: var(--ov-esp-6); }
+  .secao { margin-bottom: var(--ov-esp-8); }
+  .secao > h2 { margin: 0 0 var(--ov-esp-4); }
+  .linha { display: flex; flex-wrap: wrap; gap: var(--ov-esp-2); align-items: center; }
+  .cartao { background: var(--ov-superficie); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); padding: var(--ov-esp-5); }
+  .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--ov-esp-4); }
+  .amostra { display: flex; align-items: center; gap: var(--ov-esp-3); }
+  .quadro { width: 40px; height: 40px; border-radius: var(--ov-raio-md); border: 1px solid var(--ov-borda-forte); flex: 0 0 auto; }
+  .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="amostra">
+    <span class="ov-monograma" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+    </span>
+    <strong>OneVessel</strong>
+    <span class="ov-rotulo">Exemplo da biblioteca</span>
+  </div>
+  <button class="ov-btn ov-btn-secundario" id="trocar-tema" type="button">Tema claro</button>
+</header>
+
+<main class="pagina">
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Tipografia</h2>
+    <div class="cartao">
+      <p class="ov-titulo-1">Visão geral</p>
+      <p class="ov-titulo-2">Requisições em aberto</p>
+      <p class="ov-titulo-3">Pendências da embarcação</p>
+      <p>Corpo padrão: 22 de 49 leitos ocupados no convés principal.</p>
+      <p class="ov-legenda">Legenda: atualizado há 4 minutos.</p>
+      <p class="ov-rotulo">Rótulo de campo</p>
+      <p class="ov-codigo">materiais.estoque.contagens.aprovar</p>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Botões e campos</h2>
+    <div class="cartao">
+      <div class="linha" style="margin-bottom: var(--ov-esp-5)">
+        <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+        <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+        <button class="ov-btn ov-btn-perigo" type="button">Excluir</button>
+        <button class="ov-btn ov-btn-secundario" type="button" disabled>Aprovar</button>
+      </div>
+      <div class="grade">
+        <label><span class="ov-rotulo">Embarcação</span>
+          <input class="ov-campo" type="text" value="BRAM Cardume"></label>
+        <label><span class="ov-rotulo">Quantidade</span>
+          <input class="ov-campo ov-tnum" type="text" value="1.621"></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Estados</h2>
+    <div class="cartao linha">
+      <span class="ov-estado" data-tom="sucesso">Concluído</span>
+      <span class="ov-estado" data-tom="atencao">Atenção</span>
+      <span class="ov-estado" data-tom="erro">Parado</span>
+      <span class="ov-estado" data-tom="info">Em andamento</span>
+      <span class="ov-estado" data-tom="neutro">Rascunho</span>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Cores</h2>
+    <div class="grade" id="cores"></div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Ícones de PWA</h2>
+    <div class="cartao linha" style="gap: var(--ov-esp-6)">
+      <figure style="margin:0; text-align:center"><img src="../icons/plataforma/icone-192.png" width="64" height="64" alt="Ícone da plataforma OneVessel" style="border-radius:14px"><figcaption class="ov-rotulo">OneVessel</figcaption></figure>
+      <figure style="margin:0; text-align:center"><img src="../icons/materiais/icone-192.png" width="64" height="64" alt="Ícone do Controle de Materiais" style="border-radius:14px"><figcaption class="ov-rotulo">Materiais</figcaption></figure>
+      <figure style="margin:0; text-align:center"><img src="../icons/status-tt/icone-192.png" width="64" height="64" alt="Ícone do Status TT" style="border-radius:14px"><figcaption class="ov-rotulo">Status TT</figcaption></figure>
+      <figure style="margin:0; text-align:center"><img src="../icons/bordo/icone-192.png" width="64" height="64" alt="Ícone da Gestão de Bordo" style="border-radius:14px"><figcaption class="ov-rotulo">Bordo</figcaption></figure>
+    </div>
+  </section>
+
+</main>
+
+<script type="module">
+  // Amostras de cor lidas do próprio tokens.css.
+  const nomes = [
+    'ov-fundo', 'ov-superficie', 'ov-borda', 'ov-texto', 'ov-texto-secundario',
+    'ov-acao', 'ov-destaque', 'ov-marca-azul', 'ov-marca-laranja',
+    'ov-sucesso', 'ov-atencao', 'ov-erro', 'ov-neutro',
+  ]
+  const grade = document.getElementById('cores')
+  grade.innerHTML = nomes
+    .map(
+      (n) => `<div class="cartao amostra">
+        <span class="quadro" style="background: var(--${n})"></span>
+        <span><code class="ov-codigo">--${n}</code><br><span class="ov-legenda" data-valor="${n}"></span></span>
+      </div>`
+    )
+    .join('')
+
+  const mostrarValores = () => {
+    const estilo = getComputedStyle(document.documentElement)
+    for (const el of document.querySelectorAll('[data-valor]')) {
+      el.textContent = estilo.getPropertyValue('--' + el.dataset.valor).trim()
+    }
+  }
+  mostrarValores()
+
+  const botao = document.getElementById('trocar-tema')
+  botao.addEventListener('click', () => {
+    const claro = document.documentElement.dataset.theme === 'claro'
+    document.documentElement.dataset.theme = claro ? 'escuro' : 'claro'
+    botao.textContent = claro ? 'Tema claro' : 'Tema escuro'
+    mostrarValores()
+  })
+</script>
+</body>
+</html>

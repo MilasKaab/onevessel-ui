@@ -4,8 +4,10 @@
 :root,
 [data-theme="escuro"] {
   --ov-fundo: #040a12;
+  --ov-fundo-barra: rgba(4,10,18,.92);
   --ov-superficie: #0b1a2b;
   --ov-superficie-elevada: #0f2438;
+  --ov-superficie-recuada: #07111c;
   --ov-borda: #152b3d;
   --ov-borda-forte: #1a3247;
   --ov-borda-controle: #4a7196;
@@ -49,8 +51,10 @@
 
 [data-theme="claro"] {
   --ov-fundo: #eef2f6;
+  --ov-fundo-barra: rgba(255,255,255,.93);
   --ov-superficie: #ffffff;
   --ov-superficie-elevada: #ffffff;
+  --ov-superficie-recuada: #f7fafc;
   --ov-borda: #e6edf4;
   --ov-borda-forte: #d6e2ec;
   --ov-borda-controle: #687f96;

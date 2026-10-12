@@ -1,6 +1,6 @@
 # onevessel-ui
 
-Identidade compartilhada dos apps OneVessel: **Controle de Materiais**, **Status TT** e **Gestão de Bordo**, mais a plataforma.
+Identidade compartilhada dos apps OneVessel: **Materiais**, **Paradas** e **Bordo**, mais a plataforma.
 
 Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de componentes, fontes e ícones de PWA. Os apps instalam por versão; nenhum app copia valores para dentro de si.
 
@@ -10,13 +10,16 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | --- | --- |
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
-| `css/onevessel.css` | Classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, `ov-dialogo`, `ov-toast`, timbre de relatório…) |
+| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, etiqueta, faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
+| `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, `ov-dialogo`, `ov-toast`, timbre de relatório…). Começa importando `casca.css` |
+| `css/impressao.css` | O `@media print` e o `@page` dos relatórios internos. Só a página de impressão importa (F7) |
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
 | `fonts/` | Os `.woff2` do subconjunto latino (400, 500, 600) |
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
 | `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
-| `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis |
-| `exemplo/` | Página de conferência com tudo aplicado nos dois temas |
+| `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
+| `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
+| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `onevessel.css` e `impressao.css` e que nenhum nome antigo de app sobrou |
 
 ## Cor e tipografia, em uma linha
 
@@ -30,12 +33,75 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:<org>/onevessel-ui#v3.0.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.3.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
 
-### App com CSS próprio (Controle de Materiais)
+### Qual CSS importar
+
+| Arquivo | Quem importa |
+| --- | --- |
+| `tokens.css` | Todo app, sempre primeiro |
+| `casca.css` | App que mantém a própria base (Bordo, Paradas): só as classes de estrutura, sem mexer no `body` nem na impressão |
+| `onevessel.css` | App que adota a base de 14px e todos os componentes (já traz `casca.css`; não importe os dois) |
+| `impressao.css` | Só a página de impressão dos relatórios internos, depois do `onevessel.css` |
+| `fontes.css` | Quem imprime relatório (IBM Plex) |
+
+### Casca
+
+```html
+<div class="ov-casca">
+  <nav class="ov-lateral">
+    <div class="ov-lateral-marca">
+      <svg …glifo do app…/>
+      <div class="ov-lateral-marca-texto">
+        <span class="ov-lateral-marca-nome">Bordo</span>
+        <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+      </div>
+    </div>
+    <button class="ov-seletor-embarcacao" aria-haspopup="menu" aria-expanded="false" title="Bram Power">
+      <svg …anchor…/><span class="ov-lateral-texto">Bram Power</span>
+    </button>
+    <button class="ov-busca-gatilho" title="Buscar">
+      <svg …search…/><span class="ov-lateral-texto">Buscar…</span><kbd class="ov-tecla">Ctrl K</kbd>
+    </button>
+    <a class="ov-nav" href="/bordo/" aria-current="page" title="Conveses">
+      <svg …/><span class="ov-lateral-texto">Conveses</span>
+    </a>
+    <div class="ov-lateral-grupo">Outros apps</div>
+    …
+    <div class="ov-lateral-rodape">
+      <button class="ov-conta" title="Ana Souza"><svg …circle-user…/><span class="ov-lateral-texto">Ana Souza</span></button>
+    </div>
+  </nav>
+  <div class="ov-conteudo">
+    <header class="ov-cabecalho-movel">…</header>        <!-- só abaixo de 768px -->
+    <header class="ov-superior">
+      <div class="ov-trilha">Bordo / <b>Conveses</b></div>
+      <div class="ov-superior-direita">                  <!-- nesta ordem -->
+        <button class="ov-conta">Ana Souza</button>
+        <span class="ov-sincronizacao" data-tom="atencao">Sem conexão<span class="ov-sincronizacao-fila"> · 3 na fila</span></span>
+        …até 2 ações (um Menu ⋮ conta como uma)…
+      </div>
+    </header>
+    <main class="ov-tela">…</main>
+    <nav class="ov-barra-inferior">                      <!-- só abaixo de 768px -->
+      <a class="ov-barra-inferior-item" aria-current="page">…</a>   <!-- até 4 destinos -->
+      <button class="ov-barra-inferior-item" aria-expanded="false">…Mais</button>
+    </nav>
+  </div>
+</div>
+```
+
+- Tudo que é texto na lateral vai em `.ov-lateral-texto` (ou `.ov-lateral-marca-texto`): abaixo de 1024px a lateral recolhe para 56px, esse texto sai da tela (continua para o leitor de tela) e o `title` de cada item fica.
+- O topo da lateral num app é o glifo solto de 20px em `currentColor`; `.ov-monograma` é só da plataforma.
+- `.ov-seletor-embarcacao` desenha a própria seta. Com um navio só, use `data-fixo` num elemento que não é botão: sem seta, sem cursor.
+- Em tela de toque (`pointer: coarse`), os itens da lateral passam a 48px.
+- Margem da tela: 32px no computador, 24px de 768 a 1023px, 16px abaixo de 768px.
+- Abaixo de 768px, `.ov-paleta` vira a tela "Buscar", inteira.
+
+### App com CSS próprio (Materiais)
 
 ```js
 // main.jsx, antes do CSS do app
@@ -57,7 +123,7 @@ Na fase F1, aponte as variáveis antigas para as novas em vez de trocar tudo de 
 
 Assim a tela inteira muda de aparência sem tocar em componente nenhum, e as variáveis antigas vão sendo apagadas aos poucos.
 
-### App com Tailwind 3 (Status TT)
+### App com Tailwind 3 (Paradas)
 
 ```js
 // tailwind.config.js
@@ -71,13 +137,18 @@ module.exports = {
 // main.jsx
 import 'onevessel-ui/css/fontes.css'
 import 'onevessel-ui/css/tokens.css'
-import 'onevessel-ui/css/onevessel.css'
+import 'onevessel-ui/css/casca.css'
 import './index.css' // onde ficam as diretivas do Tailwind
 ```
 
 Depois disso, `bg-fundo`, `text-texto`, `bg-acao`, `rounded-lg`, `shadow-1`, `h-campo` e `text-titulo-1` já saem com os valores da OneVessel.
 
-### App com Tailwind 4 (Gestão de Bordo)
+**O preset não declara `spacing` nem `darkMode`** (decidido em 12/10, v3.3.0):
+
+- `spacing`: a escala padrão do Tailwind (`p-4` = `1rem`) já coincide com `--ov-esp-*` com raiz de 16px, e em `rem` ela cresce quando a pessoa aumenta a fonte do navegador. Use `p-4`, `gap-2` etc. normalmente; `--ov-esp-*` continua valendo no CSS escrito à mão.
+- `darkMode`: os tokens trocam de tema sozinhos, por variável, com `data-theme` no `<html>`; `bg-fundo` já está certo nos dois temas. Se o app ainda usa `dark:`, ele declara o próprio `darkMode` no `tailwind.config.js` e mantém a classe em sincronia com `data-theme`.
+
+### App com Tailwind 4 (Bordo)
 
 O Tailwind 4 não usa preset. Importe os tokens e repasse as variáveis no `@theme`:
 
@@ -85,7 +156,7 @@ O Tailwind 4 não usa preset. Importe os tokens e repasse as variáveis no `@the
 @import 'tailwindcss';
 @import 'onevessel-ui/css/fontes.css';
 @import 'onevessel-ui/css/tokens.css';
-@import 'onevessel-ui/css/onevessel.css';
+@import 'onevessel-ui/css/casca.css';
 
 @theme {
   --color-fundo: var(--ov-fundo);
@@ -131,11 +202,12 @@ Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`)
 
 ## Mudar a design system
 
-1. Altere `tokens/tokens.json` ou `css/onevessel.css`.
+1. Altere `tokens/tokens.json`, `css/casca.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca; nenhum seletor fica nos dois arquivos.
 2. `npm run build` (regenera `css/tokens.css`).
-3. Abra `exemplo/index.html` e confira nos dois temas.
-4. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright).
-5. Suba uma tag nova (`v2.1.0`) e avise os apps.
+3. `npm run conferir`.
+4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
+5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
+6. Suba uma tag nova (`v3.3.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 

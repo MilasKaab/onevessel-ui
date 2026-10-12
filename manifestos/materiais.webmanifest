@@ -1,8 +1,8 @@
 {
   "id": "/materiais/",
-  "name": "Controle de Materiais",
+  "name": "Materiais",
   "short_name": "Materiais",
-  "description": "Requisições, logística, pedidos e estoque de bordo.",
+  "description": "Requisições e estoque",
   "lang": "pt-BR",
   "dir": "ltr",
   "scope": "/materiais/",

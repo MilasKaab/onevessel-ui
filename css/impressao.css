@@ -1,0 +1,15 @@
+/* OneVessel — impressão dos relatórios internos (v3.3).
+   Importe só na página de impressão (F7), depois de onevessel.css: esconde
+   tudo que não é .rel-pagina e passa o timbre para preto e branco. */
+
+@media print {
+  body * { visibility: hidden; }
+  .rel-pagina, .rel-pagina * { visibility: visible; }
+  .rel-pagina { position: absolute; top: 0; left: 0; max-width: none; padding: 0; }
+  .rel-timbre { border-bottom-color: #000; }
+  .rel-timbre img { filter: grayscale(1); }
+  .rel-secao, .rel-resumo b { color: #000; }
+  .rel-resumo { background: none; border: .5px solid #999; }
+  .rel-barra { display: none; }
+}
+@page { size: A4; margin: 16mm; }

@@ -2,6 +2,12 @@
 // Mapeia as classes do Tailwind para as variáveis de css/tokens.css,
 // para que o tema escuro e o claro funcionem sem `dark:` espalhado no código.
 //
+// Desde a v3.3.0 o preset não declara `spacing` nem `darkMode`:
+// - a escala padrão do Tailwind (em rem) já coincide com --ov-esp-* com raiz
+//   de 16px, e cresce junto quando a pessoa aumenta a fonte do navegador;
+// - os tokens trocam de tema por variável ([data-theme]); se o app usa `dark:`,
+//   ele declara o próprio `darkMode`.
+//
 // tailwind.config.js do app:
 //   module.exports = {
 //     presets: [require('onevessel-ui/tailwind/preset.js')],
@@ -42,11 +48,9 @@ for (const grupo of tokens.type.groups) {
 }
 
 module.exports = {
-  darkMode: ['selector', '[data-theme="escuro"]'],
   theme: {
     extend: {
       colors: deTokens(tokens.color.tokens),
-      spacing: semPrefixo(tokens.spacing.tokens, 'ov-esp-'),
       borderRadius: semPrefixo(tokens.radius.tokens, 'ov-raio-'),
       boxShadow: semPrefixo(tokens.shadow.tokens, 'ov-sombra-'),
       zIndex: semPrefixo(tokens.zIndex.tokens, 'ov-z-'),
@@ -63,6 +67,7 @@ module.exports = {
       minHeight: semPrefixo(tokens.tamanho.tokens, 'ov-altura-'),
       width: {
         lateral: va('ov-barra-lateral'),
+        'lateral-recolhida': va('ov-barra-lateral-recolhida'),
         painel: va('ov-painel-lateral'),
         dialogo: va('ov-dialogo'),
       },

@@ -1,6 +1,6 @@
 {
   "name": "onevessel-ui",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Identidade compartilhada dos apps OneVessel: tokens, CSS de componentes, fontes e ícones de PWA.",
   "license": "UNLICENSED",
   "sideEffects": [
@@ -10,6 +10,8 @@
     "./css/tokens.css": "./css/tokens.css",
     "./css/fontes.css": "./css/fontes.css",
     "./css/onevessel.css": "./css/onevessel.css",
+    "./css/casca.css": "./css/casca.css",
+    "./css/impressao.css": "./css/impressao.css",
     "./tokens/tokens.json": "./tokens/tokens.json",
     "./tailwind/preset.js": "./tailwind/preset.js",
     "./icons/*": "./icons/*",
@@ -25,7 +27,8 @@
   ],
   "scripts": {
     "build": "node scripts/gerar-tokens.mjs",
-    "icones": "node scripts/gerar-icones.mjs"
+    "icones": "node scripts/gerar-icones.mjs",
+    "conferir": "node scripts/conferir.mjs"
   },
   "devDependencies": {
     "playwright": "^1.56.0"

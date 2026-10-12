@@ -1,7 +1,11 @@
-/* OneVessel — folha de componentes compartilhada (v3.1).
+/* OneVessel — folha de componentes compartilhada (v3.3).
    Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
+   Traz a casca (casca.css) e a base de 14px. A impressão dos relatórios
+   (@media print, @page) fica em impressao.css, importado só pela página
+   de impressão.
    Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
    Tema: [data-theme="claro"] na raiz; sem atributo = escuro. */
+@import url("./casca.css");
 
 /* ---------- Base ---------- */
 body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -22,35 +26,9 @@ button { font: inherit; color: inherit; }
 .ov-legenda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
 .ov-rotulo { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ov-texto-terciario); }
 
-/* ---------- Monograma e ícone de app ---------- */
-.ov-monograma { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; flex: 0 0 auto; background: var(--ov-marca-azul); color: #ffffff; }
+/* ---------- Ícone de app ---------- */
 .ov-icone-app { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; background: var(--ov-marca-azul); color: #ffffff; position: relative; overflow: hidden; }
 .ov-icone-app::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--ov-marca-laranja); }
-
-/* ---------- Casca da plataforma ---------- */
-.ov-casca { display: flex; min-height: 100vh; }
-.ov-lateral { width: var(--ov-barra-lateral); flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; padding: 12px; background: var(--ov-fundo); border-right: 1px solid var(--ov-borda); }
-.ov-lateral-marca { display: flex; align-items: center; gap: 8px; padding: 4px 6px 10px; font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
-.ov-lateral-grupo { margin: 18px 0 4px; padding: 0 10px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ov-texto-terciario); }
-.ov-nav { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); text-align: left; cursor: pointer; white-space: nowrap; }
-.ov-nav:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
-.ov-nav[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
-.ov-nav[aria-current="page"] svg { color: var(--ov-acao-texto); }
-.ov-nav-cont { margin-left: auto; font-size: 12px; color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
-.ov-busca-gatilho { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 8px 0 10px; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-sm); background: var(--ov-superficie); color: var(--ov-texto-terciario); font: 400 14px/20px var(--font-sans); cursor: pointer; }
-.ov-conteudo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.ov-superior { position: sticky; top: 0; z-index: var(--ov-z-barra); height: var(--ov-barra-superior); display: flex; align-items: center; gap: 12px; padding: 0 32px; background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); }
-.ov-trilha { font-size: 14px; color: var(--ov-texto-terciario); }
-.ov-trilha b { font-weight: 500; color: var(--ov-texto); }
-.ov-tela { width: 100%; max-width: var(--ov-conteudo-max); padding: 32px; display: flex; flex-direction: column; gap: 24px; }
-.ov-tecla { display: inline-flex; align-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font: 500 11px/1 var(--font-mono); color: var(--ov-texto-secundario); }
-
-/* ---------- Cabeçalho de app no celular e barra inferior ---------- */
-.ov-cabecalho-movel { height: var(--ov-barra-superior); display: flex; align-items: center; gap: 8px; padding: 0 8px 0 16px; background: var(--ov-fundo); }
-.ov-barra-inferior { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); padding: 6px 8px env(safe-area-inset-bottom, 0px); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: var(--ov-fundo); border-top: 1px solid var(--ov-borda); }
-.ov-barra-inferior a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: var(--ov-altura-toque); font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); }
-.ov-barra-inferior a[aria-current="page"] { color: var(--ov-texto); }
-.ov-barra-inferior a[aria-current="page"] svg { color: var(--ov-acao-texto); }
 
 /* ---------- Botões ---------- */
 .ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
@@ -97,7 +75,6 @@ button { font: inherit; color: inherit; }
 .ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
 .ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
 .ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
-.ov-etiqueta { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--ov-raio-sm); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 12px; font-weight: 500; }
 .ov-contador-destaque { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--ov-raio-pill); background: var(--ov-destaque-suave); color: var(--ov-destaque); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ov-progresso { height: 4px; border-radius: var(--ov-raio-pill); background: var(--ov-borda); overflow: hidden; }
 .ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }
@@ -138,26 +115,9 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-abas-internas button { height: 36px; padding: 0; border: 0; background: none; color: var(--ov-texto-terciario); font-weight: 500; cursor: pointer; }
 .ov-abas-internas button[aria-selected="true"] { color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
 
-/* ---------- Menu ---------- */
-.ov-menu { min-width: 220px; padding: 4px; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-1); }
-.ov-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; height: 36px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-texto); font: 400 14px/20px var(--font-sans); text-align: left; cursor: pointer; }
-.ov-menu-item:hover, .ov-menu-item:focus-visible { background: var(--ov-linha-hover); outline-offset: -2px; }
-.ov-menu-item svg { color: var(--ov-texto-terciario); }
-.ov-menu-item .ov-tecla { margin-left: auto; }
-.ov-menu-item[data-tom="perigo"], .ov-menu-item[data-tom="perigo"] svg { color: var(--ov-erro); }
-.ov-menu-sep { height: 1px; margin: 4px; background: var(--ov-borda); }
-
-/* ---------- Véu, diálogo, paleta, folha ---------- */
-.ov-veu { position: fixed; inset: 0; z-index: var(--ov-z-dialogo); background: var(--ov-veu); animation: ovFade .16s ease-out; }
+/* ---------- Diálogo e folha (véu e paleta em casca.css) ---------- */
 .ov-dialogo { position: fixed; left: 50%; top: 50%; z-index: var(--ov-z-dialogo); width: min(var(--ov-dialogo), calc(100vw - 32px)); transform: translate(-50%, -50%); padding: 24px; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-2); animation: ovEscala .16s cubic-bezier(.32,.72,0,1); }
 .ov-dialogo-acoes { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
-.ov-paleta { position: fixed; left: 50%; top: 120px; z-index: var(--ov-z-dialogo); width: min(640px, calc(100vw - 32px)); transform: translateX(-50%); overflow: hidden; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-xl); box-shadow: var(--ov-sombra-2); }
-.ov-paleta-busca { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border-bottom: 1px solid var(--ov-borda); }
-.ov-paleta-busca input { flex: 1; height: 40px; border: 0; outline: none; background: transparent; color: var(--ov-texto); font: 400 17px/24px var(--font-sans); }
-.ov-paleta-grupo { padding: 10px 12px 4px; font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); }
-.ov-paleta-item { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--ov-raio-md); }
-.ov-paleta-item[aria-selected="true"] { background: var(--ov-acao-suave); }
-.ov-paleta-item .meta { font-size: 13px; color: var(--ov-texto-terciario); }
 .ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
 .ov-folha-alca { display: grid; place-items: center; height: 20px; }
 .ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
@@ -165,7 +125,7 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 
 /* ---------- Toast e barra de ações em massa ---------- */
 .ov-toasts { position: fixed; left: 50%; bottom: 24px; z-index: var(--ov-z-toast); transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; width: min(440px, calc(100vw - 32px)); }
-@media (max-width: 640px) { .ov-toasts { top: calc(12px + env(safe-area-inset-top, 0px)); bottom: auto; } }
+@media (max-width: 767px) { .ov-toasts { top: calc(12px + env(safe-area-inset-top, 0px)); bottom: auto; } }
 .ov-toast { overflow: hidden; border-radius: var(--ov-raio-md); background: var(--ov-toast-fundo); color: var(--ov-toast-texto); box-shadow: var(--ov-sombra-2); animation: ovSobe .2s cubic-bezier(.32,.72,0,1); }
 .ov-toast-linha { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 8px 6px 14px; font-weight: 500; }
 .ov-toast-linha > svg { color: var(--ov-toast-sucesso); flex: 0 0 auto; }
@@ -173,14 +133,6 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-toast-tempo { height: 3px; background: color-mix(in srgb, var(--ov-toast-texto) 15%, transparent); }
 .ov-toast-tempo > span { display: block; height: 100%; background: var(--ov-toast-acao); }
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
-
-/* ---------- Estados de tela e permissão ---------- */
-.ov-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; }
-.ov-vazio-icone { width: 48px; height: 48px; border-radius: var(--ov-raio-lg); display: grid; place-items: center; background: var(--ov-item-ativo); color: var(--ov-texto-secundario); margin-bottom: 8px; }
-.ov-vazio p { margin: 0; max-width: 360px; color: var(--ov-texto-secundario); }
-.ov-somente-leitura { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--ov-raio-md); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 13px; }
-.ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
-.ov-faixa svg { color: var(--ov-atencao); flex: 0 0 auto; }
 
 /* ---------- Matriz de permissões ---------- */
 .ov-matriz { width: 100%; border-collapse: collapse; }
@@ -208,18 +160,6 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .rel-rodape { display: flex; justify-content: space-between; margin-top: 18px; padding-top: 8px; border-top: .5px solid var(--rel-linha); font-size: 11px; color: var(--rel-mudo); }
 .rel-barra { display: flex; align-items: center; gap: 8px; max-width: 210mm; margin: 0 auto; padding: 12px 0; }
 .rel-area { background: var(--ov-fundo); padding: 24px 16px; }
-@media print {
-  body * { visibility: hidden; }
-  .rel-pagina, .rel-pagina * { visibility: visible; }
-  .rel-pagina { position: absolute; top: 0; left: 0; max-width: none; padding: 0; }
-  .rel-timbre { border-bottom-color: #000; }
-  .rel-timbre img { filter: grayscale(1); }
-  .rel-secao, .rel-resumo b { color: #000; }
-  .rel-resumo { background: none; border: .5px solid #999; }
-  .rel-barra { display: none; }
-}
-@page { size: A4; margin: 16mm; }
 
-@keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes ovEscala { from { opacity: 0; transform: translate(-50%, -50%) scale(.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 @keyframes ovSobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }

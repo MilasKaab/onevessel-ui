@@ -1,8 +1,8 @@
 {
   "id": "/bordo/",
-  "name": "Gestão de Bordo",
+  "name": "Bordo",
   "short_name": "Bordo",
-  "description": "Conveses, embarque, pessoas e despacho.",
+  "description": "Conveses, embarque e despacho",
   "lang": "pt-BR",
   "dir": "ltr",
   "scope": "/bordo/",

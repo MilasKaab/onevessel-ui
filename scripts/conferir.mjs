@@ -7,7 +7,9 @@
 //   @media print / @page (a casca é importável sozinha);
 // - algum seletor estiver em casca.css e em onevessel.css ao mesmo tempo;
 // - onevessel.css ainda tiver @media print ou @page (moram em impressao.css);
-// - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote.
+// - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
+// - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
+//   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -60,6 +62,7 @@ function separar(lista) {
 }
 
 const semComentario = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '')
+const semComentarioJs = (js) => semComentario(js).replace(/^\s*\/\/.*$/gm, '')
 const casca = semComentario(ler('css/casca.css'))
 const onevessel = semComentario(ler('css/onevessel.css'))
 const regrasCasca = regras(casca)
@@ -112,8 +115,30 @@ function varrer(dir) {
 }
 varrer(raiz)
 
+// 5. js/: só import relativo, cada .js com o seu .d.ts e tudo em exports. O
+//    js/package.json só marca a pasta como ESM; não é módulo.
+const pacote = JSON.parse(ler('package.json'))
+const deJs = readdirSync(resolve(raiz, 'js')).filter((n) => n !== 'package.json')
+const deImport = /(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g
+for (const nome of deJs) {
+  if (!/\.(d\.ts|js)$/.test(nome)) { erros.push(`arquivo fora do padrão em js/: ${nome}`); continue }
+  for (const [, alvo] of semComentarioJs(ler(`js/${nome}`)).matchAll(deImport)) {
+    if (!alvo.startsWith('./') && !alvo.startsWith('../')) erros.push(`js/${nome} importa pacote: ${alvo}`)
+  }
+  if (nome.endsWith('.d.ts')) continue
+  const tipos = nome.replace(/\.js$/, '.d.ts')
+  if (!deJs.includes(tipos)) erros.push(`js/${nome} sem js/${tipos}`)
+  const entrada = pacote.exports?.[`./js/${nome}`]
+  if (entrada?.default !== `./js/${nome}`) erros.push(`js/${nome} fora de exports (default)`)
+  if (entrada?.types !== `./js/${tipos}`) erros.push(`js/${tipos} fora de exports (types)`)
+}
+for (const chave of Object.keys(pacote.exports ?? {})) {
+  if (chave.startsWith('./js/') && !deJs.includes(chave.slice(5))) erros.push(`exports aponta para arquivo que não existe: ${chave}`)
+}
+if (!pacote.files?.includes('js')) erros.push('"js" fora de files no package.json')
+
 if (erros.length) {
   console.error(`conferir: ${erros.length} problema(s)\n- ` + erros.join('\n- '))
   process.exit(1)
 }
-console.log(`conferir: ok (${daCasca.size} seletores em casca.css, nenhum repetido em onevessel.css)`)
+console.log(`conferir: ok (${daCasca.size} seletores em casca.css, nenhum repetido em onevessel.css; ${deJs.length} arquivos em js/)`)

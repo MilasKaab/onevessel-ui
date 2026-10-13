@@ -114,6 +114,14 @@
 .ov-paleta-item .meta { font-size: 13px; color: var(--ov-texto-terciario); }
 @keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
 
+/* ---------- Folha móvel (o "Mais" do celular) ---------- */
+.ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+.ov-folha-alca { display: grid; place-items: center; height: 20px; }
+.ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
+/* ovSobe: a folha sobe; o .ov-toast do onevessel.css também usa esta animação
+   (o onevessel.css importa esta casca). */
+@keyframes ovSobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
 /* ---------- Marca, etiqueta, faixa e estados de tela ---------- */
 .ov-monograma { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; flex: 0 0 auto; background: var(--ov-marca-azul); color: #ffffff; }
 .ov-etiqueta { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--ov-raio-sm); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 12px; font-weight: 500; white-space: nowrap; }

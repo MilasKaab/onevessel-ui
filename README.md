@@ -10,7 +10,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | --- | --- |
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
-| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, etiqueta, faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
+| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
 | `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, `ov-dialogo`, `ov-toast`, timbre de relatório…). Começa importando `casca.css` |
 | `css/impressao.css` | O `@media print` e o `@page` dos relatórios internos. Só a página de impressão importa (F7) |
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
@@ -18,8 +18,10 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
 | `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos e o foco preso dos diálogos. ESM puro, sem dependência, com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
-| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `onevessel.css` e `impressao.css` e que nenhum nome antigo de app sobrou |
+| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `onevessel.css` e `impressao.css`, que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM. Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -33,7 +35,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.3.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.4.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -179,6 +181,24 @@ O Tailwind 4 não usa preset. Importe os tokens e repasse as variáveis no `@the
 
 Os utilitários próprios do app (`bg-painel`, `text-texto`) continuam funcionando enquanto você troca um por um.
 
+## js/
+
+Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha (D1; desde a v3.4.0). ESM puro, sem DOM e sem importar pacote nenhum; os tipos vêm junto, para TypeScript strict.
+
+| Arquivo | O que é |
+| --- | --- |
+| `js/paleta-nucleo.js` | O núcleo da paleta de comandos: filtro (sem acento e sem caixa), ordem dos grupos, seleção, teclado (↑↓, Enter, Esc), atalho Ctrl K / ⌘K, atributos ARIA e o anúncio do `aria-live`. Reexporta `focoQueGira` |
+| `js/foco-preso.js` | `focoQueGira` e `FOCAVEIS`: o foco preso da folha do "Mais" e da paleta |
+
+```js
+import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
+import { FOCAVEIS, focoQueGira } from 'onevessel-ui/js/foco-preso.js'
+```
+
+`js/package.json` só tem `{"type": "module"}`: o pacote é CommonJS (o preset do Tailwind usa `module.exports`), e assim o Node carrega `js/` como ESM sem aviso.
+
+O app fornece as fontes (os grupos, já montados por função) e desenha o componente; o núcleo só filtra, ordena e anda pela seleção. Os tipos (`GrupoDaPaleta`, `ItemDaPaleta`, `EstadoDaPaleta`…) saem do mesmo caminho.
+
 ## Temas
 
 O tema escuro é o padrão e vale sem nenhum atributo. Para o claro, ponha `data-theme="claro"` no `<html>`:
@@ -204,10 +224,10 @@ Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`)
 
 1. Altere `tokens/tokens.json`, `css/casca.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca; nenhum seletor fica nos dois arquivos.
 2. `npm run build` (regenera `css/tokens.css`).
-3. `npm run conferir`.
+3. `npm run conferir` e, se mexeu em `js/`, `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
 5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
-6. Suba uma tag nova (`v3.3.1`) e avise os apps.
+6. Suba uma tag nova (`v3.4.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 

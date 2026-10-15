@@ -3,97 +3,50 @@
 //   npm run conferir
 //
 // Falha se:
-// - casca.css tiver regra de html, body, tamanho de fonte fora de classe ou
-//   @media print / @page (a casca é importável sozinha);
-// - algum seletor estiver em casca.css e em onevessel.css ao mesmo tempo;
-// - onevessel.css ainda tiver @media print ou @page (moram em impressao.css);
+// - casca.css ou janelas.css tiver regra de html, body, :root, a ou button
+//   soltos, tamanho de fonte fora de classe ou @media print / @page (os dois
+//   são importáveis sozinhos), ou não tiver prefers-reduced-motion;
+// - algum seletor estiver em dois de casca.css, janelas.css e onevessel.css;
+// - onevessel.css ainda tiver @media print ou @page (moram em impressao.css),
+//   ou não importar casca.css e janelas.css;
 // - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
 // - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
 //   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { problemasDeBase, semComentario, seletores } from './css-regras.mjs'
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ler = (p) => readFileSync(resolve(raiz, p), 'utf8')
 const erros = []
 
-// Regras de um CSS: { seletores, corpo }, entrando em @media e afins.
-function regras(css) {
-  const texto = css.replace(/\/\*[\s\S]*?\*\//g, '')
-  const saida = []
-  let i = 0
-  const percorrer = (fim) => {
-    while (i < fim) {
-      const abre = texto.indexOf('{', i)
-      const fecha = texto.indexOf('}', i)
-      if (abre === -1 || (fecha !== -1 && fecha < abre)) { i = fecha === -1 ? fim : fecha + 1; return }
-      const cabeca = texto.slice(i, abre).replace(/^[\s\S]*;/, '').trim()
-      i = abre + 1
-      if (cabeca.startsWith('@media') || cabeca.startsWith('@supports')) {
-        percorrer(fim)
-      } else if (cabeca.startsWith('@')) {
-        // @keyframes, @page: pula o bloco inteiro.
-        let nivel = 1
-        while (nivel && i < fim) { if (texto[i] === '{') nivel++; else if (texto[i] === '}') nivel--; i++ }
-        saida.push({ seletores: [cabeca], corpo: '' })
-      } else {
-        const f = texto.indexOf('}', i)
-        saida.push({ seletores: separar(cabeca), corpo: texto.slice(i, f) })
-        i = f + 1
-      }
-    }
-  }
-  percorrer(texto.length)
-  return saida
-}
-
-// Divide "a, b:is(c, d)" por vírgulas fora de parênteses.
-function separar(lista) {
-  const partes = []
-  let nivel = 0, atual = ''
-  for (const c of lista) {
-    if (c === '(') nivel++
-    if (c === ')') nivel--
-    if (c === ',' && nivel === 0) { partes.push(atual); atual = '' } else atual += c
-  }
-  partes.push(atual)
-  return partes.map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean)
-}
-
-const semComentario = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '')
 const semComentarioJs = (js) => semComentario(js).replace(/^\s*\/\/.*$/gm, '')
-const casca = semComentario(ler('css/casca.css'))
+const casca = ler('css/casca.css')
+const janelas = ler('css/janelas.css')
 const onevessel = semComentario(ler('css/onevessel.css'))
-const regrasCasca = regras(casca)
-const regrasOnevessel = regras(onevessel)
 
-// 1. casca.css sem base nem impressão.
-if (/@media\s+print/.test(casca)) erros.push('casca.css tem @media print')
-if (/@page/.test(casca)) erros.push('casca.css tem @page')
-for (const { seletores, corpo } of regrasCasca) {
-  for (const s of seletores) {
-    if (s.startsWith('@')) continue
-    if (/(^|[\s>+~(,])(html|body)\b/.test(s) || /^:root\b/.test(s)) {
-      erros.push(`casca.css tem regra de base: ${s}`)
-    }
-    if (/(^|;|\s)font(-size)?\s*:/.test(corpo) && !s.includes('.')) {
-      erros.push(`casca.css define fonte fora de classe: ${s}`)
-    }
+// 1. casca.css e janelas.css sem base nem impressão.
+erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas))
+
+// 2. Nenhum seletor em dois arquivos.
+const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'onevessel.css': seletores(onevessel) }
+const nomes = Object.keys(arquivos)
+for (const [n, a] of nomes.entries()) {
+  for (const b of nomes.slice(n + 1)) {
+    for (const s of arquivos[a]) if (arquivos[b].has(s)) erros.push(`seletor em ${a} e ${b}: ${s}`)
   }
 }
 
-// 2. Nenhum seletor nos dois arquivos.
-const daCasca = new Set(regrasCasca.flatMap((r) => r.seletores))
-for (const s of new Set(regrasOnevessel.flatMap((r) => r.seletores))) {
-  if (daCasca.has(s)) erros.push(`seletor em casca.css e onevessel.css: ${s}`)
-}
-
-// 3. onevessel.css sem impressão, e importando a casca.
+// 3. onevessel.css sem impressão, e importando a casca e as janelas.
 if (/@media\s+print/.test(onevessel)) erros.push('onevessel.css ainda tem @media print')
 if (/@page/.test(onevessel)) erros.push('onevessel.css ainda tem @page')
 if (!/@import\s+url\(["']\.\/casca\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./casca.css')
+if (!/@import\s+url\(["']\.\/janelas\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./janelas.css')
 if (/impressao\.css/.test(onevessel)) erros.push('onevessel.css importa impressao.css')
+for (const nome of ['casca.css', 'janelas.css']) {
+  if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)/.test(ler(`css/${nome}`))) erros.push(`${nome} sem prefers-reduced-motion`)
+}
 
 // 4. Nome antigo do Paradas em arquivo ou pasta. A expressão é montada aos
 //    pedaços para este arquivo não acusar a si mesmo.
@@ -141,4 +94,4 @@ if (erros.length) {
   console.error(`conferir: ${erros.length} problema(s)\n- ` + erros.join('\n- '))
   process.exit(1)
 }
-console.log(`conferir: ok (${daCasca.size} seletores em casca.css, nenhum repetido em onevessel.css; ${deJs.length} arquivos em js/)`)
+console.log(`conferir: ok (${arquivos['casca.css'].size} seletores em casca.css e ${arquivos['janelas.css'].size} em janelas.css, nenhum repetido; ${deJs.length} arquivos em js/)`)

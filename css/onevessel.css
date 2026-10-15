@@ -1,11 +1,13 @@
-/* OneVessel — folha de componentes compartilhada (v3.3).
+/* OneVessel — folha de componentes compartilhada (v3.5).
    Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
-   Traz a casca (casca.css) e a base de 14px. A impressão dos relatórios
-   (@media print, @page) fica em impressao.css, importado só pela página
-   de impressão.
+   Traz a casca (casca.css), as janelas (janelas.css: Diálogo, Toast, Painel
+   lateral, rodapé e alturas da folha, .ov-btn-perigo) e a base de 14px.
+   A impressão dos relatórios (@media print, @page) fica em impressao.css,
+   importado só pela página de impressão.
    Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
    Tema: [data-theme="claro"] na raiz; sem atributo = escuro. */
 @import url("./casca.css");
+@import url("./janelas.css");
 
 /* ---------- Base ---------- */
 body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -39,7 +41,6 @@ button { font: inherit; color: inherit; }
 .ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
 .ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
-.ov-btn-perigo { background: var(--ov-erro); color: var(--ov-sobre-erro); }
 .ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
 .ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
 @media (pointer: coarse) { .ov-btn { height: var(--ov-altura-campo); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } }
@@ -104,31 +105,7 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-tabela[data-densidade="compacta"] td { height: 36px; }
 .ov-tabela[data-densidade="conforto"] td { height: 56px; }
 
-/* ---------- Painel lateral ---------- */
-.ov-painel { width: var(--ov-painel-lateral); flex: 0 0 auto; display: flex; flex-direction: column; background: var(--ov-superficie); border-left: 1px solid var(--ov-borda); }
-.ov-painel-cab { height: 48px; display: flex; align-items: center; gap: 4px; padding: 0 12px 0 20px; border-bottom: 1px solid var(--ov-borda); }
-.ov-painel-corpo { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
-.ov-dados { margin: 0; display: grid; grid-template-columns: 128px 1fr; gap: 10px 12px; }
-.ov-dados dt { color: var(--ov-texto-terciario); }
-.ov-dados dd { margin: 0; overflow-wrap: anywhere; }
-.ov-abas-internas { display: flex; gap: 16px; border-bottom: 1px solid var(--ov-borda); }
-.ov-abas-internas button { height: 36px; padding: 0; border: 0; background: none; color: var(--ov-texto-terciario); font-weight: 500; cursor: pointer; }
-.ov-abas-internas button[aria-selected="true"] { color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
-
-/* ---------- Diálogo e rodapé da folha (véu, paleta e folha em casca.css) ---------- */
-.ov-dialogo { position: fixed; left: 50%; top: 50%; z-index: var(--ov-z-dialogo); width: min(var(--ov-dialogo), calc(100vw - 32px)); transform: translate(-50%, -50%); padding: 24px; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-2); animation: ovEscala .16s cubic-bezier(.32,.72,0,1); }
-.ov-dialogo-acoes { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
-.ov-folha-rodape { margin-top: auto; display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--ov-borda); }
-
-/* ---------- Toast e barra de ações em massa ---------- */
-.ov-toasts { position: fixed; left: 50%; bottom: 24px; z-index: var(--ov-z-toast); transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; width: min(440px, calc(100vw - 32px)); }
-@media (max-width: 767px) { .ov-toasts { top: calc(12px + env(safe-area-inset-top, 0px)); bottom: auto; } }
-.ov-toast { overflow: hidden; border-radius: var(--ov-raio-md); background: var(--ov-toast-fundo); color: var(--ov-toast-texto); box-shadow: var(--ov-sombra-2); animation: ovSobe .2s cubic-bezier(.32,.72,0,1); }
-.ov-toast-linha { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 8px 6px 14px; font-weight: 500; }
-.ov-toast-linha > svg { color: var(--ov-toast-sucesso); flex: 0 0 auto; }
-.ov-toast-acao { margin-left: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-toast-acao); font-weight: 600; cursor: pointer; }
-.ov-toast-tempo { height: 3px; background: color-mix(in srgb, var(--ov-toast-texto) 15%, transparent); }
-.ov-toast-tempo > span { display: block; height: 100%; background: var(--ov-toast-acao); }
+/* ---------- Barra de ações em massa ---------- */
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
 
 /* ---------- Matriz de permissões ---------- */
@@ -157,5 +134,3 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .rel-rodape { display: flex; justify-content: space-between; margin-top: 18px; padding-top: 8px; border-top: .5px solid var(--rel-linha); font-size: 11px; color: var(--rel-mudo); }
 .rel-barra { display: flex; align-items: center; gap: 8px; max-width: 210mm; margin: 0 auto; padding: 12px 0; }
 .rel-area { background: var(--ov-fundo); padding: 24px 16px; }
-
-@keyframes ovEscala { from { opacity: 0; transform: translate(-50%, -50%) scale(.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }

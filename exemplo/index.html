@@ -23,6 +23,10 @@
   .moldura .ov-conteudo { overflow-y: auto; }
   .moldura-rotulo { margin: 0 0 var(--ov-esp-2); }
   .menu-aberto { position: absolute; z-index: var(--ov-z-menu); }
+  .janelas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(680px, 100%), 1fr)); gap: var(--ov-esp-4); }
+  .janelas .moldura { height: 400px; }
+  .janelas .moldura + .moldura { margin-top: 0; }
+  .janelas-lista { flex: 1; padding: var(--ov-esp-5); color: var(--ov-texto-secundario); }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -211,7 +215,6 @@
       <div class="linha" style="margin-bottom: var(--ov-esp-5)">
         <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
         <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
-        <button class="ov-btn ov-btn-perigo" type="button">Excluir</button>
         <button class="ov-btn ov-btn-secundario" type="button" disabled>Aprovar</button>
       </div>
       <div class="grade">
@@ -219,6 +222,141 @@
           <input class="ov-campo" type="text" value="BRAM Cardume"></label>
         <label><span class="ov-rotulo">Quantidade</span>
           <input class="ov-campo ov-tnum" type="text" value="1.621"></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Janelas</h2>
+    <p class="ov-legenda">Diálogo de confirmação (440px) e de formulário (640px; abaixo de 768px, tela cheia), toasts de sucesso com barra de tempo (pausa com o mouse; recarregue para ver de novo) e de erro, e Painel lateral (abaixo de 1024px, folha de 90%). Cada moldura faz o papel da tela.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
+    <div class="janelas">
+      <div class="moldura" data-theme="escuro">
+        <div class="ov-veu"></div>
+        <div class="ov-dialogo" data-tamanho="confirmacao" role="alertdialog" aria-labelledby="dc-escuro" aria-describedby="df-escuro">
+          <h2 class="ov-dialogo-titulo" id="dc-escuro">Remover o dia 14/10?</h2>
+          <p class="ov-dialogo-frase" id="df-escuro">As atividades e os relatórios do dia somem para todas as estações. Não dá para desfazer.</p>
+          <div class="ov-dialogo-acoes">
+            <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+            <button class="ov-btn ov-btn-perigo" type="button">Remover dia</button>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="escuro">
+        <div class="ov-veu"></div>
+        <div class="ov-dialogo" data-tamanho="formulario" role="dialog" aria-labelledby="dt-escuro">
+          <h2 class="ov-dialogo-titulo" id="dt-escuro">Encerrar TT</h2>
+          <div class="ov-dialogo-corpo">
+            <div class="grade">
+              <label><span class="ov-rotulo">Encerrada em</span><input class="ov-campo" type="text" value="15/10 18:00"></label>
+              <label><span class="ov-rotulo">Responsável</span><input class="ov-campo" type="text" value="Ana Souza"></label>
+              <label><span class="ov-rotulo">Observação</span><input class="ov-campo" type="text" value=""></label>
+              <label><span class="ov-rotulo">Digite ENCERRAR</span><input class="ov-campo" type="text" value=""></label>
+            </div>
+          </div>
+          <div class="ov-dialogo-acoes">
+            <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+            <button class="ov-btn ov-btn-primario" type="button" disabled>Encerrar</button>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="escuro">
+        <div class="ov-toasts">
+          <div class="ov-toast" role="status">
+            <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>3 contagens aprovadas</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+            <div class="ov-toast-tempo"><span></span></div>
+          </div>
+          <div class="ov-toast" data-tipo="erro" role="alert">
+            <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>Não consegui encerrar a TT.</span><button class="ov-toast-acao" type="button">Tentar de novo</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="escuro">
+        <div style="display: flex; height: 100%">
+          <div class="janelas-lista">Lista de camarotes…</div>
+          <aside class="ov-painel" role="complementary" aria-label="Camarote 214">
+            <div class="ov-painel-cab"><b>Camarote 214</b></div>
+            <div class="ov-painel-corpo">
+              <h3 class="ov-titulo-3">Camarote 214</h3>
+              <span class="ov-estado" data-tom="sucesso">Livre</span>
+              <div class="ov-abas-internas" role="tablist">
+                <button type="button" role="tab" aria-selected="true">Detalhes</button>
+                <button type="button" role="tab" aria-selected="false">Histórico</button>
+              </div>
+              <dl class="ov-dados">
+                <dt>Convés</dt><dd>B</dd>
+                <dt>Leitos</dt><dd>2 de 4 ocupados</dd>
+                <dt>Atualizado</dt><dd>15/10 09:12</dd>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tema claro</p>
+    <div class="janelas">
+      <div class="moldura" data-theme="claro">
+        <div class="ov-veu"></div>
+        <div class="ov-dialogo" data-tamanho="confirmacao" role="alertdialog" aria-labelledby="dc-claro" aria-describedby="df-claro">
+          <h2 class="ov-dialogo-titulo" id="dc-claro">Remover o dia 14/10?</h2>
+          <p class="ov-dialogo-frase" id="df-claro">As atividades e os relatórios do dia somem para todas as estações. Não dá para desfazer.</p>
+          <div class="ov-dialogo-acoes">
+            <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+            <button class="ov-btn ov-btn-perigo" type="button">Remover dia</button>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="claro">
+        <div class="ov-veu"></div>
+        <div class="ov-dialogo" data-tamanho="formulario" role="dialog" aria-labelledby="dt-claro">
+          <h2 class="ov-dialogo-titulo" id="dt-claro">Encerrar TT</h2>
+          <div class="ov-dialogo-corpo">
+            <div class="grade">
+              <label><span class="ov-rotulo">Encerrada em</span><input class="ov-campo" type="text" value="15/10 18:00"></label>
+              <label><span class="ov-rotulo">Responsável</span><input class="ov-campo" type="text" value="Ana Souza"></label>
+              <label><span class="ov-rotulo">Observação</span><input class="ov-campo" type="text" value=""></label>
+              <label><span class="ov-rotulo">Digite ENCERRAR</span><input class="ov-campo" type="text" value=""></label>
+            </div>
+          </div>
+          <div class="ov-dialogo-acoes">
+            <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+            <button class="ov-btn ov-btn-primario" type="button" disabled>Encerrar</button>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="claro">
+        <div class="ov-toasts">
+          <div class="ov-toast" role="status">
+            <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>3 contagens aprovadas</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+            <div class="ov-toast-tempo"><span></span></div>
+          </div>
+          <div class="ov-toast" data-tipo="erro" role="alert">
+            <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>Não consegui encerrar a TT.</span><button class="ov-toast-acao" type="button">Tentar de novo</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="moldura" data-theme="claro">
+        <div style="display: flex; height: 100%">
+          <div class="janelas-lista">Lista de camarotes…</div>
+          <aside class="ov-painel" role="complementary" aria-label="Camarote 214">
+            <div class="ov-painel-cab"><b>Camarote 214</b></div>
+            <div class="ov-painel-corpo">
+              <h3 class="ov-titulo-3">Camarote 214</h3>
+              <span class="ov-estado" data-tom="sucesso">Livre</span>
+              <div class="ov-abas-internas" role="tablist">
+                <button type="button" role="tab" aria-selected="true">Detalhes</button>
+                <button type="button" role="tab" aria-selected="false">Histórico</button>
+              </div>
+              <dl class="ov-dados">
+                <dt>Convés</dt><dd>B</dd>
+                <dt>Leitos</dt><dd>2 de 4 ocupados</dd>
+                <dt>Atualizado</dt><dd>15/10 09:12</dd>
+              </dl>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   </section>

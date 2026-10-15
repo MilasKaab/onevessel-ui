@@ -111,13 +111,16 @@
   --ov-barra-superior: 56px;
   --ov-barra-inferior: 64px;
   --ov-painel-lateral: 400px;
+  --ov-painel-lateral-abas: 480px;
   --ov-dialogo: 440px;
+  --ov-dialogo-formulario: 640px;
   --ov-conteudo-max: 1280px;
   --ov-z-flutuante: 20;
   --ov-z-barra: 30;
   --ov-z-menu: 40;
   --ov-z-dialogo: 50;
   --ov-z-toast: 60;
+  --ov-toast-duracao: 8s;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-rel-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;

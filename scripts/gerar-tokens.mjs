@@ -38,7 +38,7 @@ function blocoTema(tema, seletor) {
 }
 
 const fixos = []
-for (const grupo of ['spacing', 'radius', 'tamanho', 'zIndex']) {
+for (const grupo of ['spacing', 'radius', 'tamanho', 'zIndex', 'movimento']) {
   for (const tk of t[grupo].tokens) fixos.push(linha(tk.name, tk.value))
 }
 for (const [nome, familia] of Object.entries(t.type.families)) {

@@ -11,7 +11,8 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
 | `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
-| `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, `ov-dialogo`, `ov-toast`, timbre de relatório…). Começa importando `casca.css` |
+| `css/janelas.css` | As camadas sobre a tela: Diálogo, Toast, Painel lateral, rodapé e alturas da folha móvel, e o `ov-btn-perigo`. Importável sozinho, como a casca (depende de `tokens.css` e `casca.css`) |
+| `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, timbre de relatório…). Começa importando `casca.css` e `janelas.css` |
 | `css/impressao.css` | O `@media print` e o `@page` dos relatórios internos. Só a página de impressão importa (F7) |
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
 | `fonts/` | Os `.woff2` do subconjunto latino (400, 500, 600) |
@@ -20,8 +21,8 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos e o foco preso dos diálogos. ESM puro, sem dependência, com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
-| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `onevessel.css` e `impressao.css`, que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM. Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `onevessel.css` e `impressao.css`, que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css` com os mesmos valores). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -35,7 +36,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.4.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.5.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -46,7 +47,8 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 | --- | --- |
 | `tokens.css` | Todo app, sempre primeiro |
 | `casca.css` | App que mantém a própria base (Bordo, Paradas): só as classes de estrutura, sem mexer no `body` nem na impressão |
-| `onevessel.css` | App que adota a base de 14px e todos os componentes (já traz `casca.css`; não importe os dois) |
+| `janelas.css` | App que mantém a própria base (Bordo, Paradas), depois de `casca.css`: Diálogo, Toast, Painel lateral e folha |
+| `onevessel.css` | App que adota a base de 14px e todos os componentes (já traz `casca.css` e `janelas.css`; não importe junto) |
 | `impressao.css` | Só a página de impressão dos relatórios internos, depois do `onevessel.css` |
 | `fontes.css` | Quem imprime relatório (IBM Plex) |
 
@@ -103,6 +105,61 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 - Margem da tela: 32px no computador, 24px de 768 a 1023px, 16px abaixo de 768px.
 - Abaixo de 768px, `.ov-paleta` vira a tela "Buscar", inteira.
 
+### Janelas
+
+Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css` e `janelas.css`; quem usa o `onevessel.css` já recebe tudo. As regras de uso (quando é Diálogo, quando é Toast, Desfazer) estão em `janelas-e-avisos.md`, no `onevessel-docs`.
+
+```html
+<!-- Diálogo: div do app, véu e foco preso (focoQueGira), não <dialog> -->
+<div class="ov-veu"></div>
+<div class="ov-dialogo" data-tamanho="confirmacao" role="alertdialog" aria-labelledby="t" aria-describedby="f">
+  <h2 class="ov-dialogo-titulo" id="t">Remover o dia 14/10?</h2>
+  <p class="ov-dialogo-frase" id="f">As atividades do dia somem para todas as estações.</p>
+  <div class="ov-dialogo-acoes">                      <!-- Cancelar antes da ação -->
+    <button class="… Cancelar">Cancelar</button>
+    <button class="ov-btn-perigo …">Remover dia</button>
+  </div>
+</div>
+
+<div class="ov-dialogo" data-tamanho="formulario" role="dialog" aria-labelledby="t2">
+  <h2 class="ov-dialogo-titulo" id="t2">Encerrar TT</h2>
+  <div class="ov-dialogo-corpo">…campos…</div>      <!-- rola por dentro -->
+  <div class="ov-dialogo-acoes">…</div>
+</div>
+
+<!-- Toasts: no layout, sobrevivem à troca de tela -->
+<div class="ov-toasts">                               <!-- data-com-barra com a .ov-acoes-massa na tela -->
+  <div class="ov-toast" role="status">
+    <div class="ov-toast-linha"><svg …/>3 contagens aprovadas<button class="ov-toast-acao">Desfazer</button></div>
+    <div class="ov-toast-tempo"><span></span></div>
+  </div>
+  <div class="ov-toast" data-tipo="erro" role="alert">
+    <div class="ov-toast-linha"><svg …/>Não consegui encerrar a TT.<button class="ov-toast-acao">Tentar de novo</button></div>
+  </div>
+</div>
+
+<!-- Painel lateral: data-abas dá 480px -->
+<aside class="ov-painel" data-abas role="complementary">
+  <div class="ov-painel-cab">…</div>
+  <div class="ov-painel-corpo">…<div class="ov-abas-internas">…</div><dl class="ov-dados">…</dl></div>
+</aside>
+
+<!-- Folha móvel: data-altura="rapida" (40%), "detalhe" (90%) ou "cheia" (100%) -->
+<div class="ov-folha" data-altura="detalhe">
+  <div class="ov-folha-alca"></div>
+  <div class="ov-folha-corpo">…</div>
+  <div class="ov-folha-rodape">…até 2 botões…</div>
+</div>
+```
+
+- **Diálogo**: `data-tamanho="confirmacao"` (ou sem atributo) tem 440px (`--ov-dialogo`); `"formulario"` tem 640px (`--ov-dialogo-formulario`), com o `.ov-dialogo-corpo` rolando. Abaixo de 768px a confirmação continua centrada, com 16px de margem, e **o formulário vira folha em tela cheia pelo próprio CSS** (`@media` sobre `data-tamanho="formulario"`): o app não troca classe nem precisa saber a largura. Nesse caso as ações ganham a geometria do `.ov-folha-rodape`.
+- **`ov-btn-perigo`** só existe dentro do Diálogo e traz **só as cores** (`--ov-erro` e `--ov-sobre-erro`). A base do botão (altura, padding, fonte) é do app; quem usa o `onevessel.css` junta com `ov-btn`.
+- **Toast**: centro inferior no computador; com a barra de ações em massa na tela, o app põe `data-com-barra` na `.ov-toasts` e a pilha sobe para 96px. Abaixo de 768px, logo abaixo da barra superior (`--ov-barra-superior` + área segura + 12px), entrando de cima. Sem `data-tipo` (ou `"sucesso"`) o ícone vai em `--ov-toast-sucesso`; `data-tipo="erro"` usa `--ov-toast-erro` e o CSS esconde a barra de tempo. O máximo de 3 é do app.
+- **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (no app até a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
+- **Painel lateral**: não é modal no computador. **Abaixo de 1024px vira Folha móvel de 90%** (`data-altura="cheia"` no painel dá a tela inteira) e passa a ser modal: **o app põe o `.ov-veu` antes dele e prende o foco** enquanto a folha estiver aberta.
+- **Folha**: sem `data-altura`, a altura do conteúdo (o "Mais"). Na `"cheia"` some o raio e a alça, e entra a área segura de cima. Os botões do `.ov-folha-rodape` têm 48px e a mesma largura.
+- **Movimento reduzido** (`janelas.css` e `casca.css`): as entradas não sobem nem escalam, só aparecem; a barra de tempo continua, porque diz quanto falta.
+
 ### App com CSS próprio (Materiais)
 
 ```js
@@ -140,6 +197,7 @@ module.exports = {
 import 'onevessel-ui/css/fontes.css'
 import 'onevessel-ui/css/tokens.css'
 import 'onevessel-ui/css/casca.css'
+import 'onevessel-ui/css/janelas.css'
 import './index.css' // onde ficam as diretivas do Tailwind
 ```
 
@@ -159,6 +217,7 @@ O Tailwind 4 não usa preset. Importe os tokens e repasse as variáveis no `@the
 @import 'onevessel-ui/css/fontes.css';
 @import 'onevessel-ui/css/tokens.css';
 @import 'onevessel-ui/css/casca.css';
+@import 'onevessel-ui/css/janelas.css';
 
 @theme {
   --color-fundo: var(--ov-fundo);
@@ -222,17 +281,17 @@ Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`)
 
 ## Mudar a design system
 
-1. Altere `tokens/tokens.json`, `css/casca.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca; nenhum seletor fica nos dois arquivos.
+1. Altere `tokens/tokens.json`, `css/casca.css`, `css/janelas.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca, camada sobre a tela (Diálogo, Toast, Painel, folha) vai nas janelas; nenhum seletor fica em dois arquivos.
 2. `npm run build` (regenera `css/tokens.css`).
-3. `npm run conferir` e, se mexeu em `js/`, `npm run testar`.
+3. `npm run conferir` e `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
 5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
-6. Suba uma tag nova (`v3.4.1`) e avise os apps.
+6. Suba uma tag nova (`v3.5.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 
 ## Regras que não mudam
 
 - Nada de valor solto no código do app: cor, espaçamento e raio saem sempre de uma variável.
-- Nada de `confirm()` nem `alert()`: use as classes `ov-dialogo` e `ov-toast`.
+- Nada de `confirm()` nem `alert()`: use as classes `ov-dialogo` e `ov-toast` (em `janelas.css`).
 - Este repositório é público e guarda só estilo. As diretrizes de uso, de permissão e de documento ficam no repositório privado `onevessel-docs`.

@@ -1,0 +1,113 @@
+/* OneVessel — janelas (v3.5): Diálogo, Toast, Painel lateral, rodapé e
+   alturas da Folha móvel, e o .ov-btn-perigo (só dentro do Diálogo).
+   Importável sozinho, como a casca: depende de tokens.css e de casca.css
+   (véu .ov-veu, .ov-folha, .ov-folha-alca, @keyframes ovSobe e ovFade).
+   Sem regra de html, body, a, button, tamanho de fonte base ou impressão;
+   cada caixa declara a própria fonte e cor. A base do botão (.ov-btn) é do
+   app: aqui saem só as cores do perigo.
+
+   Larguras: abaixo de 1024px o Painel lateral vira Folha móvel de 90% (é
+   modal: o app põe o .ov-veu e prende o foco); abaixo de 768px o Diálogo de
+   formulário vira folha em tela cheia e os toasts descem para logo abaixo
+   da barra superior. O app não precisa saber a largura. */
+
+:where(.ov-dialogo, .ov-dialogo-corpo, .ov-dialogo-acoes, .ov-toasts, .ov-toast, .ov-toast-linha, .ov-toast-acao,
+  .ov-painel, .ov-painel-cab, .ov-painel-corpo, .ov-dados, .ov-abas-internas, .ov-folha-rodape, .ov-folha-corpo) {
+  box-sizing: border-box;
+}
+
+/* ---------- Botão de perigo ---------- */
+.ov-btn-perigo { background: var(--ov-erro); color: var(--ov-sobre-erro); }
+
+/* ---------- Diálogo (véu em casca.css) ---------- */
+/* data-tamanho="confirmacao" (ou sem atributo): 440px. "formulario": 640px,
+   com o .ov-dialogo-corpo rolando entre o título e as ações. */
+.ov-dialogo { position: fixed; left: 50%; top: 50%; z-index: var(--ov-z-dialogo); width: min(var(--ov-dialogo), calc(100vw - 32px)); transform: translate(-50%, -50%); padding: 24px; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); animation: ovEscala .16s cubic-bezier(.32,.72,0,1); }
+.ov-dialogo[data-tamanho="formulario"] { width: min(var(--ov-dialogo-formulario), calc(100vw - 32px)); display: flex; flex-direction: column; max-height: calc(100vh - 64px); max-height: calc(100dvh - 64px); }
+.ov-dialogo-titulo { margin: 0; font: var(--ov-fonte-titulo-3); color: var(--ov-texto); }
+.ov-dialogo-frase { margin: 8px 0 0; font: var(--ov-fonte-corpo); color: var(--ov-texto-secundario); }
+.ov-dialogo-corpo { flex: 1; min-height: 0; overflow-y: auto; margin-top: 16px; }
+/* Cancelar antes da ação, os dois à direita. */
+.ov-dialogo-acoes { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+@keyframes ovEscala { from { opacity: 0; transform: translate(-50%, -50%) scale(.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+/* ---------- Toast ---------- */
+/* Pilha no centro inferior. Com a .ov-acoes-massa na tela (48px, a 24px do
+   rodapé), o app põe data-com-barra e a pilha sobe: 24 + 48 + 24. O máximo
+   de 3 é regra do app. */
+.ov-toasts { position: fixed; left: 50%; bottom: 24px; z-index: var(--ov-z-toast); transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; width: min(440px, calc(100vw - 32px)); }
+.ov-toasts[data-com-barra] { bottom: calc(24px + 48px + 24px); }
+/* Sem data-tipo, ou data-tipo="sucesso": ícone em ov-toast-sucesso e barra
+   de tempo. data-tipo="erro": ícone em ov-toast-erro, sem barra (fica até
+   dispensar). O ícone é o primeiro svg da .ov-toast-linha. */
+.ov-toast { overflow: hidden; border-radius: var(--ov-raio-md); background: var(--ov-toast-fundo); color: var(--ov-toast-texto); font: var(--ov-fonte-corpo); box-shadow: var(--ov-sombra-2); animation: ovSobe .2s cubic-bezier(.32,.72,0,1); }
+.ov-toast-linha { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 8px 6px 14px; font-weight: 500; }
+.ov-toast-linha > svg { color: var(--ov-toast-sucesso); flex: 0 0 auto; }
+.ov-toast[data-tipo="erro"] .ov-toast-linha > svg { color: var(--ov-toast-erro); }
+.ov-toast-acao { margin-left: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-toast-acao); font-weight: 600; cursor: pointer; }
+.ov-toast-acao:focus-visible { text-decoration: underline; }
+/* Barra de tempo: o span vai de 100% a 0 em --ov-toast-duracao e pausa com
+   o mouse ou o foco no toast. O temporizador do app pausa nos mesmos
+   eventos, senão a barra e o fechamento se desencontram. */
+.ov-toast-tempo { height: 3px; background: color-mix(in srgb, var(--ov-toast-texto) 15%, transparent); }
+.ov-toast-tempo > span { display: block; height: 100%; background: var(--ov-toast-acao); animation: ovTempo var(--ov-toast-duracao, 8s) linear forwards; }
+.ov-toast:hover .ov-toast-tempo > span, .ov-toast:focus-within .ov-toast-tempo > span { animation-play-state: paused; }
+.ov-toast[data-tipo="erro"] .ov-toast-tempo { display: none; }
+@keyframes ovTempo { from { width: 100%; } to { width: 0; } }
+/* No celular a pilha fica no topo: o toast entra descendo. */
+@keyframes ovDesce { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Painel lateral ---------- */
+/* Não é modal no computador: empurra a lista, sem véu nem foco preso. */
+.ov-painel { width: var(--ov-painel-lateral); flex: 0 0 auto; display: flex; flex-direction: column; background: var(--ov-superficie); border-left: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-painel[data-abas] { width: var(--ov-painel-lateral-abas); }
+.ov-painel-cab { height: 48px; display: flex; align-items: center; gap: 4px; padding: 0 12px 0 20px; border-bottom: 1px solid var(--ov-borda); }
+.ov-painel-corpo { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.ov-dados { margin: 0; display: grid; grid-template-columns: 128px 1fr; gap: 10px 12px; }
+.ov-dados dt { color: var(--ov-texto-terciario); }
+.ov-dados dd { margin: 0; overflow-wrap: anywhere; }
+.ov-abas-internas { display: flex; gap: 16px; border-bottom: 1px solid var(--ov-borda); }
+.ov-abas-internas button { height: 36px; padding: 0; border: 0; background: none; color: var(--ov-texto-terciario); font-weight: 500; cursor: pointer; }
+.ov-abas-internas button[aria-selected="true"] { color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
+
+/* ---------- Folha móvel: rodapé, corpo e alturas (.ov-folha em casca.css) ---------- */
+/* Sem data-altura, a folha tem a altura do conteúdo (o "Mais", até 92%). */
+.ov-folha-corpo { flex: 1; min-height: 0; overflow-y: auto; }
+.ov-folha-rodape { margin-top: auto; display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--ov-borda); }
+/* Botões de 48px, mesma largura. O segundo seletor vence a altura do .ov-btn
+   do onevessel.css, que vem depois deste arquivo. */
+.ov-folha-rodape > *, .ov-folha-rodape > .ov-btn { flex: 1; height: var(--ov-altura-toque); }
+.ov-folha[data-altura="rapida"] { height: 40vh; height: 40dvh; }
+.ov-folha[data-altura="detalhe"] { height: 90vh; height: 90dvh; }
+.ov-folha[data-altura="cheia"] { height: 100vh; height: 100dvh; max-height: none; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
+.ov-folha[data-altura="cheia"] .ov-folha-alca { display: none; }
+
+/* ---------- Abaixo de 1024px: o Painel lateral vira Folha móvel ---------- */
+/* A geometria da .ov-folha[data-altura="detalhe"] (90%); data-altura="cheia"
+   no painel dá a tela inteira (formulário). Agora é modal: o app põe o
+   .ov-veu antes dele e prende o foco. */
+@media (max-width: 1023px) {
+  .ov-painel, .ov-painel[data-abas] { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: auto; height: 90vh; height: 90dvh; background: var(--ov-superficie-elevada); border-left: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+  .ov-painel[data-altura="cheia"] { height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
+}
+
+/* ---------- Abaixo de 768px: diálogo de formulário em tela cheia, toasts no topo ---------- */
+@media (max-width: 767px) {
+  /* A confirmação continua centrada, com 16px de margem (a largura acima). */
+  .ov-dialogo[data-tamanho="formulario"] { inset: 0; width: auto; max-height: none; transform: none; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 0; border: 0; border-radius: 0; animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+  /* As ações ganham a geometria da .ov-folha-rodape. */
+  .ov-dialogo[data-tamanho="formulario"] .ov-dialogo-acoes { margin: auto -16px 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--ov-borda); }
+  .ov-dialogo[data-tamanho="formulario"] .ov-dialogo-acoes > * { flex: 1; height: var(--ov-altura-toque); }
+  /* Logo abaixo do .ov-cabecalho-movel, nunca sobre as ações dele. */
+  .ov-toasts, .ov-toasts[data-com-barra] { top: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px) + 12px); bottom: auto; }
+  .ov-toast { animation-name: ovDesce; }
+}
+
+/* ---------- Movimento reduzido ---------- */
+/* Sem deslocamento nem escala: as entradas só aparecem (ovFade, da casca).
+   A barra de tempo continua, porque diz quanto falta; a especificidade vence
+   a regra global de duração do onevessel.css. */
+@media (prefers-reduced-motion: reduce) {
+  .ov-dialogo, .ov-dialogo[data-tamanho="formulario"], .ov-toast, .ov-painel, .ov-painel[data-abas] { animation-name: ovFade; }
+  .ov-toast-tempo > span { animation-duration: var(--ov-toast-duracao, 8s) !important; }
+}

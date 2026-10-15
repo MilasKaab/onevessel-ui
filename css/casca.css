@@ -118,8 +118,9 @@
 .ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
 .ov-folha-alca { display: grid; place-items: center; height: 20px; }
 .ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
-/* ovSobe: a folha sobe; o .ov-toast do onevessel.css também usa esta animação
-   (o onevessel.css importa esta casca). */
+/* ovSobe: a folha sobe; o .ov-toast, o painel e o diálogo de formulário do
+   janelas.css também usam esta animação (o janelas.css depende da casca).
+   O rodapé e as alturas da folha (data-altura) moram no janelas.css. */
 @keyframes ovSobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* ---------- Marca, etiqueta, faixa e estados de tela ---------- */
@@ -167,4 +168,10 @@
   .ov-faixa { padding: 8px 16px; }
   /* A paleta vira a tela "Buscar", inteira. */
   .ov-paleta { inset: 0; width: auto; transform: none; overflow-y: auto; padding-top: env(safe-area-inset-top, 0px); border: 0; border-radius: 0; box-shadow: none; }
+}
+
+/* ---------- Movimento reduzido ---------- */
+/* A folha não sobe: só aparece. O véu já é só opacidade (ovFade). */
+@media (prefers-reduced-motion: reduce) {
+  .ov-folha { animation-name: ovFade; }
 }

@@ -3,12 +3,15 @@
 //   npm run conferir
 //
 // Falha se:
-// - casca.css ou janelas.css tiver regra de html, body, :root, a ou button
-//   soltos, tamanho de fonte fora de classe ou @media print / @page (os dois
-//   são importáveis sozinhos), ou não tiver prefers-reduced-motion;
-// - algum seletor estiver em dois de casca.css, janelas.css e onevessel.css;
+// - casca.css, janelas.css ou telas.css tiver regra de html, body, :root, *,
+//   a ou button soltos, tamanho de fonte fora de classe ou @media print /
+//   @page (os três são importáveis sozinhos), ou não tiver
+//   prefers-reduced-motion;
+// - algum seletor estiver em dois de casca.css, janelas.css, telas.css e
+//   onevessel.css;
 // - onevessel.css ainda tiver @media print ou @page (moram em impressao.css),
-//   ou não importar casca.css e janelas.css;
+//   ou não importar casca.css, janelas.css e telas.css;
+// - algum CSS de css/ faltar em exports;
 // - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
 // - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
 //   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports.
@@ -24,13 +27,14 @@ const erros = []
 const semComentarioJs = (js) => semComentario(js).replace(/^\s*\/\/.*$/gm, '')
 const casca = ler('css/casca.css')
 const janelas = ler('css/janelas.css')
+const telas = ler('css/telas.css')
 const onevessel = semComentario(ler('css/onevessel.css'))
 
-// 1. casca.css e janelas.css sem base nem impressão.
-erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas))
+// 1. casca.css, janelas.css e telas.css sem base nem impressão.
+erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas), ...problemasDeBase('telas.css', telas))
 
 // 2. Nenhum seletor em dois arquivos.
-const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'onevessel.css': seletores(onevessel) }
+const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'onevessel.css': seletores(onevessel) }
 const nomes = Object.keys(arquivos)
 for (const [n, a] of nomes.entries()) {
   for (const b of nomes.slice(n + 1)) {
@@ -38,13 +42,14 @@ for (const [n, a] of nomes.entries()) {
   }
 }
 
-// 3. onevessel.css sem impressão, e importando a casca e as janelas.
+// 3. onevessel.css sem impressão, e importando a casca, as janelas e as telas.
 if (/@media\s+print/.test(onevessel)) erros.push('onevessel.css ainda tem @media print')
 if (/@page/.test(onevessel)) erros.push('onevessel.css ainda tem @page')
 if (!/@import\s+url\(["']\.\/casca\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./casca.css')
 if (!/@import\s+url\(["']\.\/janelas\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./janelas.css')
+if (!/@import\s+url\(["']\.\/telas\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./telas.css')
 if (/impressao\.css/.test(onevessel)) erros.push('onevessel.css importa impressao.css')
-for (const nome of ['casca.css', 'janelas.css']) {
+for (const nome of ['casca.css', 'janelas.css', 'telas.css']) {
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)/.test(ler(`css/${nome}`))) erros.push(`${nome} sem prefers-reduced-motion`)
 }
 
@@ -89,9 +94,12 @@ for (const chave of Object.keys(pacote.exports ?? {})) {
   if (chave.startsWith('./js/') && !deJs.includes(chave.slice(5))) erros.push(`exports aponta para arquivo que não existe: ${chave}`)
 }
 if (!pacote.files?.includes('js')) erros.push('"js" fora de files no package.json')
+for (const nome of readdirSync(resolve(raiz, 'css')).filter((n) => n.endsWith('.css'))) {
+  if (pacote.exports?.[`./css/${nome}`] !== `./css/${nome}`) erros.push(`css/${nome} fora de exports`)
+}
 
 if (erros.length) {
   console.error(`conferir: ${erros.length} problema(s)\n- ` + erros.join('\n- '))
   process.exit(1)
 }
-console.log(`conferir: ok (${arquivos['casca.css'].size} seletores em casca.css e ${arquivos['janelas.css'].size} em janelas.css, nenhum repetido; ${deJs.length} arquivos em js/)`)
+console.log(`conferir: ok (${arquivos['casca.css'].size} seletores em casca.css, ${arquivos['janelas.css'].size} em janelas.css e ${arquivos['telas.css'].size} em telas.css, nenhum repetido; ${deJs.length} arquivos em js/)`)

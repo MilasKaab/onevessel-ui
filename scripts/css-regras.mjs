@@ -50,9 +50,10 @@ export function separar(lista) {
 // Todos os seletores de um CSS (com os @keyframes), sem repetição.
 export const seletores = (css) => new Set(regras(css).flatMap((r) => r.seletores))
 
-// O que um CSS importável sozinho (casca.css, janelas.css) não pode ter:
-// regra de html, body, :root, de a ou button soltos (sem classe), fonte fora
-// de classe, @media print ou @page. Devolve a lista de problemas.
+// O que um CSS importável sozinho (casca.css, janelas.css, telas.css) não
+// pode ter: regra de html, body, :root, do seletor universal * solto (.x > *
+// é da classe), de a ou button soltos (sem classe), fonte fora de classe, @media print ou @page.
+// Devolve a lista de problemas.
 export function problemasDeBase(nome, css) {
   const texto = semComentario(css)
   const problemas = []
@@ -64,6 +65,7 @@ export function problemasDeBase(nome, css) {
       if (/(^|[\s>+~(,])(html|body)\b/.test(s) || /^:root\b/.test(s)) {
         problemas.push(`${nome} tem regra de base: ${s}`)
       }
+      if (/^\*/.test(s)) problemas.push(`${nome} tem regra universal: ${s}`)
       if (!/[.[]/.test(s) && /(^|[\s>+~])(a|button)(?![\w-])/.test(s)) {
         problemas.push(`${nome} tem regra de elemento solto: ${s}`)
       }

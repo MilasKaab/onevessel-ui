@@ -123,9 +123,16 @@
    O rodapé e as alturas da folha (data-altura) moram no janelas.css. */
 @keyframes ovSobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-/* ---------- Marca, etiqueta, faixa e estados de tela ---------- */
+/* ---------- Marca, etiqueta, estado, faixa e estados de tela ---------- */
 .ov-monograma { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; flex: 0 0 auto; background: var(--ov-marca-azul); color: #ffffff; }
 .ov-etiqueta { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--ov-raio-sm); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 12px; font-weight: 500; white-space: nowrap; }
+/* Estado: ponto de 8px + texto; a cor vem de data-tom (sem atributo, neutro). */
+.ov-estado { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ov-texto-secundario); white-space: nowrap; }
+.ov-estado::before { content: ""; width: 8px; height: 8px; border-radius: var(--ov-raio-pill); background: var(--estado-cor, var(--ov-neutro)); flex: 0 0 auto; }
+.ov-estado[data-tom="sucesso"] { --estado-cor: var(--ov-sucesso); }
+.ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
+.ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
+.ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
 .ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
 .ov-faixa svg { color: var(--ov-atencao); flex: 0 0 auto; }
 .ov-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; }

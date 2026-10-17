@@ -10,7 +10,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | --- | --- |
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
-| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
+| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
 | `css/janelas.css` | As camadas sobre a tela: Diálogo, Toast, Painel lateral, rodapé e alturas da folha móvel, e o `ov-btn-perigo`. Importável sozinho, como a casca (depende de `tokens.css` e `casca.css`) |
 | `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, `ov-tabela`, timbre de relatório…). Começa importando `casca.css` e `janelas.css` |
 | `css/impressao.css` | O `@media print` e o `@page` dos relatórios internos. Só a página de impressão importa (F7) |
@@ -19,10 +19,10 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
 | `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos e o foco preso dos diálogos. ESM puro, sem dependência, com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `onevessel.css` e `impressao.css`, que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css` com os mesmos valores). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, e o `.ov-estado` da v3.6.0 no `casca.css`, com os mesmos valores). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -36,7 +36,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.5.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.6.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -46,7 +46,7 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 | Arquivo | Quem importa |
 | --- | --- |
 | `tokens.css` | Todo app, sempre primeiro |
-| `casca.css` | App que mantém a própria base (Bordo, Paradas): só as classes de estrutura, sem mexer no `body` nem na impressão |
+| `casca.css` | App que mantém a própria base (Bordo, Paradas): só as classes de estrutura (e, desde a v3.6.0, o `.ov-estado`), sem mexer no `body` nem na impressão |
 | `janelas.css` | App que mantém a própria base (Bordo, Paradas), depois de `casca.css`: Diálogo, Toast, Painel lateral e folha |
 | `onevessel.css` | App que adota a base de 14px e todos os componentes (já traz `casca.css` e `janelas.css`; não importe junto) |
 | `impressao.css` | Só a página de impressão dos relatórios internos, depois do `onevessel.css` |
@@ -155,7 +155,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 - **Diálogo**: `data-tamanho="confirmacao"` (ou sem atributo) tem 440px (`--ov-dialogo`); `"formulario"` tem 640px (`--ov-dialogo-formulario`), com o `.ov-dialogo-corpo` rolando. Abaixo de 768px a confirmação continua centrada, com 16px de margem, e **o formulário vira folha em tela cheia pelo próprio CSS** (`@media` sobre `data-tamanho="formulario"`): o app não troca classe nem precisa saber a largura. Nesse caso as ações ganham a geometria do `.ov-folha-rodape`.
 - **`ov-btn-perigo`** só existe dentro do Diálogo e traz **só as cores** (`--ov-erro` e `--ov-sobre-erro`). A base do botão (altura, padding, fonte) é do app; quem usa o `onevessel.css` junta com `ov-btn`.
 - **Toast**: centro inferior no computador; com a barra de ações em massa na tela, o app põe `data-com-barra` na `.ov-toasts` e a pilha sobe para 96px. Abaixo de 768px, logo abaixo da barra superior (`--ov-barra-superior` + área segura + 12px), entrando de cima. Sem `data-tipo` (ou `"sucesso"`) o ícone vai em `--ov-toast-sucesso`; `data-tipo="erro"` usa `--ov-toast-erro` e o CSS esconde a barra de tempo. O máximo de 3 é do app.
-- **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (no app até a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
+- **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (`js/toast-nucleo.js` desde a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
 - **Painel lateral**: não é modal no computador. **Abaixo de 1024px vira Folha móvel de 90%** (`data-altura="cheia"` no painel dá a tela inteira) e passa a ser modal: **o app põe o `.ov-veu` antes dele e prende o foco** enquanto a folha estiver aberta.
 - **Folha**: sem `data-altura`, a altura do conteúdo (o "Mais"). Na `"cheia"` some o raio e a alça, e entra a área segura de cima. Os botões do `.ov-folha-rodape` têm 48px e a mesma largura.
 - **Movimento reduzido** (`janelas.css` e `casca.css`): as entradas não sobem nem escalam, só aparecem; a barra de tempo continua, porque diz quanto falta.
@@ -248,15 +248,30 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | --- | --- |
 | `js/paleta-nucleo.js` | O núcleo da paleta de comandos: filtro (sem acento e sem caixa), ordem dos grupos, seleção, teclado (↑↓, Enter, Esc), atalho Ctrl K / ⌘K, atributos ARIA e o anúncio do `aria-live`. Reexporta `focoQueGira` |
 | `js/foco-preso.js` | `focoQueGira` e `FOCAVEIS`: o foco preso da folha do "Mais" e da paleta |
+| `js/toast-nucleo.js` | O núcleo do Toast (v3.6.0): fila de 3, prazo de 8s com pausa por ponteiro e foco, erro sem prazo, filtro do Ctrl Z |
+| `js/teclas-do-painel.js` | O teclado do Painel lateral (v3.6.0): ↑↓ trocam de registro, Esc fecha, e onde está o foco |
+| `js/camada.js` | A pilha de camadas modais (v3.6.0): quem está no topo e a trava de rolagem do `<html>` |
+| `js/alteracoes-nucleo.js` | "Há alterações nesta tela" (v3.6.0): o registro em árvore e o texto único do "Descartar alterações?" |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
 import { FOCAVEIS, focoQueGira } from 'onevessel-ui/js/foco-preso.js'
+import { filaVazia, acrescentar, pausar, retomar, vencer, toastDoCtrlZ } from 'onevessel-ui/js/toast-nucleo.js'
+import { acaoDaTecla, ondeEstaOFoco, vizinho } from 'onevessel-ui/js/teclas-do-painel.js'
+import { abrirCamada, camadasAbertas } from 'onevessel-ui/js/camada.js'
+import { criarRegistroDeAlteracoes, DESCARTAR } from 'onevessel-ui/js/alteracoes-nucleo.js'
 ```
 
 `js/package.json` só tem `{"type": "module"}`: o pacote é CommonJS (o preset do Tailwind usa `module.exports`), e assim o Node carrega `js/` como ESM sem aviso.
 
 O app fornece as fontes (os grupos, já montados por função) e desenha o componente; o núcleo só filtra, ordena e anda pela seleção. Os tipos (`GrupoDaPaleta`, `ItemDaPaleta`, `EstadoDaPaleta`…) saem do mesmo caminho.
+
+Os quatro da v3.6.0 importam a Bordo e o Paradas (a adoção sai num PR por app). O que é de cada um fica no app:
+
+- **`toast-nucleo.js`**: funções puras sobre a fila e um relógio que o app passa (`agora`, em ms). O app desenha a `.ov-toasts`, liga `mouseenter`/`mouseleave` e `focusin`/`focusout` a `pausar`/`retomar`, agenda o próximo `vencer` com `proximoVencimento` e chama `toastDoCtrlZ` no `keydown`, passando `camadasAbertas() > 0`.
+- **`teclas-do-painel.js`**: o componente descreve a tecla e a situação (`ondeEstaOFoco` com o `document.activeElement` e o `body`), e `acaoDaTecla` diz `"anterior"`, `"proximo"`, `"fechar"` ou `null`. A troca de registro (`vizinho` na lista do app) e a pergunta antes de fechar com dado digitado são do componente.
+- **`camada.js`**: `abrirCamada()` devolve quem fecha (a própria função, ou `fechar()`) e `estaNoTopo()`; a primeira camada trava a rolagem do `<html>` e a última devolve, e sem `document` (servidor, teste) só conta. **O gancho do React fica no app** (`useCamadaModal` na Bordo, `useCamada` no Paradas), como invólucro fino: abre no `useEffect` e fecha na limpeza.
+- **`alteracoes-nucleo.js`**: `criarRegistroDeAlteracoes(pai?)` com `marcar(chave, sujo)`, `remover(chave)`, `ha()` e `filho()`; o filho conta no pai como uma chave só. `DESCARTAR` (congelado) tem `titulo`, `frase`, `continuar` e `descartar` do Diálogo. **Quem diz se houve digitação fica no app**: `retratoDosCampos` na Bordo (entradas de `FormData`), `retrato`, `mudou` e `reportSujo` no Paradas (estado do React).
 
 ## Temas
 
@@ -286,7 +301,7 @@ Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`)
 3. `npm run conferir` e `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
 5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
-6. Suba uma tag nova (`v3.5.1`) e avise os apps.
+6. Suba uma tag nova (`v3.6.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 

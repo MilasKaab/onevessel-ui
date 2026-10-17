@@ -1,6 +1,8 @@
 // A divisão do CSS desde a v3.5.0: janelas.css importável sozinho, como a
-// casca, e o que saiu do onevessel.css morando lá, com os mesmos valores.
-// `test/fixtures/onevessel-v3.4.0.css` é o onevessel.css da tag v3.4.0, fixo.
+// casca, e o que saiu do onevessel.css morando lá, com os mesmos valores. Na
+// v3.6.0, o .ov-estado foi para a casca do mesmo jeito (V4).
+// `test/fixtures/onevessel-v3.4.0.css` e `onevessel-v3.5.0.css` são o
+// onevessel.css dessas tags, fixos.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -12,6 +14,7 @@ const casca = ler('css/casca.css');
 const janelas = ler('css/janelas.css');
 const onevessel = ler('css/onevessel.css');
 const antes = ler('test/fixtures/onevessel-v3.4.0.css');
+const daV350 = ler('test/fixtures/onevessel-v3.5.0.css');
 
 // O que saiu do onevessel.css na v3.5.0.
 const MOVIDOS = [
@@ -23,6 +26,12 @@ const MOVIDOS = [
   '.ov-toasts', '.ov-toast', '.ov-toast-linha', '.ov-toast-linha > svg', '.ov-toast-acao',
   '.ov-toast-tempo', '.ov-toast-tempo > span',
   '@keyframes ovEscala',
+];
+
+// O que saiu do onevessel.css na v3.6.0 para o casca.css (V4).
+const PARA_A_CASCA = [
+  '.ov-estado', '.ov-estado::before',
+  '.ov-estado[data-tom="sucesso"]', '.ov-estado[data-tom="atencao"]', '.ov-estado[data-tom="erro"]', '.ov-estado[data-tom="info"]',
 ];
 
 // Classes que nasceram no janelas.css (fora do diff de movidos).
@@ -64,9 +73,34 @@ test('onevessel.css importa janelas.css e não repete nenhum seletor dele', () =
   assert.deepEqual([...seletores(janelas)].filter((s) => deOnevessel.has(s)), []);
 });
 
-test('o que saiu do onevessel.css é exatamente a lista de movidos', () => {
-  const depois = seletores(onevessel);
+test('o que saiu do onevessel.css na v3.5.0 é exatamente a lista de movidos', () => {
+  const depois = seletores(daV350);
   assert.deepEqual([...seletores(antes)].filter((s) => !depois.has(s)), MOVIDOS);
+});
+
+test('o que saiu do onevessel.css na v3.6.0 é exatamente o .ov-estado, e nada entrou', () => {
+  const depois = seletores(onevessel);
+  const v350 = seletores(daV350);
+  assert.deepEqual([...v350].filter((s) => !depois.has(s)), PARA_A_CASCA);
+  assert.deepEqual([...depois].filter((s) => !v350.has(s)), []);
+});
+
+test('o .ov-estado mora no casca.css com as declarações da v3.5.0, ao lado da .ov-etiqueta', () => {
+  const deCasca = seletores(casca);
+  for (const s of PARA_A_CASCA) {
+    assert.ok(deCasca.has(s), `falta no casca.css: ${s}`);
+    assert.deepEqual(declaracoes(casca, s), declaracoes(daV350, s), `${s} mudou`);
+  }
+  const ordem = regras(casca).filter((r) => !r.media).flatMap((r) => r.seletores);
+  const etiqueta = ordem.indexOf('.ov-etiqueta');
+  assert.deepEqual(ordem.slice(etiqueta + 1, etiqueta + 1 + PARA_A_CASCA.length), PARA_A_CASCA);
+});
+
+test('casca.css: sem base, e o onevessel.css continua entregando o .ov-estado pelo import', () => {
+  assert.deepEqual(problemasDeBase('casca.css', casca), []);
+  assert.match(semComentario(onevessel), /@import\s+url\(["']\.\/casca\.css["']\)/);
+  const deOnevessel = seletores(onevessel);
+  assert.deepEqual([...seletores(casca)].filter((s) => deOnevessel.has(s)), []);
 });
 
 test('todo seletor movido existe no janelas.css, com as declarações da v3.4.0', () => {

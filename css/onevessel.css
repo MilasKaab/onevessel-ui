@@ -1,7 +1,8 @@
-/* OneVessel — folha de componentes compartilhada (v3.5).
+/* OneVessel — folha de componentes compartilhada (v3.6).
    Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
-   Traz a casca (casca.css), as janelas (janelas.css: Diálogo, Toast, Painel
-   lateral, rodapé e alturas da folha, .ov-btn-perigo) e a base de 14px.
+   Traz a casca (casca.css, com o .ov-estado), as janelas (janelas.css:
+   Diálogo, Toast, Painel lateral, rodapé e alturas da folha, .ov-btn-perigo)
+   e a base de 14px.
    A impressão dos relatórios (@media print, @page) fica em impressao.css,
    importado só pela página de impressão.
    Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
@@ -69,13 +70,7 @@ button { font: inherit; color: inherit; }
 .ov-chip-filtro .campo { color: var(--ov-texto-terciario); }
 .ov-chip-filtro button { width: 22px; height: 22px; display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: var(--ov-texto-terciario); cursor: pointer; }
 
-/* ---------- Estado e etiqueta ---------- */
-.ov-estado { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ov-texto-secundario); white-space: nowrap; }
-.ov-estado::before { content: ""; width: 8px; height: 8px; border-radius: var(--ov-raio-pill); background: var(--estado-cor, var(--ov-neutro)); flex: 0 0 auto; }
-.ov-estado[data-tom="sucesso"] { --estado-cor: var(--ov-sucesso); }
-.ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
-.ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
-.ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
+/* ---------- Contador e progresso (o .ov-estado mora na casca desde a v3.6.0) ---------- */
 .ov-contador-destaque { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--ov-raio-pill); background: var(--ov-destaque-suave); color: var(--ov-destaque); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ov-progresso { height: 4px; border-radius: var(--ov-raio-pill); background: var(--ov-borda); overflow: hidden; }
 .ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }

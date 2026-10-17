@@ -1,6 +1,6 @@
 {
   "name": "onevessel-ui",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "Identidade compartilhada dos apps OneVessel: tokens, CSS de componentes, fontes e ícones de PWA.",
   "license": "UNLICENSED",
   "sideEffects": [
@@ -20,6 +20,22 @@
     "./js/foco-preso.js": {
       "types": "./js/foco-preso.d.ts",
       "default": "./js/foco-preso.js"
+    },
+    "./js/toast-nucleo.js": {
+      "types": "./js/toast-nucleo.d.ts",
+      "default": "./js/toast-nucleo.js"
+    },
+    "./js/teclas-do-painel.js": {
+      "types": "./js/teclas-do-painel.d.ts",
+      "default": "./js/teclas-do-painel.js"
+    },
+    "./js/camada.js": {
+      "types": "./js/camada.d.ts",
+      "default": "./js/camada.js"
+    },
+    "./js/alteracoes-nucleo.js": {
+      "types": "./js/alteracoes-nucleo.d.ts",
+      "default": "./js/alteracoes-nucleo.js"
     },
     "./tokens/tokens.json": "./tokens/tokens.json",
     "./tailwind/preset.js": "./tailwind/preset.js",

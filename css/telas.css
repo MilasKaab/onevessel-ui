@@ -60,6 +60,11 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 /* Grade: 4 colunas no computador, 2 de 768 a 1023px, 1 no celular (abaixo).
    Até 4 indicadores por tela é regra do app. Serve em div ou ul. */
 .ov-indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ov-esp-4); margin: 0; padding: 0; list-style: none; }
+/* Em ul, o item da grade é o li: ele vira flex e o cartão ocupa a altura
+   dele, e os cartões de uma linha ficam da mesma altura (v3.8). Em div, o
+   cartão já é o item da grade e estica sozinho. */
+.ov-indicadores > li { display: flex; min-width: 0; }
+.ov-indicadores > li > .ov-indicador { flex: 1 1 auto; min-width: 0; }
 
 /* ---------- Precisa de você ---------- */
 /* Contêiner: .ov-cartao.ov-pendencias. Dentro, nesta ordem: .ov-pendencias-cab

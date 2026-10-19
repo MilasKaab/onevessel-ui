@@ -20,7 +20,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
 | `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações. ESM puro, sem dependência (nem de React), com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `onevessel.css` e `impressao.css` (e que todo CSS está em `exports`), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
 | `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; e o contraste dos estados novos nos dois temas, pelos tokens). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
@@ -217,7 +217,7 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 - **Barra de ações em massa**: `data-flutuante` põe a `.ov-acoes-massa` fixa, centrada, 24px acima do rodapé e da área segura (no celular, acima da `.ov-barra-inferior`), em `--ov-z-flutuante` e `--ov-fundo-barra` sem desfoque, entrando de 12px em 180ms. Sem o atributo, a caixa é a da v3.6. Com ela na tela, a `.ov-toasts` leva `data-com-barra`. Esc e ✕ limpam a seleção no app.
 - **Esqueleto**: `.ov-esqueleto` é o bloco (o app dá a altura; 48px sem ela), `.ov-esqueleto-texto` uma linha de texto (o app dá a largura) e `.ov-esqueleto-linha` uma linha de tabela (44px; 64px no celular). Também serve uma `<tr>` da `.ov-tabela` com um `.ov-esqueleto-texto` por célula. Pulsa só na opacidade.
 - **Movimento reduzido** (`telas.css`): a barra de massa só aparece, já no lugar (`ovFade`, da casca), e o esqueleto não pulsa.
-- O teclado da tabela (↑↓, Enter, X) nasce nos apps; nada de `js/` novo.
+- **Teclado da tabela** (↑↓, Enter, X): o núcleo é o `js/teclas-da-tabela.js` desde a v3.8.0 (ver `js/`); quem diz onde está o foco dentro da linha é a tabela, no app.
 
 ### App com CSS próprio (Materiais)
 
@@ -313,6 +313,7 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/teclas-do-painel.js` | O teclado do Painel lateral (v3.6.0): ↑↓ trocam de registro, Esc fecha, e onde está o foco |
 | `js/camada.js` | A pilha de camadas modais (v3.6.0): quem está no topo e a trava de rolagem do `<html>` |
 | `js/alteracoes-nucleo.js` | "Há alterações nesta tela" (v3.6.0): o registro em árvore e o texto único do "Descartar alterações?" |
+| `js/teclas-da-tabela.js` | O teclado da linha da `.ov-tabela` (v3.8.0): ↑↓ só movem o foco entre linhas, Enter abre, X marca onde há seleção; o destino sem dar a volta e a linha que recebe o Tab |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
@@ -321,6 +322,7 @@ import { filaVazia, acrescentar, pausar, retomar, vencer, toastDoCtrlZ } from 'o
 import { acaoDaTecla, ondeEstaOFoco, vizinho } from 'onevessel-ui/js/teclas-do-painel.js'
 import { abrirCamada, camadasAbertas } from 'onevessel-ui/js/camada.js'
 import { criarRegistroDeAlteracoes, DESCARTAR } from 'onevessel-ui/js/alteracoes-nucleo.js'
+import { acaoDaTeclaNaLinha, linhaDeDestino, linhaDoTab } from 'onevessel-ui/js/teclas-da-tabela.js'
 ```
 
 `js/package.json` só tem `{"type": "module"}`: o pacote é CommonJS (o preset do Tailwind usa `module.exports`), e assim o Node carrega `js/` como ESM sem aviso.
@@ -333,6 +335,10 @@ Os quatro da v3.6.0 importam a Bordo e o Paradas (a adoção sai num PR por app)
 - **`teclas-do-painel.js`**: o componente descreve a tecla e a situação (`ondeEstaOFoco` com o `document.activeElement` e o `body`), e `acaoDaTecla` diz `"anterior"`, `"proximo"`, `"fechar"` ou `null`. A troca de registro (`vizinho` na lista do app) e a pergunta antes de fechar com dado digitado são do componente.
 - **`camada.js`**: `abrirCamada()` devolve quem fecha (a própria função, ou `fechar()`) e `estaNoTopo()`; a primeira camada trava a rolagem do `<html>` e a última devolve, e sem `document` (servidor, teste) só conta. **O gancho do React fica no app** (`useCamadaModal` na Bordo, `useCamada` no Paradas), como invólucro fino: abre no `useEffect` e fecha na limpeza.
 - **`alteracoes-nucleo.js`**: `criarRegistroDeAlteracoes(pai?)` com `marcar(chave, sujo)`, `remover(chave)`, `ha()` e `filho()`; o filho conta no pai como uma chave só. `DESCARTAR` (congelado) tem `titulo`, `frase`, `continuar` e `descartar` do Diálogo. **Quem diz se houve digitação fica no app**: `retratoDosCampos` na Bordo (entradas de `FormData`), `retrato`, `mudou` e `reportSujo` no Paradas (estado do React).
+
+Desde a v3.8.0, o `teclas-da-tabela.js` (V10 da v3.8.0; era `src/lib/teclas-da-tabela.ts` na Bordo e `src/lib/teclas-da-tabela.js` no Paradas, iguais linha a linha). A adoção sai no PR de cada app, com o resto da v3.8.0:
+
+- **`teclas-da-tabela.js`**: a tabela descreve a tecla e onde está o foco dentro da linha (`'campo'`, `'linha'` ou `'outro-controle'`), e `acaoDaTeclaNaLinha` diz `"anterior"`, `"proximo"`, `"abrir"`, `"marcar"` (só com `comSelecao`) ou `null`; `linhaDeDestino` e `linhaDoTab` andam numa lista de ids que o app passa. **Quem classifica o foco (`alvoNaLinha`) fica no app**, porque muda de tabela para tabela (o checkbox do Embarcar da Bordo é "outro-controle"); os quatro de hoje usam o `ehCampo` do `teclas-do-painel.js`.
 
 ## Temas
 

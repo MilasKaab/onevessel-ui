@@ -38,6 +38,10 @@
       "types": "./js/alteracoes-nucleo.d.ts",
       "default": "./js/alteracoes-nucleo.js"
     },
+    "./js/teclas-da-tabela.js": {
+      "types": "./js/teclas-da-tabela.d.ts",
+      "default": "./js/teclas-da-tabela.js"
+    },
     "./tokens/tokens.json": "./tokens/tokens.json",
     "./tailwind/preset.js": "./tailwind/preset.js",
     "./icons/*": "./icons/*",

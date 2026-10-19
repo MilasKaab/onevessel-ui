@@ -12,7 +12,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
 | `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
 | `css/janelas.css` | As camadas sobre a tela: Diálogo, Toast, Painel lateral, rodapé e alturas da folha móvel, e o `ov-btn-perigo`. Importável sozinho, como a casca (depende de `tokens.css` e `casca.css`) |
-| `css/telas.css` | O que vai dentro da tela (v3.7.0): tipografia, cartão e indicadores (grade 4/2/1), Precisa de você, visões e filtros, contador, progresso, segmentado, checkbox, tabela (lista de linhas abaixo de 768px), barra de ações em massa e esqueleto. Importável sozinho, como a casca (depende de `tokens.css` e, para o movimento reduzido, de `casca.css`) |
+| `css/telas.css` | O que vai dentro da tela (v3.7.0; o miolo do item do Precisa de você e o cartão que estica na grade desde a v3.8.0): tipografia, cartão e indicadores (grade 4/2/1), Precisa de você, visões e filtros, contador, progresso, segmentado, checkbox, tabela (lista de linhas abaixo de 768px), barra de ações em massa e esqueleto. Importável sozinho, como a casca (depende de `tokens.css` e, para o movimento reduzido, de `casca.css`) |
 | `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`, timbre de relatório…). Começa importando `casca.css`, `janelas.css` e `telas.css` |
 | `css/impressao.css` | O `@media print` e o `@page` dos relatórios internos. Só a página de impressão importa (F7) |
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
@@ -23,7 +23,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `onevessel.css` e `impressao.css` (e que todo CSS está em `exports`), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; e o contraste dos estados novos nos dois temas, pelos tokens). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; e o contraste dos estados novos nos dois temas, pelos tokens). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -37,7 +37,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.7.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.8.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -368,7 +368,7 @@ Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`)
 3. `npm run conferir` e `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
 5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
-6. Suba uma tag nova (`v3.7.1`) e avise os apps.
+6. Suba uma tag nova (`v3.8.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 

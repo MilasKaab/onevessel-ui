@@ -174,7 +174,19 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
     <span class="ov-contador-destaque">3</span>
     <a class="ov-pendencias-ver-tudo" href="…">Ver tudo</a>
   </div>
-  <ul class="ov-pendencias-lista"><li><a class="ov-pendencia" href="…">…</a></li></ul>
+  <ul class="ov-pendencias-lista">
+    <li>
+      <a class="ov-pendencia" href="…">
+        <span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span>
+        <span class="ov-pendencia-texto">
+          <span class="ov-pendencia-titulo"><span class="ov-pendencia-id">1234</span>Título</span>
+          <span class="ov-pendencia-contexto">Contexto</span>
+        </span>
+        <svg class="ov-pendencia-seta" aria-hidden="true">…</svg>
+      </a>
+    </li>
+    <!-- item sem link: <div class="ov-pendencia">…</div>, o mesmo miolo, sem a seta -->
+  </ul>
   <!-- ou: <p class="ov-pendencias-vazio">Nada pendente com você.</p> -->
 </section>
 
@@ -200,6 +212,7 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 ```
 
 - **Lista do celular**: abaixo de 768px, **a `.ov-tabela` que tem uma `td.nome`** vira lista de linhas de 64px ou mais, com o nome em cima em 16px e as outras células numa linha de `legenda`, separadas por "·", e divisor `ov-borda`. O cabeçalho sai da tela e continua para o leitor de tela; a célula com `.ov-check` fica à esquerda. O app não troca de classe. Tabela sem `td.nome` (as da plataforma até a v3.6) continua como estava, rolando de lado, e navegador sem `:has()` também.
+- **Miolo do item** (v3.8.0): o `.ov-pendencia-estado` vai ao lado do `.ov-estado`, numa coluna de 88px (as palavras alinham); título (`.ov-pendencia-titulo`, 600, com elipse) e contexto (`.ov-pendencia-contexto`, 12px/16px) em duas linhas; o identificador (`.ov-pendencia-id`, mono 12px/16px) antes do título; a seta (`.ov-pendencia-seta`) no fim. Identificador, contexto e seta em `ov-texto-terciario`. **Item sem link** é `div.ov-pendencia`, sem a seta e sem CSS próprio: o realce e o anel de foco são só do `a`. O título da caixa é do app.
 - **Indicadores**: a grade é a `.ov-indicadores`, em `div` ou `ul`; o máximo de 4 é do app.
 - **Barra de ações em massa**: `data-flutuante` põe a `.ov-acoes-massa` fixa, centrada, 24px acima do rodapé e da área segura (no celular, acima da `.ov-barra-inferior`), em `--ov-z-flutuante` e `--ov-fundo-barra` sem desfoque, entrando de 12px em 180ms. Sem o atributo, a caixa é a da v3.6. Com ela na tela, a `.ov-toasts` leva `data-com-barra`. Esc e ✕ limpam a seleção no app.
 - **Esqueleto**: `.ov-esqueleto` é o bloco (o app dá a altura; 48px sem ela), `.ov-esqueleto-texto` uma linha de texto (o app dá a largura) e `.ov-esqueleto-linha` uma linha de tabela (44px; 64px no celular). Também serve uma `<tr>` da `.ov-tabela` com um `.ov-esqueleto-texto` por célula. Pulsa só na opacidade.

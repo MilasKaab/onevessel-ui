@@ -313,6 +313,84 @@ test('esqueleto: sem spinner, animação só de opacidade', () => {
   assert.match(corpoDe(telas, CELULAR, '.ov-esqueleto-linha'), /min-height: 64px/);
 });
 
+// ---------- v3.8.0: miolo do item e o cartão que estica (V1–V9) ----------
+
+// `test/fixtures/telas-v3.7.0.css` é o telas.css da tag v3.7.0, fixo.
+const daV370 = ler('test/fixtures/telas-v3.7.0.css');
+
+// O miolo do item do "Precisa de você" (V1–V7) e o cartão que estica na
+// linha da grade em ul > li > a (V9).
+const MIOLO = ['.ov-pendencia-estado', '.ov-pendencia-texto', '.ov-pendencia-titulo', '.ov-pendencia-id', '.ov-pendencia-contexto', '.ov-pendencia-seta'];
+const ESTICA = ['.ov-indicadores > li', '.ov-indicadores > li > .ov-indicador'];
+
+// A lista de box-sizing do topo (um seletor só, o :where inteiro): ganhou os
+// seis nomes do miolo. É a única regra da v3.7.0 que muda; as do V9 são
+// regras novas, e nenhuma regra da v3.7.0 mudou por causa dele.
+const ehListaDeCaixa = (s) => s.startsWith(':where(.ov-cartao');
+const nomesDaLista = (css) => {
+  const s = [...seletores(css)].find(ehListaDeCaixa);
+  return s.slice(':where('.length, -1).split(',').map((n) => n.trim());
+};
+
+test('minor: toda regra do telas.css da v3.7.0 continua com as mesmas declarações, fora a lista de box-sizing', () => {
+  const deTelas = seletores(telas);
+  for (const r of regras(daV370)) {
+    for (const s of r.seletores) {
+      if (ehListaDeCaixa(s)) continue;
+      assert.ok(deTelas.has(s), `sumiu do telas.css: ${r.media} ${s}`);
+      if (s.startsWith('@')) { assert.equal(keyframes(telas, s.slice(11)), keyframes(daV370, s.slice(11)), s); continue; }
+      assert.deepEqual(declaracoesEm(telas, r.media, s), declaracoesEm(daV370, r.media, s), `${r.media} ${s}`);
+    }
+  }
+  // A lista de box-sizing: a da v3.7.0, na mesma ordem, mais os seis do miolo.
+  const antes = nomesDaLista(daV370);
+  const depois = nomesDaLista(telas);
+  assert.deepEqual(depois.filter((n) => !antes.includes(n)), MIOLO);
+  assert.deepEqual(depois.filter((n) => antes.includes(n)), antes);
+});
+
+test('o que entrou no telas.css na v3.8.0 é exatamente o miolo e o cartão que estica', () => {
+  const v370 = seletores(daV370);
+  const novos = [...seletores(telas)].filter((s) => !v370.has(s) && !ehListaDeCaixa(s));
+  assert.deepEqual(novos, [...ESTICA, ...MIOLO]);
+  for (const s of [...MIOLO, ...ESTICA]) assert.ok(regras(telas).some((r) => !r.media && r.seletores.includes(s)), `fora de @media: ${s}`);
+});
+
+test('miolo do item: coluna de 88px, elipse, 600, mono 12/16 e terciário no identificador, no contexto e na seta', () => {
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-estado'), ['flex: 0 0 88px']);
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-texto'), ['display: flex', 'flex: 1 1 auto', 'flex-direction: column', 'min-width: 0']);
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-titulo'), ['overflow: hidden', 'text-overflow: ellipsis', 'white-space: nowrap', 'font-weight: 600']);
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-id'), [
+    'margin-right: 8px', 'font-weight: 400', 'font-size: 12px', 'line-height: 16px', 'font-family: var(--font-mono)', 'color: var(--ov-texto-terciario)',
+  ]);
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-contexto'), ['font-size: 12px', 'line-height: 16px', 'color: var(--ov-texto-terciario)']);
+  assert.deepEqual(declaracoes(telas, '.ov-pendencia-seta'), ['flex: 0 0 auto', 'color: var(--ov-texto-terciario)']);
+  // A família mono é o token do pacote, o mesmo do .ov-tecla.
+  assert.match(tokens, /--font-mono:\s*ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;/);
+});
+
+test('o realce e o anel de foco do item são só do a.ov-pendencia; o item sem link não ganha CSS', () => {
+  for (const { seletores: ss } of regras(telas)) {
+    for (const s of ss) {
+      if (!/\.ov-pendencia(?![\w-])/.test(s)) continue;
+      assert.doesNotMatch(s, /div\.ov-pendencia/, s);
+      if (/:hover|:focus/.test(s)) assert.match(s, /\ba\.ov-pendencia:(hover|focus-visible)$/, s);
+    }
+  }
+  assert.match(corpoDe(telas, '', '.ov-pendencias a.ov-pendencia:hover'), /background: var\(--ov-linha-hover\)/);
+  // A linha (.ov-pendencia) não tem cor de fundo nem cursor: o div fica parado.
+  assert.doesNotMatch(corpoDe(telas, '', '.ov-pendencia'), /background|cursor/);
+});
+
+test('indicadores: em ul o li é flex e o cartão ocupa a altura dele; a grade continua 4/2/1', () => {
+  assert.deepEqual(declaracoes(telas, '.ov-indicadores > li'), ['display: flex', 'min-width: 0']);
+  assert.deepEqual(declaracoes(telas, '.ov-indicadores > li > .ov-indicador'), ['flex: 1 1 auto', 'min-width: 0']);
+  for (const media of ['', TABLET, CELULAR]) assert.equal(corpoDe(telas, media, '.ov-indicadores'), corpoDe(daV370, media, '.ov-indicadores'), media);
+  // Nenhuma regra nova num @media: a 360 e 375px nada muda.
+  const novas = regras(telas).filter((r) => r.seletores.some((s) => ESTICA.includes(s) || MIOLO.includes(s)));
+  assert.ok(novas.every((r) => !r.media));
+});
+
 // ---------- Contraste dos estados novos, pelos tokens ----------
 
 // Os dois temas do tokens.css: o claro herda da raiz o que não redefine.

@@ -1,5 +1,5 @@
-/* OneVessel — telas (v3.7): tipografia, cartão e indicadores, Precisa de
-   você, visões e filtros, contador, progresso, segmentado, checkbox,
+/* OneVessel — telas (v3.8): tipografia, cartão e indicadores, Precisa de
+   você (com o miolo do item), visões e filtros, contador, progresso, segmentado, checkbox,
    tabela, barra de ações em massa e esqueleto.
    Importável sozinho, como a casca e as janelas: depende de tokens.css e,
    só para o movimento reduzido da barra de massa, do @keyframes ovFade de
@@ -13,6 +13,7 @@
    troca de classe nem precisa saber a largura. */
 
 :where(.ov-cartao, .ov-indicador, .ov-indicadores, .ov-pendencias, .ov-pendencias-cab, .ov-pendencia, .ov-pendencias-ver-tudo,
+  .ov-pendencia-estado, .ov-pendencia-texto, .ov-pendencia-titulo, .ov-pendencia-id, .ov-pendencia-contexto, .ov-pendencia-seta,
   .ov-visao, .ov-chip-filtro, .ov-segmentado, .ov-acoes-massa, .ov-esqueleto, .ov-esqueleto-texto, .ov-esqueleto-linha) {
   box-sizing: border-box;
 }
@@ -59,6 +60,11 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 /* Grade: 4 colunas no computador, 2 de 768 a 1023px, 1 no celular (abaixo).
    Até 4 indicadores por tela é regra do app. Serve em div ou ul. */
 .ov-indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ov-esp-4); margin: 0; padding: 0; list-style: none; }
+/* Em ul, o item da grade é o li: ele vira flex e o cartão ocupa a altura
+   dele, e os cartões de uma linha ficam da mesma altura (v3.8). Em div, o
+   cartão já é o item da grade e estica sozinho. */
+.ov-indicadores > li { display: flex; min-width: 0; }
+.ov-indicadores > li > .ov-indicador { flex: 1 1 auto; min-width: 0; }
 
 /* ---------- Precisa de você ---------- */
 /* Contêiner: .ov-cartao.ov-pendencias. Dentro, nesta ordem: .ov-pendencias-cab
@@ -80,6 +86,25 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-pendencias-ver-tudo:hover { color: var(--ov-acao-hover); }
 .ov-pendencias-ver-tudo:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
 .ov-pendencias-vazio { margin: 0; padding: 0 16px 16px; font: var(--ov-fonte-legenda); color: var(--ov-texto-terciario); }
+/* Miolo do item (v3.8): o .ov-estado numa coluna de largura fixa (as
+   palavras alinham), título e contexto em duas linhas, a seta no fim.
+     <a class="ov-pendencia" href="…">
+       <span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span>
+       <span class="ov-pendencia-texto">
+         <span class="ov-pendencia-titulo"><span class="ov-pendencia-id">1234</span>Título</span>
+         <span class="ov-pendencia-contexto">Contexto</span>
+       </span>
+       <svg class="ov-pendencia-seta" aria-hidden="true">…</svg>
+     </a>
+   Item sem link: div.ov-pendencia, sem a seta e sem CSS próprio; o realce
+   e o anel de foco continuam só no a. Identificador, contexto e seta em
+   ov-texto-terciario, a cor de metadado. */
+.ov-pendencia-estado { flex: 0 0 88px; }
+.ov-pendencia-texto { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.ov-pendencia-titulo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ov-pendencia-id { margin-right: 8px; font-weight: 400; font-size: 12px; line-height: 16px; font-family: var(--font-mono); color: var(--ov-texto-terciario); }
+.ov-pendencia-contexto { font-size: 12px; line-height: 16px; color: var(--ov-texto-terciario); }
+.ov-pendencia-seta { flex: 0 0 auto; color: var(--ov-texto-terciario); }
 @media (pointer: coarse) {
   .ov-pendencias-ver-tudo { height: var(--ov-altura-toque); margin-top: -12px; margin-bottom: -12px; }
 }

@@ -85,9 +85,11 @@
 /* ---------- Abaixo de 1024px: o Painel lateral vira Folha móvel ---------- */
 /* A geometria da .ov-folha[data-altura="detalhe"] (90%); data-altura="cheia"
    no painel dá a tela inteira (formulário). Agora é modal: o app põe o
-   .ov-veu antes dele e prende o foco. */
+   .ov-veu antes dele e prende o foco. Encosta nas duas beiras: o recuo
+   lateral da área segura vai na caixa (v3.9.0); os filetes de dentro param
+   nele. */
 @media (max-width: 1023px) {
-  .ov-painel, .ov-painel[data-abas] { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: auto; height: 90vh; height: 90dvh; background: var(--ov-superficie-elevada); border-left: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+  .ov-painel, .ov-painel[data-abas] { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: auto; height: 90vh; height: 90dvh; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-left: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
   .ov-painel[data-altura="cheia"] { height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
 }
 

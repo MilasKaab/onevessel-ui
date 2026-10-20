@@ -23,7 +23,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `onevessel.css` e `impressao.css` (e que todo CSS está em `exports`), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; e o contraste dos estados novos nos dois temas, pelos tokens). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -37,7 +37,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.8.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.9.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -106,6 +106,7 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 - Em tela de toque (`pointer: coarse`), os itens da lateral passam a 48px.
 - Margem da tela: 32px no computador, 24px de 768 a 1023px, 16px abaixo de 768px.
 - Abaixo de 768px, `.ov-paleta` vira a tela "Buscar", inteira.
+- Recuos laterais da área segura (desde a v3.9.0, para o iPhone deitado; precisam de `viewport-fit=cover`): a lateral cresce por dentro o recuo da esquerda, e o de baixo no rodapé, sem encolher o alvo; `.ov-superior`, `.ov-tela` e `.ov-faixa` recebem o da direita; abaixo de 768px, `.ov-cabecalho-movel`, `.ov-barra-inferior` e `.ov-tela` recebem os dois; a `.ov-folha` e o Painel lateral em folha (abaixo de 1024px), na própria caixa. Sem recorte, todo recuo vale 0 e nada muda.
 
 ### Janelas
 

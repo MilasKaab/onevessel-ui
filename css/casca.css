@@ -5,7 +5,13 @@
 
    Larguras: 1024px ou mais, lateral de 240px; 768–1023px, lateral recolhida
    de 56px (só ícones); abaixo de 768px, cabeçalho móvel + barra inferior.
-   Texto que some na lateral recolhida vai em .ov-lateral-texto. */
+   Texto que some na lateral recolhida vai em .ov-lateral-texto.
+
+   Área segura nas laterais (v3.9.0, o iPhone deitado): a lateral cresce
+   por dentro o recuo da esquerda (e o de baixo, para o rodapé), sem
+   encolher o alvo; a barra superior, a tela e a faixa recebem o recuo da
+   direita; no celular, cabeçalho, barra inferior e tela recebem os dois; a
+   folha, na própria caixa. Sem recorte, todo recuo vale 0. */
 
 :where(.ov-casca, .ov-conteudo, .ov-lateral, .ov-lateral-marca, .ov-lateral-grupo, .ov-lateral-rodape,
   .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-superior, .ov-superior-direita,
@@ -20,10 +26,10 @@
 /* ---------- Estrutura ---------- */
 .ov-casca { display: flex; min-height: 100vh; min-height: 100dvh; }
 .ov-conteudo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.ov-tela { width: 100%; max-width: var(--ov-conteudo-max); padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+.ov-tela { width: 100%; max-width: var(--ov-conteudo-max); padding: 32px calc(32px + env(safe-area-inset-right, 0px)) 32px 32px; display: flex; flex-direction: column; gap: 24px; }
 
 /* ---------- Barra lateral ---------- */
-.ov-lateral { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; width: var(--ov-barra-lateral); flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; padding: 12px; background: var(--ov-fundo); border-right: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-lateral { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; width: calc(var(--ov-barra-lateral) + env(safe-area-inset-left, 0px)); flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)); background: var(--ov-fundo); border-right: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
 /* Topo: na plataforma, .ov-monograma + "OneVessel"; num app, o glifo solto
    de 20px (currentColor) + nome + subtítulo. */
 .ov-lateral-marca { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 4px 6px 12px; color: var(--ov-texto); }
@@ -68,7 +74,7 @@
 .ov-conta[aria-expanded="true"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
 
 /* ---------- Barra superior ---------- */
-.ov-superior { position: sticky; top: 0; z-index: var(--ov-z-barra); height: var(--ov-barra-superior); display: flex; align-items: center; gap: 12px; padding: 0 32px; background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-superior { position: sticky; top: 0; z-index: var(--ov-z-barra); height: var(--ov-barra-superior); display: flex; align-items: center; gap: 12px; padding: 0 calc(32px + env(safe-area-inset-right, 0px)) 0 32px; background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
 .ov-trilha { min-width: 0; font-size: 14px; color: var(--ov-texto-terciario); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ov-trilha b { font-weight: 500; color: var(--ov-texto); }
 /* À direita, nesta ordem no HTML: .ov-conta → .ov-sincronizacao → até 2 ações. */
@@ -85,10 +91,10 @@
 .ov-sincronizacao-fila { color: var(--ov-texto-terciario); }
 
 /* ---------- Celular: cabeçalho e barra inferior ---------- */
-.ov-cabecalho-movel { display: none; position: sticky; top: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); align-items: center; gap: 8px; padding: env(safe-area-inset-top, 0px) 4px 0 16px; background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-cabecalho-movel { display: none; position: sticky; top: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); align-items: center; gap: 8px; padding: env(safe-area-inset-top, 0px) calc(4px + env(safe-area-inset-right, 0px)) 0 calc(16px + env(safe-area-inset-left, 0px)); background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
 .ov-cabecalho-movel-titulo { flex: 1; min-width: 0; margin: 0; font: var(--ov-fonte-titulo-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* Até 4 destinos (a) + "Mais" (button): até 5 colunas iguais. */
-.ov-barra-inferior { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); padding: 6px 8px env(safe-area-inset-bottom, 0px); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: var(--ov-fundo); border-top: 1px solid var(--ov-borda); }
+.ov-barra-inferior { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); padding: 6px calc(8px + env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) calc(8px + env(safe-area-inset-left, 0px)); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: var(--ov-fundo); border-top: 1px solid var(--ov-borda); }
 .ov-barra-inferior-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; min-height: var(--ov-altura-toque); padding: 0; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-terciario); font: var(--ov-fonte-rotulo); text-decoration: none; cursor: pointer; }
 .ov-barra-inferior-item svg { width: 22px; height: 22px; flex: 0 0 auto; }
 .ov-barra-inferior-item[aria-current="page"], .ov-barra-inferior-item[aria-expanded="true"] { color: var(--ov-texto); }
@@ -115,7 +121,7 @@
 @keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Folha móvel (o "Mais" do celular) ---------- */
-.ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+.ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
 .ov-folha-alca { display: grid; place-items: center; height: 20px; }
 .ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
 /* ovSobe: a folha sobe; o .ov-toast, o painel e o diálogo de formulário do
@@ -133,7 +139,7 @@
 .ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
 .ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
 .ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
-.ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
+.ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px calc(32px + env(safe-area-inset-right, 0px)) 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
 .ov-faixa svg { color: var(--ov-atencao); flex: 0 0 auto; }
 .ov-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; }
 .ov-vazio-icone { width: 48px; height: 48px; border-radius: var(--ov-raio-lg); display: grid; place-items: center; background: var(--ov-item-ativo); color: var(--ov-texto-secundario); margin-bottom: 8px; }
@@ -147,7 +153,7 @@
 
 /* ---------- Abaixo de 1024px: lateral recolhida, margem de 24px ---------- */
 @media (max-width: 1023px) {
-  .ov-lateral { width: var(--ov-barra-lateral-recolhida); padding: 12px; }
+  .ov-lateral { width: calc(var(--ov-barra-lateral-recolhida) + env(safe-area-inset-left, 0px)); padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)); }
   .ov-lateral-texto, .ov-lateral-marca-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .ov-lateral-marca { justify-content: center; padding: 4px 0 12px; }
   /* O rótulo do grupo vira um filete; o texto continua para leitor de tela. */
@@ -156,13 +162,14 @@
   .ov-busca-gatilho { border-color: transparent; background: transparent; }
   .ov-nav-cont, .ov-busca-gatilho .ov-tecla { display: none; }
   .ov-seletor-embarcacao::after { content: none; }
-  .ov-superior { padding: 0 24px; }
-  .ov-tela { padding: 24px; }
-  .ov-faixa { padding: 8px 24px; }
+  .ov-superior { padding: 0 calc(24px + env(safe-area-inset-right, 0px)) 0 24px; }
+  .ov-tela { padding: 24px calc(24px + env(safe-area-inset-right, 0px)) 24px 24px; }
+  .ov-faixa { padding: 8px calc(24px + env(safe-area-inset-right, 0px)) 8px 24px; }
 }
 @media (max-width: 1023px) and (pointer: coarse) {
-  /* 56 − 1 de borda − 4 − 3 = 48px de alvo. */
-  .ov-lateral { padding: 12px 3px 12px 4px; }
+  /* 56 − 1 de borda − 4 − 3 = 48px de alvo (o recuo soma na largura e no
+     padding da esquerda, e o alvo continua 48px). */
+  .ov-lateral { padding: 12px 3px calc(12px + env(safe-area-inset-bottom, 0px)) calc(4px + env(safe-area-inset-left, 0px)); }
 }
 
 /* ---------- Abaixo de 768px: app no celular, margem de 16px ---------- */
@@ -170,7 +177,7 @@
   .ov-lateral, .ov-superior { display: none; }
   .ov-cabecalho-movel { display: flex; }
   .ov-barra-inferior { display: grid; }
-  .ov-tela { padding: 16px; }
+  .ov-tela { padding: 16px calc(16px + env(safe-area-inset-right, 0px)) 16px calc(16px + env(safe-area-inset-left, 0px)); }
   .ov-casca:has(.ov-barra-inferior) .ov-tela { padding-bottom: calc(16px + var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); }
   .ov-faixa { padding: 8px 16px; }
   /* A paleta vira a tela "Buscar", inteira. */

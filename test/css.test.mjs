@@ -449,3 +449,138 @@ for (const [tema, t] of Object.entries(TEMAS)) {
     confere('ov-foco', [...cartao, ...itemHover], 3, 'anel de foco');
   });
 }
+
+// ---------- v3.9.0: área segura nas laterais (decisão (5) da F6) ----------
+
+// `test/fixtures/casca-v3.8.0.css` e `janelas-v3.8.0.css` são o casca.css e
+// o janelas.css da tag v3.8.0, fixos.
+const cascaV380 = ler('test/fixtures/casca-v3.8.0.css');
+const janelasV380 = ler('test/fixtures/janelas-v3.8.0.css');
+const TOQUE_TABLET = '@media (max-width: 1023px) and (pointer: coarse)';
+
+// As regras que ganharam o recuo, e de que beira. Toda outra regra fica igual.
+const COM_RECUO = {
+  'casca.css': [
+    ['', '.ov-tela', ['right']],
+    ['', '.ov-lateral', ['left', 'bottom']],
+    ['', '.ov-superior', ['right']],
+    ['', '.ov-cabecalho-movel', ['left', 'right']],
+    ['', '.ov-barra-inferior', ['left', 'right']],
+    ['', '.ov-folha', ['left', 'right']],
+    ['', '.ov-faixa', ['right']],
+    [TABLET, '.ov-lateral', ['left', 'bottom']],
+    [TABLET, '.ov-superior', ['right']],
+    [TABLET, '.ov-tela', ['right']],
+    [TABLET, '.ov-faixa', ['right']],
+    [TOQUE_TABLET, '.ov-lateral', ['left', 'bottom']],
+    [CELULAR, '.ov-tela', ['left', 'right']],
+  ],
+  'janelas.css': [
+    [TABLET, '.ov-painel', ['left', 'right']],
+    [TABLET, '.ov-painel[data-abas]', ['left', 'right']],
+  ],
+};
+
+// Declarações como mapa propriedade → valor, com o padding em quatro
+// longhands, para comparar "padding: 12px" com a forma de quatro valores.
+const LADOS = ['top', 'right', 'bottom', 'left'];
+const mapa = (decls) => {
+  const m = new Map();
+  for (const d of decls) {
+    const i = d.indexOf(':');
+    const prop = d.slice(0, i).trim();
+    const valor = d.slice(i + 1).trim();
+    if (prop !== 'padding') { m.set(prop, valor); continue; }
+    const v = separarValores(valor);
+    const quatro = [v[0], v[1] ?? v[0], v[2] ?? v[0], v[3] ?? v[1] ?? v[0]];
+    LADOS.forEach((l, n) => m.set(`padding-${l}`, quatro[n]));
+  }
+  return m;
+};
+// Divide por espaço fora de parênteses.
+const separarValores = (valor) => {
+  const partes = [];
+  let nivel = 0, atual = '';
+  for (const c of valor) {
+    if (c === '(') nivel++;
+    if (c === ')') nivel--;
+    if (c === ' ' && nivel === 0) { if (atual) partes.push(atual); atual = ''; } else atual += c;
+  }
+  if (atual) partes.push(atual);
+  return partes;
+};
+// A fórmula com o recuo daquelas beiras em 0: o env() vira 0px e o
+// "calc(X + 0px)" vira X.
+const semRecuo = (valor, beiras) => {
+  let v = valor;
+  for (const b of beiras) v = v.split(`env(safe-area-inset-${b}, 0px)`).join('0px');
+  let antes;
+  do { antes = v; v = v.replace(/calc\(((?:[^()]|\([^()]*\))+?) \+ 0px\)/g, '$1'); } while (v !== antes);
+  return v;
+};
+
+for (const [nome, atual, fixo] of [['casca.css', casca, cascaV380], ['janelas.css', janelas, janelasV380]]) {
+  const lista = COM_RECUO[nome];
+  const recuoDe = (media, s) => lista.find(([m, x]) => m === media && x === s)?.[2];
+
+  test(`minor: toda regra do ${nome} da v3.8.0 igual, fora a lista do recuo`, () => {
+    const deAgora = regras(atual).flatMap((r) => r.seletores.map((s) => `${r.media}|${s}`));
+    const deAntes = regras(fixo).flatMap((r) => r.seletores.map((s) => `${r.media}|${s}`));
+    assert.deepEqual(deAgora, deAntes, 'as mesmas regras, na mesma ordem');
+    for (const r of regras(fixo)) {
+      for (const s of r.seletores) {
+        if (s.startsWith('@')) { assert.equal(keyframes(atual, s.slice(11)), keyframes(fixo, s.slice(11)), s); continue; }
+        const antes = declaracoesEm(fixo, r.media, s);
+        const agora = declaracoesEm(atual, r.media, s);
+        if (!recuoDe(r.media, s)) assert.deepEqual(agora, antes, `${r.media} ${s}`);
+        else assert.notDeepEqual(agora, antes, `está na lista e não mudou: ${r.media} ${s}`);
+      }
+    }
+  });
+
+  test(`${nome}: nas regras da lista, só o acréscimo do env() das beiras dela; sem ele, a fórmula da v3.8.0`, () => {
+    for (const [media, s, beiras] of lista) {
+      const antes = mapa(declaracoesEm(fixo, media, s));
+      const agora = mapa(declaracoesEm(atual, media, s));
+      const zerado = new Map();
+      for (const [prop, valor] of agora) {
+        const v = semRecuo(valor, beiras);
+        // Declaração nova (o padding lateral da folha e do painel): sem o
+        // recuo, 0 — o valor que a caixa já tinha.
+        if (!antes.has(prop)) { assert.match(prop, /^padding-(left|right)$/, `${media} ${s}: ${prop} nova`); assert.equal(v, '0px', `${media} ${s}: ${prop}`); continue; }
+        zerado.set(prop, v);
+      }
+      // Padding de antes que não está mais em quatro valores volta da forma longa.
+      assert.deepEqual(zerado, antes, `${media} ${s}`);
+      const texto = [...agora.values()].join(' ');
+      for (const b of beiras) assert.match(texto, new RegExp(`env\\(safe-area-inset-${b}, 0px\\)`), `${media} ${s}: sem o recuo ${b}`);
+      // Fora das beiras da lista, os env() são os que já estavam.
+      const outros = (m) => [...m.values()].join(' ').match(/env\(safe-area-inset-\w+/g)?.filter((e) => !beiras.some((b) => e.endsWith(b))) ?? [];
+      assert.deepEqual(outros(agora), outros(antes), `${media} ${s}`);
+    }
+  });
+}
+
+test('todo env(safe-area-inset-*) do pacote tem fallback 0px', () => {
+  for (const nome of ['tokens.css', 'casca.css', 'janelas.css', 'telas.css', 'onevessel.css', 'impressao.css']) {
+    const texto = semComentario(ler(`css/${nome}`));
+    for (const m of texto.matchAll(/env\(([^)]*)\)/g)) {
+      assert.match(m[1], /^safe-area-inset-(top|right|bottom|left), 0px$/, `${nome}: env(${m[1]})`);
+    }
+  }
+});
+
+test('lateral: o recuo da esquerda entra na largura e no padding, o mesmo tanto; o alvo de toque continua 48px', () => {
+  const L = 'env(safe-area-inset-left, 0px)';
+  const base = mapa(declaracoesEm(casca, '', '.ov-lateral'));
+  assert.equal(base.get('width'), `calc(var(--ov-barra-lateral) + ${L})`);
+  assert.equal(base.get('padding-left'), `calc(12px + ${L})`);
+  const recolhida = mapa(declaracoesEm(casca, TABLET, '.ov-lateral'));
+  assert.equal(recolhida.get('width'), `calc(var(--ov-barra-lateral-recolhida) + ${L})`);
+  assert.equal(recolhida.get('padding-left'), `calc(12px + ${L})`);
+  const toque = mapa(declaracoesEm(casca, TOQUE_TABLET, '.ov-lateral'));
+  assert.equal(toque.get('padding-left'), `calc(4px + ${L})`);
+  assert.equal(toque.get('padding-right'), '3px');
+  // O fundo e a borda são da própria lateral: vão até a beira.
+  assert.match(corpoDe(casca, '', '.ov-lateral'), /background: var\(--ov-fundo\); border-right: 1px solid var\(--ov-borda\)/);
+});

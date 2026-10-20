@@ -15,6 +15,7 @@ const casca = ler('css/casca.css');
 const janelas = ler('css/janelas.css');
 const telas = ler('css/telas.css');
 const onevessel = ler('css/onevessel.css');
+const relatorio = ler('css/relatorio.css');
 const antes = ler('test/fixtures/onevessel-v3.4.0.css');
 const daV350 = ler('test/fixtures/onevessel-v3.5.0.css');
 const daV360 = ler('test/fixtures/onevessel-v3.6.0.css');
@@ -147,6 +148,9 @@ test('toast no celular: abaixo da barra superior, nunca a 12px do topo da tela',
 
 // ---------- v3.7.0: telas.css (D1 da F5) ----------
 
+// As regras .rel-* que o relatorio.css alterou na v3.10.0 (U3 da F7).
+const ALTERADAS_V3100 = ['.rel-pagina', '.rel-tabela th', '.rel-barra'];
+
 // O que saiu do onevessel.css na v3.7.0, na ordem em que estava.
 const PARA_AS_TELAS = [
   '.ov-titulo-1', '.ov-titulo-2', '.ov-titulo-3', '.ov-legenda', '.ov-rotulo',
@@ -215,9 +219,11 @@ test('onevessel.css importa telas.css depois de janelas.css e não repete nenhum
 });
 
 test('o que saiu do onevessel.css na v3.7.0 é exatamente a lista das telas, e nada entrou', () => {
+  // As .rel-* saíram na v3.10.0 para o relatorio.css (test/relatorio.test.mjs).
   const depois = seletores(onevessel);
   const v360 = seletores(daV360);
-  assert.deepEqual([...v360].filter((s) => !depois.has(s)), PARA_AS_TELAS);
+  const doRelatorio = seletores(relatorio);
+  assert.deepEqual([...v360].filter((s) => !depois.has(s) && !doRelatorio.has(s)), PARA_AS_TELAS);
   assert.deepEqual([...depois].filter((s) => !v360.has(s)), []);
 });
 
@@ -235,10 +241,13 @@ test('todo seletor movido mora no telas.css com as declarações da v3.6.0, na m
 test('minor: toda regra do onevessel.css da v3.6.0 continua com os mesmos valores no pacote', () => {
   // A soma (onevessel.css + o que ele importa) entrega, para cada seletor e
   // cada @media da v3.6.0, as mesmas declarações.
-  const soma = [onevessel, casca, janelas, telas].join('\n');
+  // Desde a v3.10.0 a soma inclui o relatorio.css, e as três regras que ele
+  // alterou ficam com o teste da v3.10.0 (test/relatorio.test.mjs).
+  const soma = [onevessel, casca, janelas, telas, relatorio].join('\n');
   for (const r of regras(daV360)) {
     for (const s of r.seletores) {
       if (s.startsWith('@')) { assert.ok(seletores(soma).has(s), s); continue; }
+      if (ALTERADAS_V3100.includes(s)) continue;
       assert.deepEqual(declaracoesEm(soma, r.media, s), declaracoesEm(daV360, r.media, s), `${r.media} ${s}`);
     }
   }

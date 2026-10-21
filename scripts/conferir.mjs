@@ -18,11 +18,13 @@
 // - algum CSS de css/ faltar em exports;
 // - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
 // - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
-//   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports.
+//   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports;
+// - algum CSS de css/ tiver outline: none (ou 0) fora da exceção pelo nome
+//   (v3.11.0, U17-13): o foco perde o anel do livro.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { problemasDeBase, semComentario, seletores } from './css-regras.mjs'
+import { problemasDeBase, regras, semComentario, seletores } from './css-regras.mjs'
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ler = (p) => readFileSync(resolve(raiz, p), 'utf8')
@@ -71,6 +73,18 @@ for (const s of arquivos['onevessel.css']) if (s.startsWith('.rel-')) erros.push
 if (/impressao\.css/.test(onevessel)) erros.push('onevessel.css importa impressao.css')
 for (const nome of ['casca.css', 'janelas.css', 'telas.css']) {
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)/.test(ler(`css/${nome}`))) erros.push(`${nome} sem prefers-reduced-motion`)
+}
+
+// 3b. Nenhum outline: none. A exceção é o .ov-campo, que marca o foco com a
+//     borda ov-acao e o halo até o BV-4 decidir o campo (v3.12.0).
+const OUTLINE_NONE_PERMITIDO = { 'onevessel.css': ['.ov-campo'] }
+for (const nome of readdirSync(resolve(raiz, 'css')).filter((n) => n.endsWith('.css'))) {
+  for (const { seletores: ss, corpo, media } of regras(ler(`css/${nome}`))) {
+    if (!/(^|;|\s)outline\s*:\s*(none|0)\s*(;|$)/.test(corpo)) continue
+    for (const s of ss) {
+      if (!OUTLINE_NONE_PERMITIDO[nome]?.includes(s)) erros.push(`${nome} tem outline: none em ${media ? media + ' ' : ''}${s}`)
+    }
+  }
 }
 
 // 4. Nome antigo do Paradas em arquivo ou pasta. A expressão é montada aos

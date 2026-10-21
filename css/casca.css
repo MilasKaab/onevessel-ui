@@ -17,7 +17,7 @@
   .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-superior, .ov-superior-direita,
   .ov-sincronizacao, .ov-tela, .ov-cabecalho-movel, .ov-barra-inferior, .ov-barra-inferior-item,
   .ov-paleta, .ov-paleta-item, .ov-menu, .ov-menu-item, .ov-faixa, .ov-vazio, .ov-somente-leitura,
-  .ov-menu-grupo, .ov-folha-topo, .ov-folha-menu, .ov-folha-conta) {
+  .ov-menu-grupo, .ov-folha-topo, .ov-folha-menu, .ov-folha-conta, .ov-paleta-lista, .ov-paleta-aviso) {
   box-sizing: border-box;
 }
 :where(.ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-barra-inferior-item, .ov-menu-item):focus-visible {
@@ -121,11 +121,23 @@
 .ov-veu { position: fixed; inset: 0; z-index: var(--ov-z-dialogo); background: var(--ov-veu); animation: ovFade .16s ease-out; }
 .ov-paleta { position: fixed; left: 50%; top: 120px; z-index: var(--ov-z-dialogo); width: min(640px, calc(100vw - 32px)); transform: translateX(-50%); overflow: hidden; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-xl); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
 .ov-paleta-busca { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border-bottom: 1px solid var(--ov-borda); }
-.ov-paleta-busca input { flex: 1; height: 40px; border: 0; outline: none; background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo-grande); }
+.ov-paleta-busca input { flex: 1; height: 40px; border: 0; background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo-grande); }
+/* O campo tem o foco enquanto a paleta está aberta: o anel único do livro,
+   no próprio campo (v3.11). Cabe nos 8px de folga da faixa de 56px sem
+   tocar o filete, o ícone nem o Fechar; a .ov-paleta não recebe foco. */
+.ov-paleta-busca input:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
 .ov-paleta-grupo { padding: 10px 12px 4px; font: var(--ov-fonte-rotulo); color: var(--ov-texto-terciario); }
 .ov-paleta-item { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--ov-raio-md); }
 .ov-paleta-item[aria-selected="true"] { background: var(--ov-acao-suave); }
 .ov-paleta-item .meta { font-size: 13px; color: var(--ov-texto-terciario); }
+/* Miolo (v3.11): a lista rolando por dentro (no celular a paleta é a tela
+   inteira e rola ela mesma), o aviso de um grupo ("Sem conexão…") ou do
+   vazio ("Nada encontrado."), e o item que é link (Ctrl/Cmd-clique abre
+   outra aba). */
+.ov-paleta-lista { max-height: min(60vh, 480px); overflow-y: auto; overscroll-behavior: contain; padding: 4px 8px 8px; }
+.ov-paleta-lista .ov-paleta-item { cursor: pointer; }
+a.ov-paleta-item { color: inherit; text-decoration: none; }
+.ov-paleta-aviso { margin: 0; padding: 8px 12px; font-size: 13px; color: var(--ov-texto-terciario); }
 @keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Folha móvel (o "Mais" do celular) ---------- */
@@ -209,6 +221,7 @@
   .ov-faixa { padding: 8px 16px; }
   /* A paleta vira a tela "Buscar", inteira. */
   .ov-paleta { inset: 0; width: auto; transform: none; overflow-y: auto; padding-top: env(safe-area-inset-top, 0px); border: 0; border-radius: 0; box-shadow: none; }
+  .ov-paleta-lista { max-height: none; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ---------- Movimento reduzido ---------- */

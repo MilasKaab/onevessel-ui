@@ -36,7 +36,11 @@
 /* "+ Filtro" e "Exibir" são .ov-menu da casca. */
 .ov-visoes { display: flex; gap: 4px; flex-wrap: wrap; }
 .ov-visao { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); cursor: pointer; }
-.ov-visao[aria-selected="true"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+/* Aba de rota (v3.11): a .ov-visao também é um link de navegação, com
+   aria-current="page" na rota aberta, no mesmo desenho da selecionada. O
+   tablist (aria-selected) fica para a visão que filtra a mesma tela. */
+.ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+a.ov-visao { text-decoration: none; }
 .ov-visao .ov-tnum { color: var(--ov-texto-terciario); }
 .ov-chip-filtro { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--ov-raio-sm); border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font-size: 13px; color: var(--ov-texto); }
 .ov-chip-filtro .campo { color: var(--ov-texto-terciario); }

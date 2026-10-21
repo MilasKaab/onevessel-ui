@@ -1,0 +1,64 @@
+/* OneVessel — folha de componentes compartilhada (v3.7).
+   Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
+   Traz a casca (casca.css, com o .ov-estado), as janelas (janelas.css:
+   Diálogo, Toast, Painel lateral, rodapé e alturas da folha, .ov-btn-perigo),
+   as telas (telas.css: tipografia, cartão e indicadores, Precisa de você,
+   visões e filtros, contador, progresso, segmentado, checkbox, tabela, barra
+   de ações em massa e esqueleto), o relatório (relatorio.css) e a base de 14px.
+   Desde a v3.10.0, as .rel-* moram em relatorio.css; a impressão (@media
+   print, @page com nome) fica em impressao.css, só nas rotas de relatório.
+   Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
+   Tema: [data-theme="claro"] na raiz; sem atributo = escuro. */
+@import url("./casca.css");
+@import url("./janelas.css");
+@import url("./telas.css");
+@import url("./relatorio.css");
+
+/* ---------- Base ---------- */
+body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; }
+a { color: var(--ov-acao-texto); text-decoration: none; }
+a:hover { color: var(--ov-acao-hover); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+.ov-tnum { font-variant-numeric: tabular-nums; }
+.ov-codigo { font: 400 13px/20px var(--font-mono); }
+.ov-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* ---------- Ícone de app ---------- */
+.ov-icone-app { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; background: var(--ov-marca-azul); color: #ffffff; position: relative; overflow: hidden; }
+.ov-icone-app::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--ov-marca-laranja); }
+
+/* ---------- Botões ---------- */
+.ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
+.ov-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ov-btn-primario { background: var(--ov-acao); color: var(--ov-sobre-acao); }
+.ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); }
+.ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); color: var(--ov-texto); }
+.ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
+.ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
+.ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
+.ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
+.ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
+@media (pointer: coarse) { .ov-btn { height: var(--ov-altura-campo); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } }
+
+/* ---------- Campos ---------- */
+.ov-campo-grupo { display: flex; flex-direction: column; gap: 6px; }
+.ov-label { font: 500 14px/20px var(--font-sans); color: var(--ov-texto); }
+.ov-label small { font-weight: 400; color: var(--ov-texto-terciario); font-size: 13px; }
+.ov-campo { width: 100%; height: var(--ov-altura-campo); padding: 0 12px; border-radius: var(--ov-raio-md); border: 1px solid var(--ov-borda-controle); background: var(--ov-fundo); color: var(--ov-texto); font: 400 16px/24px var(--font-sans); outline: none; transition: border-color .12s, box-shadow .12s; }
+.ov-campo::placeholder { color: var(--ov-texto-terciario); }
+.ov-campo:focus { border-color: var(--ov-acao); box-shadow: 0 0 0 3px var(--ov-acao-suave); }
+.ov-campo[aria-invalid="true"] { border-color: var(--ov-erro); }
+.ov-ajuda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
+.ov-erro-campo { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 18px; color: var(--ov-erro); }
+
+/* ---------- Matriz de permissões ---------- */
+.ov-matriz { width: 100%; border-collapse: collapse; }
+.ov-matriz th, .ov-matriz td { height: 44px; padding: 0 12px; border-bottom: 1px solid var(--ov-borda); text-align: center; white-space: nowrap; }
+.ov-matriz th { font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); }
+.ov-matriz th:first-child, .ov-matriz td:first-child { text-align: left; }
+.ov-matriz .modulo td { background: var(--ov-item-ativo); font-weight: 600; text-align: left; }
+.ov-matriz .herdado { color: var(--ov-texto-terciario); font-size: 12px; }
+.ov-matriz .excecao { box-shadow: inset 0 0 0 1px var(--ov-destaque); border-radius: 4px; }

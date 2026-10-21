@@ -25,10 +25,9 @@
 }
 
 /* Papel em preto e branco: logo em cinza, sem fundos, títulos e números em
-   preto. A barra e o rodapé da folha somem (o rodapé sai pelas caixas). */
+   preto. O rodapé da folha some (sai pelas caixas); a barra e a área somem
+   pelo previa.css (v3.11.0). */
 @media print {
-  .rel-area { padding: 0; background: none; }
-  .rel-barra { display: none; }
   .rel-pagina { max-width: none; margin: 0; padding: 0; background: none; }
   .rel-pagina[data-orientacao="paisagem"] { max-width: none; aspect-ratio: auto; }
   .rel-timbre { border-bottom-color: #000; }

@@ -10,11 +10,12 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | --- | --- |
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
-| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu, paleta, folha móvel do "Mais", etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
+| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu (com o rótulo de grupo e o item da seção aberta), paleta (com a lista, o aviso e o anel do campo), folha móvel do "Mais" (com o topo, a lista e a conta, desde a v3.11.0), etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
 | `css/janelas.css` | As camadas sobre a tela: Diálogo, Toast, Painel lateral, rodapé e alturas da folha móvel, e o `ov-btn-perigo`. Importável sozinho, como a casca (depende de `tokens.css` e `casca.css`) |
 | `css/telas.css` | O que vai dentro da tela (v3.7.0; o miolo do item do Precisa de você e o cartão que estica na grade desde a v3.8.0): tipografia, cartão e indicadores (grade 4/2/1), Precisa de você, visões e filtros, contador, progresso, segmentado, checkbox, tabela (lista de linhas abaixo de 768px), barra de ações em massa e esqueleto. Importável sozinho, como a casca (depende de `tokens.css` e, para o movimento reduzido, de `casca.css`) |
-| `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`…). Começa importando `casca.css`, `janelas.css`, `telas.css` e `relatorio.css` |
-| `css/relatorio.css` | O papel dos relatórios internos (v3.10.0): folha, timbre, resumo, seções, tabela, coluna numérica, estado com símbolo e a barra da Página de impressão. Só `.rel-*`; importável sozinho, como a casca (depende de `tokens.css` e `fontes.css`) |
+| `css/onevessel.css` | A base de 14px e as classes dos componentes (`ov-btn`, `ov-campo`…; desde a v3.11.0, o `.ov-btn-primario` sob o mouse tem o texto em `ov-fundo`: 10,99:1 no escuro e 6,40:1 no claro, em vez de 1,72:1). Começa importando `casca.css`, `janelas.css`, `telas.css` e `relatorio.css` |
+| `css/relatorio.css` | O papel dos relatórios internos (v3.10.0): folha, timbre, resumo, seções, tabela, coluna numérica e estado com símbolo. Só `.rel-*`; importável sozinho, como a casca (depende de `tokens.css` e `fontes.css`). Importa o `previa.css` |
+| `css/previa.css` | A barra da Página de impressão e a área em volta da folha (v3.11.0): `.rel-barra`, `.rel-barra-titulo` e `.rel-area`, interface em `--ov-*`, sem a folha e sem `@page`; no papel, a barra some. Importável sozinho, também pela prévia de um formulário oficial |
 | `css/impressao.css` | O `@page relatorio` e o `@page relatorio-paisagem` (com o rodapé nas caixas de margem) e o `@media print` das `.rel-*`. Sem seletor global (v3.10.0) |
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
 | `fonts/` | Os `.woff2` do subconjunto latino (400, 500, 600) |
@@ -24,8 +25,8 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
-| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `relatorio.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*` e sem base; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; e `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (a exceção, pelo nome, é o `.ov-campo`, até a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta. Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -39,7 +40,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.10.1"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.11.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -53,7 +54,8 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 | `janelas.css` | App que mantém a própria base (Bordo, Paradas), depois de `casca.css`: Diálogo, Toast, Painel lateral e folha |
 | `telas.css` | App que mantém a própria base (Bordo, Paradas), depois de `janelas.css`: indicadores, Precisa de você, visões, tabela, barra de massa, esqueleto |
 | `onevessel.css` | App que adota a base de 14px e todos os componentes (já traz `casca.css`, `janelas.css`, `telas.css` e `relatorio.css`; não importe junto) |
-| `relatorio.css` | Bordo e Paradas: **só nas rotas dos relatórios internos**, nunca no CSS global. No Materiais chega pelo `onevessel.css` (só `.rel-*`, nenhum `@page`: sem dano) |
+| `relatorio.css` | Bordo e Paradas: **só nas rotas dos relatórios internos**, nunca no CSS global. No Materiais chega pelo `onevessel.css` (só `.rel-*`, nenhum `@page`: sem dano). Já traz o `previa.css` |
+| `previa.css` | A prévia de um formulário oficial, que não pode receber o `relatorio.css`: só a barra e a área (v3.11.0). Nas rotas dos relatórios internos ele já vem pelo `relatorio.css` |
 | `impressao.css` | Todo app: **só nas rotas dos relatórios internos**, depois do `relatorio.css` (ou do `onevessel.css`). Nunca no CSS global, nunca numa rota de formulário oficial |
 | `fontes.css` | Quem imprime relatório (IBM Plex) |
 
@@ -109,6 +111,20 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 - Em tela de toque (`pointer: coarse`), os itens da lateral passam a 48px.
 - Margem da tela: 32px no computador, 24px de 768 a 1023px, 16px abaixo de 768px.
 - Abaixo de 768px, `.ov-paleta` vira a tela "Buscar", inteira.
+- **Miolo da paleta** (v3.11.0): `.ov-paleta-lista` rola por dentro até `min(60vh, 480px)` (4px em cima; no celular, sem limite e com a área segura de baixo), os `.ov-paleta-item` dela com cursor de mão, `a.ov-paleta-item` sem cor de link (Ctrl/Cmd-clique abre outra aba) e `.ov-paleta-aviso` para o aviso de um grupo ou o vazio, em 13px e `ov-texto-terciario`. O campo da `.ov-paleta-busca` tem o anel único do livro no próprio campo (o `outline: none` saiu).
+- **Folha do "Mais"** (v3.11.0): dentro da `.ov-folha`, depois da `.ov-folha-alca`, o `.ov-folha-topo` (com o `h2.ov-folha-titulo` e o Fechar do app) e a `.ov-folha-menu`, que rola por dentro com a área segura de baixo e dá 48px aos `.ov-menu-item`. A alça e o topo são puxador (`touch-action: none`). A conta vai em `p.ov-folha-conta`. Os grupos ("Outros apps", "Conta") em `.ov-menu-grupo`, que serve também ao `.ov-menu` (lá com `aria-hidden`). O item da seção aberta leva `aria-current="page"` e ganha o desenho do `.ov-nav` ativo, no menu e na folha.
+
+```html
+<div class="ov-folha" role="dialog" aria-modal="true" aria-labelledby="mais">
+  <div class="ov-folha-alca"></div>
+  <div class="ov-folha-topo"><h2 class="ov-folha-titulo" id="mais">Mais</h2>…Fechar…</div>
+  <div class="ov-folha-menu">
+    <a class="ov-menu-item" href="…" aria-current="page">…</a>
+    <h3 class="ov-menu-grupo">Conta</h3>
+    <p class="ov-folha-conta"><svg …circle-user…/>Ana Souza</p>
+  </div>
+</div>
+```
 - Recuos laterais da área segura (desde a v3.9.0, para o iPhone deitado; precisam de `viewport-fit=cover`): a lateral cresce por dentro o recuo da esquerda, e o de baixo no rodapé, sem encolher o alvo; `.ov-superior`, `.ov-tela` e `.ov-faixa` recebem o da direita; abaixo de 768px, `.ov-cabecalho-movel`, `.ov-barra-inferior` e `.ov-tela` recebem os dois; a `.ov-folha` e o Painel lateral em folha (abaixo de 1024px), na própria caixa. Sem recorte, todo recuo vale 0 e nada muda.
 
 ### Janelas
@@ -194,6 +210,15 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
   <!-- ou: <p class="ov-pendencias-vazio">Nada pendente com você.</p> -->
 </section>
 
+<!-- Aba de rota (v3.11.0): link com aria-current, no desenho da visão selecionada -->
+<nav class="ov-visoes" aria-label="Conveses">
+  <a class="ov-visao" href="…" aria-current="page">Principal</a>
+  <a class="ov-visao" href="…">Superior</a>
+</nav>
+
+<!-- Cartão aberto (v3.11.0): o registro do painel -->
+<button class="ov-cartao" aria-current="true">…</button>
+
 <!-- Indicadores: 4 colunas, 2 de 768 a 1023px, 1 no celular -->
 <div class="ov-indicadores">
   <a class="ov-cartao ov-indicador" href="…">…</a>
@@ -202,7 +227,8 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 <!-- Tabela: a célula do nome leva .nome; abaixo de 768px vira lista de linhas -->
 <table class="ov-tabela">
   <thead><tr><th></th><th>Nome</th><th>Função</th><th>Estado</th></tr></thead>
-  <tbody><tr><td><input class="ov-check" type="checkbox" aria-label="…"></td><td class="nome">João Pereira</td><td>Mecânico</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td></tr></tbody>
+  <tbody><tr><td><input class="ov-check" type="checkbox" aria-label="…"></td><td class="nome">João Pereira</td><td>Mecânico</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td>
+    <td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular">…Excluir…</td></tr></tbody>
 </table>
 
 <!-- Barra de ações em massa: data-flutuante dá a posição e a entrada -->
@@ -216,6 +242,9 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 ```
 
 - **Lista do celular**: abaixo de 768px, **a `.ov-tabela` que tem uma `td.nome`** vira lista de linhas de 64px ou mais, com o nome em cima em 16px e as outras células numa linha de `legenda`, separadas por "·", e divisor `ov-borda`. O cabeçalho sai da tela e continua para o leitor de tela; a célula com `.ov-check` fica à esquerda. O app não troca de classe. Tabela sem `td.nome` (as da plataforma até a v3.6) continua como estava, rolando de lado, e navegador sem `:has()` também.
+- **Só na lista, fora da lista** (v3.11.0): dentro da `.ov-tabela`, o `.ov-so-no-celular` (um rótulo, `inline`) só aparece na lista do celular, onde o cabeçalho sai ("12 atividades"); o `.ov-fora-do-celular` (uma célula, ou o `th` dela) some na lista e fica de 768px para cima, no tablet também.
+- **Cartão** (v3.11.0): sem sombra em nenhum tema (o livro: cartão em repouso se separa por borda). **Cartão aberto**: `aria-current="true"` no `.ov-cartao` dá borda `ov-acao` e `ov-acao-suave` sobre a superfície, como a linha selecionada da tabela. A regra é fraca (`:where`): a borda de alerta que o app põe numa classe dele, depois do pacote, continua vencendo.
+- **Aba de rota** (v3.11.0): a `.ov-visao` também é link de navegação, com `aria-current="page"` na rota aberta, no desenho da selecionada e sem sublinhado. O `tablist` (`aria-selected`) fica para a visão que filtra a mesma tela.
 - **Miolo do item** (v3.8.0): o `.ov-pendencia-estado` vai ao lado do `.ov-estado`, numa coluna de 88px (as palavras alinham); título (`.ov-pendencia-titulo`, 600, com elipse) e contexto (`.ov-pendencia-contexto`, 12px/16px) em duas linhas; o identificador (`.ov-pendencia-id`, mono 12px/16px) antes do título; a seta (`.ov-pendencia-seta`) no fim. Identificador, contexto e seta em `ov-texto-terciario`. **Item sem link** é `div.ov-pendencia`, sem a seta e sem CSS próprio: o realce e o anel de foco são só do `a`. O título da caixa é do app.
 - **Indicadores**: a grade é a `.ov-indicadores`, em `div` ou `ul`; o máximo de 4 é do app. Em `ul`, desde a v3.8.0 o `li` é flex e o cartão ocupa a altura dele: os cartões de uma linha ficam da mesma altura nas duas formas. A grade continua 4/2/1 (1 coluna até 767px).
 - **Barra de ações em massa**: `data-flutuante` põe a `.ov-acoes-massa` fixa, centrada, 24px acima do rodapé e da área segura (no celular, acima da `.ov-barra-inferior`), em `--ov-z-flutuante` e `--ov-fundo-barra` sem desfoque, entrando de 12px em 180ms. Sem o atributo, a caixa é a da v3.6. Com ela na tela, a `.ov-toasts` leva `data-com-barra`. Esc e ✕ limpam a seleção no app.
@@ -232,8 +261,13 @@ Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no
 ```js
 // Rota de relatório interno (Bordo, Paradas): o layout dela, não o globals.css
 import 'onevessel-ui/css/fontes.css'
-import 'onevessel-ui/css/relatorio.css'
+import 'onevessel-ui/css/relatorio.css'   // já traz o previa.css
 import 'onevessel-ui/css/impressao.css'
+```
+
+```js
+// Prévia de um formulário oficial: só a barra e a área, nada da folha nem @page
+import 'onevessel-ui/css/previa.css'
 ```
 
 ```html
@@ -270,11 +304,11 @@ import 'onevessel-ui/css/impressao.css'
   - `page: relatorio` sem o `impressao.css` (o Materiais, que recebe a `.rel-pagina` pelo `onevessel.css`) não muda tamanho nem margem, mas força uma quebra de página antes e depois da folha, como toda troca de página com nome.
   - **Na rota do relatório, nenhum `@page` sem nome pode vir depois do `impressao.css`.** No Chromium 156 (medido em 20/10, no PDF), um `@page { size; margin }` sem nome que venha depois ganha do `@page relatorio` no tamanho e na margem: o Chromium decide pela ordem, não pelo nome. Antes dele, não atrapalha.
 - **Rodapé.** Sai inteiro pelas caixas de margem das duas páginas, em IBM Plex Sans 8pt, `rel-mudo`: à esquerda (`@bottom-left`) o texto de `--rel-rodape`; à direita (`@bottom-right`) "pág. n/N", dos contadores `page` e `pages`. **O app escreve `--rel-rodape` no `<html>` (`:root`) da prévia, com o texto entre aspas** (`--rel-rodape: "OneVessel · Bordo · Ocupação do convés"`, pelo atributo `style` do `<html>` ou por um `:root { }` da rota). Definida no `body` ou na `.rel-pagina`, a caixa sai vazia (medido no Chromium 156: a caixa de margem herda da raiz, não da folha); sem a variável, a esquerda sai vazia e a numeração continua. Só o Chrome e o Edge 131+ desenham caixas de margem: fora deles, o documento sai sem rodapé. A `.rel-rodape` da folha some no papel, para o texto não sair duas vezes; na tela ela continua. No diálogo do Chrome, desmarcar "Cabeçalhos e rodapés", senão o navegador soma os dele.
-- **Papel em preto e branco** (`@media print`): a `.rel-barra` some; filete em preto; logo em cinza, com 10mm de altura (40px na tela); sem fundos (a `.rel-area` e a folha ficam sem cor, o resumo sem tinta e com borda fina); títulos e números do resumo em preto. Linha de tabela não quebra entre páginas (`.rel-tabela tr`), e o cabeçalho (`.rel-tabela thead`) se repete em cada página.
+- **Papel em preto e branco** (`@media print`): a `.rel-barra` some e a `.rel-area` perde o fundo (pelo `previa.css`); filete em preto; logo em cinza, com 10mm de altura (40px na tela); sem fundos (a `.rel-area` e a folha ficam sem cor, o resumo sem tinta e com borda fina); títulos e números do resumo em preto. Linha de tabela não quebra entre páginas (`.rel-tabela tr`), e o cabeçalho (`.rel-tabela thead`) se repete em cada página.
 - **Tamanhos**: todo texto da folha com 8,5pt ou mais (o `th` subiu para 8,5pt); o rodapé, 8pt.
 - **Coluna numérica**: `.rel-num` no `th` e no `td` da coluna: à direita, `tabular-nums`.
 - **Estado e prioridade**: `.rel-estado` é símbolo e palavra, sem fundo e sem cor de estado (herda a cor do texto). O app escreve o símbolo num `span` com `aria-hidden` (● ○ ▲ × △, a tabela está em `relatorios-e-logos.md`); a Plex não tem esses glifos, e eles caem na fonte do sistema.
-- **Barra** (`.rel-barra`): interface, não papel — fonte do sistema e `--ov-*`. Voltar à esquerda, o título (`.rel-barra-titulo`, `titulo-3`, com elipse) ocupa o resto, e a ação fica à direita. Ocupa a largura da `.rel-area`, para alinhar com a folha em pé e deitada. Os botões são do app.
+- **Barra** (`.rel-barra`): interface, não papel — fonte do sistema e `--ov-*`. Voltar à esquerda, o título (`.rel-barra-titulo`, `titulo-3`: 16px, 600, com elipse) ocupa o resto, e a ação fica à direita. Ocupa a largura da `.rel-area`, para alinhar com a folha em pé e deitada. Os botões são do app. Desde a v3.11.0 (BV-8) a barra e a área moram no `previa.css`, com os mesmos valores: o `relatorio.css` o importa, e a prévia de um formulário oficial importa só ele.
 - **Fora daqui**: o JSX da barra e do Timbre, o conteúdo de cada relatório, o `<title>` e o nome do arquivo são do app; o PDF por código do Paradas (pdfmake) segue as mesmas medidas, com o tema próprio conferido contra os tokens.
 
 ### App com CSS próprio (Materiais)
@@ -433,12 +467,12 @@ public/marca/bram-offshore-horizontal.png ← marca/bram-offshore-horizontal.png
 
 ## Mudar a design system
 
-1. Altere `tokens/tokens.json`, `css/casca.css`, `css/janelas.css`, `css/telas.css`, `css/relatorio.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca, camada sobre a tela (Diálogo, Toast, Painel, folha) vai nas janelas, o que vai dentro da tela (tabela, indicadores, pendências, visões) vai nas telas; nenhum seletor fica em dois arquivos.
+1. Altere `tokens/tokens.json`, `css/casca.css`, `css/janelas.css`, `css/telas.css`, `css/relatorio.css`, `css/previa.css`, `css/onevessel.css` ou `css/impressao.css`. Classe de estrutura vai na casca, camada sobre a tela (Diálogo, Toast, Painel, folha) vai nas janelas, o que vai dentro da tela (tabela, indicadores, pendências, visões) vai nas telas; nenhum seletor fica em dois arquivos.
 2. `npm run build` (regenera `css/tokens.css`).
 3. `npm run conferir` e `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
 5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
-6. Suba uma tag nova (`v3.8.1`) e avise os apps.
+6. Suba uma tag nova (`v3.11.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.
 

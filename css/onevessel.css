@@ -34,7 +34,12 @@ button { font: inherit; color: inherit; }
 .ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
 .ov-btn:disabled { opacity: .45; cursor: not-allowed; }
 .ov-btn-primario { background: var(--ov-acao); color: var(--ov-sobre-acao); }
-.ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); }
+/* No hover o texto vira ov-fundo (v3.11, PV-4): o ciano do escuro com o
+   ov-sobre-acao dava 1,72:1. ov-fundo sobre ov-acao-hover: 10,99:1 no escuro
+   e 6,40:1 no claro. O token não escurece: ele é também a cor do link sob o
+   mouse, sobre ov-fundo, e um tom escuro o bastante para o texto claro (o
+   petrol da ação dá 5,10:1 com ele) fica em 3,71:1 ali. */
+.ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); color: var(--ov-fundo); }
 .ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); color: var(--ov-texto); }
 .ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
 .ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }

@@ -36,7 +36,11 @@
 /* "+ Filtro" e "Exibir" são .ov-menu da casca. */
 .ov-visoes { display: flex; gap: 4px; flex-wrap: wrap; }
 .ov-visao { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); cursor: pointer; }
-.ov-visao[aria-selected="true"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+/* Aba de rota (v3.11): a .ov-visao também é um link de navegação, com
+   aria-current="page" na rota aberta, no mesmo desenho da selecionada. O
+   tablist (aria-selected) fica para a visão que filtra a mesma tela. */
+.ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+a.ov-visao { text-decoration: none; }
 .ov-visao .ov-tnum { color: var(--ov-texto-terciario); }
 .ov-chip-filtro { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--ov-raio-sm); border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font-size: 13px; color: var(--ov-texto); }
 .ov-chip-filtro .campo { color: var(--ov-texto-terciario); }
@@ -48,8 +52,15 @@
 .ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }
 
 /* ---------- Cartões e indicadores ---------- */
+/* Cartão em repouso se separa por borda, não por sombra, nos dois temas
+   (livro da marca; a sombra do tema claro saiu na v3.11). */
 .ov-cartao { background: var(--ov-superficie); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); }
-[data-theme="claro"] .ov-cartao { box-shadow: 0 1px 2px rgba(14,20,27,.04); }
+/* Cartão aberto (v3.11): o registro do painel, com aria-current="true" no
+   cartão. Borda ov-acao e fundo ov-acao-suave sobre a ov-superficie do
+   cartão (a ov-acao-suave é translúcida: vai como imagem, por cima da cor),
+   como a linha selecionada da tabela. O :where deixa a regra fraca: a borda
+   de alerta que o app põe numa classe dele continua vencendo. */
+.ov-cartao:where([aria-current="true"]) { border-color: var(--ov-acao); background-image: linear-gradient(var(--ov-acao-suave), var(--ov-acao-suave)); }
 .ov-indicador { display: block; padding: 20px; color: inherit; transition: border-color .12s; }
 a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }
@@ -120,6 +131,10 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-tabela .meta { color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
 .ov-tabela[data-densidade="compacta"] td { height: 36px; }
 .ov-tabela[data-densidade="conforto"] td { height: 56px; }
+/* O que só a lista do celular mostra (v3.11): o rótulo de um número solto,
+   onde o cabeçalho sai ("12 atividades"). O par, .ov-fora-do-celular, some
+   na lista e fica de 768px para cima, no tablet também (abaixo). */
+.ov-tabela .ov-so-no-celular { display: none; }
 
 /* ---------- Barra de ações em massa ---------- */
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
@@ -169,6 +184,8 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
   .ov-tabela:has(td.nome) td:not(.nome, :empty, :has(.ov-check)) ~ td:not(.nome, :empty, :has(.ov-check))::before { content: "·"; content: "·" / ""; padding: 0 6px; }
   .ov-tabela:has(td.nome) tbody tr:has(.ov-check) { padding-left: 46px; }
   .ov-tabela:has(td.nome) td:has(.ov-check) { position: absolute; left: 16px; top: 50%; display: flex; transform: translateY(-50%); }
+  .ov-tabela:has(td.nome) .ov-so-no-celular { display: inline; }
+  .ov-tabela:has(td.nome) .ov-fora-do-celular { display: none; }
 
   .ov-esqueleto-linha { height: auto; min-height: 64px; padding: 0 16px; }
 

@@ -1,0 +1,41 @@
+/* OneVessel — impressão dos relatórios internos (v3.10.0, D1 e D8 da F7).
+   O app importa este arquivo, com o relatorio.css, só nas rotas dos
+   relatórios internos: nunca no CSS global, e nunca chega a um formulário
+   oficial. Sem seletor global (nada de body *, visibility nem position:
+   absolute): só .rel-*. Nenhum @page sem nome: a .rel-pagina pede a página
+   "relatorio" (ou "relatorio-paisagem"), e o @page do formulário oficial
+   fica intacto.
+   Rodapé inteiro nas caixas de margem, que só o Chrome e o Edge 131+
+   desenham: o texto vem de --rel-rodape, que o app escreve no <html> da
+   prévia (no body ou na folha, a caixa sai vazia — medido no Chromium 156),
+   e "pág. n/N" dos contadores. Fora deles, o documento sai sem rodapé. */
+
+@page relatorio {
+  size: A4 portrait;
+  margin: 16mm;
+  @bottom-left { content: var(--rel-rodape, ""); font-family: var(--font-rel-sans); font-size: 8pt; color: var(--rel-mudo); }
+  @bottom-right { content: "pág. " counter(page) "/" counter(pages); font-family: var(--font-rel-sans); font-size: 8pt; color: var(--rel-mudo); font-variant-numeric: tabular-nums; }
+}
+
+@page relatorio-paisagem {
+  size: A4 landscape;
+  margin: 16mm;
+  @bottom-left { content: var(--rel-rodape, ""); font-family: var(--font-rel-sans); font-size: 8pt; color: var(--rel-mudo); }
+  @bottom-right { content: "pág. " counter(page) "/" counter(pages); font-family: var(--font-rel-sans); font-size: 8pt; color: var(--rel-mudo); font-variant-numeric: tabular-nums; }
+}
+
+/* Papel em preto e branco: logo em cinza, sem fundos, títulos e números em
+   preto. A barra e o rodapé da folha somem (o rodapé sai pelas caixas). */
+@media print {
+  .rel-area { padding: 0; background: none; }
+  .rel-barra { display: none; }
+  .rel-pagina { max-width: none; margin: 0; padding: 0; background: none; }
+  .rel-pagina[data-orientacao="paisagem"] { max-width: none; aspect-ratio: auto; }
+  .rel-timbre { border-bottom-color: #000; }
+  .rel-timbre img { height: 10mm; filter: grayscale(1); }
+  .rel-titulo, .rel-secao, .rel-resumo b { color: #000; }
+  .rel-resumo { background: none; border: .5px solid #999; }
+  .rel-tabela tr { break-inside: avoid; }
+  .rel-tabela thead { display: table-header-group; }
+  .rel-rodape { display: none; }
+}

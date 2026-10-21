@@ -1,6 +1,6 @@
 {
   "name": "onevessel-ui",
-  "version": "3.10.1",
+  "version": "3.11.0",
   "description": "Identidade compartilhada dos apps OneVessel: tokens, CSS de componentes, fontes, ícones de PWA e o logo dos relatórios.",
   "license": "UNLICENSED",
   "sideEffects": [
@@ -15,6 +15,7 @@
     "./css/telas.css": "./css/telas.css",
     "./css/relatorio.css": "./css/relatorio.css",
     "./css/impressao.css": "./css/impressao.css",
+    "./css/previa.css": "./css/previa.css",
     "./js/paleta-nucleo.js": {
       "types": "./js/paleta-nucleo.d.ts",
       "default": "./js/paleta-nucleo.js"

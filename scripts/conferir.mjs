@@ -7,7 +7,10 @@
 //   body, :root, *, a ou button soltos, tamanho de fonte fora de classe ou
 //   @media print / @page (os quatro são importáveis sozinhos), ou casca.css,
 //   janelas.css ou telas.css não tiver prefers-reduced-motion;
-// - relatorio.css tiver regra que não seja .rel-*;
+// - relatorio.css tiver regra que não seja .rel-*, ou não importar previa.css;
+// - previa.css tiver regra que não seja a barra (.rel-barra, .rel-barra-titulo
+//   e .rel-area), @page, base, ou impressão que não seja esconder a barra e
+//   tirar o fundo da área;
 // - impressao.css tiver @page sem nome, visibility, position: absolute ou
 //   regra que não seja .rel-*;
 // - algum seletor estiver em dois de casca.css, janelas.css, telas.css,
@@ -18,11 +21,13 @@
 // - algum CSS de css/ faltar em exports;
 // - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
 // - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
-//   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports.
+//   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports;
+// - algum CSS de css/ tiver outline: none (ou 0) fora da exceção pelo nome
+//   (v3.11.0, U17-13): o foco perde o anel do livro.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { problemasDeBase, semComentario, seletores } from './css-regras.mjs'
+import { problemasDeBase, regras, semComentario, seletores } from './css-regras.mjs'
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ler = (p) => readFileSync(resolve(raiz, p), 'utf8')
@@ -33,6 +38,7 @@ const casca = ler('css/casca.css')
 const janelas = ler('css/janelas.css')
 const telas = ler('css/telas.css')
 const relatorio = ler('css/relatorio.css')
+const previa = ler('css/previa.css')
 const impressao = semComentario(ler('css/impressao.css'))
 const onevessel = semComentario(ler('css/onevessel.css'))
 
@@ -40,6 +46,18 @@ const onevessel = semComentario(ler('css/onevessel.css'))
 //    relatorio.css só com .rel-*.
 erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas), ...problemasDeBase('telas.css', telas), ...problemasDeBase('relatorio.css', relatorio))
 for (const s of seletores(relatorio)) if (!s.startsWith('.rel-')) erros.push(`relatorio.css tem regra fora de .rel-*: ${s}`)
+if (!/@import\s+url\(["']\.\/previa\.css["']\)/.test(semComentario(relatorio))) erros.push('relatorio.css não importa ./previa.css')
+
+// 1a. previa.css: só a barra e a área, sem @page nem base; no papel, só
+//     esconde a barra e tira o fundo da área. Os oficiais o importam.
+const DA_PREVIA = ['.rel-barra', '.rel-barra-titulo', '.rel-area']
+erros.push(...problemasDeBase('previa.css', previa).filter((p) => p !== 'previa.css tem @media print'))
+for (const { seletores: ss, corpo, media } of regras(previa)) {
+  for (const s of ss) {
+    if (!DA_PREVIA.includes(s)) erros.push(`previa.css tem regra fora da barra: ${media} ${s}`)
+    if (/print/.test(media) && !/^\s*(display:\s*none|padding:\s*0;\s*background:\s*none)\s*;?\s*$/.test(corpo)) erros.push(`previa.css muda o papel além de esconder a barra: ${s}`)
+  }
+}
 
 // 1b. impressao.css sem seletor global: só .rel-* e @page com nome.
 for (const s of seletores(impressao)) {
@@ -51,7 +69,7 @@ if (/visibility\s*:/.test(impressao)) erros.push('impressao.css tem visibility')
 if (/position\s*:\s*absolute/.test(impressao)) erros.push('impressao.css tem position: absolute')
 
 // 2. Nenhum seletor em dois arquivos.
-const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'relatorio.css': seletores(relatorio), 'onevessel.css': seletores(onevessel) }
+const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'relatorio.css': seletores(relatorio), 'previa.css': seletores(previa), 'onevessel.css': seletores(onevessel) }
 const nomes = Object.keys(arquivos)
 for (const [n, a] of nomes.entries()) {
   for (const b of nomes.slice(n + 1)) {
@@ -71,6 +89,18 @@ for (const s of arquivos['onevessel.css']) if (s.startsWith('.rel-')) erros.push
 if (/impressao\.css/.test(onevessel)) erros.push('onevessel.css importa impressao.css')
 for (const nome of ['casca.css', 'janelas.css', 'telas.css']) {
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)/.test(ler(`css/${nome}`))) erros.push(`${nome} sem prefers-reduced-motion`)
+}
+
+// 3b. Nenhum outline: none. A exceção é o .ov-campo, que marca o foco com a
+//     borda ov-acao e o halo até o BV-4 decidir o campo (v3.12.0).
+const OUTLINE_NONE_PERMITIDO = { 'onevessel.css': ['.ov-campo'] }
+for (const nome of readdirSync(resolve(raiz, 'css')).filter((n) => n.endsWith('.css'))) {
+  for (const { seletores: ss, corpo, media } of regras(ler(`css/${nome}`))) {
+    if (!/(^|;|\s)outline\s*:\s*(none|0)\s*(;|$)/.test(corpo)) continue
+    for (const s of ss) {
+      if (!OUTLINE_NONE_PERMITIDO[nome]?.includes(s)) erros.push(`${nome} tem outline: none em ${media ? media + ' ' : ''}${s}`)
+    }
+  }
 }
 
 // 4. Nome antigo do Paradas em arquivo ou pasta. A expressão é montada aos

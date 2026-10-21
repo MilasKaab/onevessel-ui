@@ -29,6 +29,10 @@
   .janelas-lista { flex: 1; padding: var(--ov-esp-5); color: var(--ov-texto-secundario); }
   .telas-moldura { position: relative; height: 560px; overflow-y: auto; transform: translateZ(0); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); background: var(--ov-fundo); color: var(--ov-texto); font: var(--ov-fonte-corpo); padding: var(--ov-esp-6); display: flex; flex-direction: column; gap: var(--ov-esp-6); }
   .telas-moldura + .moldura-rotulo { margin-top: var(--ov-esp-4); }
+  /* A moldura rola: os blocos não encolhem (a caixa tem overflow: hidden). */
+  .telas-moldura > * { flex-shrink: 0; }
+  .cartoes { display: grid; gap: var(--ov-esp-3); margin: 0; padding: 0; list-style: none; }
+  .cartoes .ov-cartao { display: block; padding: var(--ov-esp-4); color: inherit; text-decoration: none; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -179,6 +183,7 @@
         <button class="ov-menu-item" role="menuitem" type="button"><i data-icone="anchor"></i>Bram Cardume</button>
       </div>
       <div class="ov-menu menu-aberto" role="menu" style="left: 24px; top: 140px">
+        <div class="ov-menu-grupo" aria-hidden="true">Tema</div>
         <button class="ov-menu-item" role="menuitem" type="button">Tema claro</button>
         <div class="ov-menu-sep"></div>
         <button class="ov-menu-item" role="menuitem" type="button" data-tom="perigo">Sair</button>
@@ -186,13 +191,42 @@
       <div class="ov-veu" style="left: 280px"></div>
       <div class="ov-paleta" role="dialog" aria-label="Buscar">
         <div class="ov-paleta-busca"><i data-icone="search"></i><input role="combobox" aria-expanded="true" aria-controls="paleta-lista" value="pe" aria-label="Buscar"></div>
-        <div id="paleta-lista" role="listbox" style="padding: 4px 8px 8px">
+        <div id="paleta-lista" class="ov-paleta-lista" role="listbox">
           <div class="ov-paleta-grupo">Registros</div>
           <div class="ov-paleta-item" role="option" aria-selected="true"><i data-icone="users"></i>Pedro Lima<span class="meta">Pessoa</span></div>
+          <div class="ov-paleta-grupo">Despachos</div>
+          <div class="ov-paleta-aviso">Sem conexão: os despachos aparecem quando a rede voltar.</div>
           <div class="ov-paleta-grupo">Ações</div>
           <div class="ov-paleta-item" role="option" aria-selected="false"><i data-icone="log-in"></i>Embarcar pessoa<kbd class="ov-tecla" style="margin-left:auto">E</kbd></div>
           <div class="ov-paleta-grupo">Ir para</div>
-          <div class="ov-paleta-item" role="option" aria-selected="false"><i data-icone="users"></i>Pessoas</div>
+          <a class="ov-paleta-item" role="option" aria-selected="false" href="#"><i data-icone="users"></i>Pessoas</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo" style="margin-top: var(--ov-esp-6)">Folha do "Mais" (aberta) · tema claro · a seção aberta (Tabela Mestra) mora nele</p>
+    <div class="moldura" data-theme="claro" style="height: 520px">
+      <div class="ov-veu"></div>
+      <div class="ov-folha" role="dialog" aria-modal="true" aria-labelledby="mais-titulo">
+        <div class="ov-folha-alca"></div>
+        <div class="ov-folha-topo"><h2 class="ov-folha-titulo" id="mais-titulo">Mais</h2><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-folha-menu">
+          <section aria-label="Bordo">
+            <a class="ov-menu-item" href="#" aria-current="page"><i data-icone="table"></i>Tabela Mestra</a>
+            <a class="ov-menu-item" href="#"><i data-icone="send"></i>Despacho</a>
+            <a class="ov-menu-item" href="#"><i data-icone="copy"></i>Templates</a>
+            <div class="ov-menu-sep" role="separator"></div>
+          </section>
+          <section aria-labelledby="mais-outros">
+            <h3 class="ov-menu-grupo" id="mais-outros">Outros apps</h3>
+            <a class="ov-menu-item" href="#"><i data-icone="semaforo"></i>Paradas</a>
+            <div class="ov-menu-sep" role="separator"></div>
+          </section>
+          <section aria-labelledby="mais-conta">
+            <h3 class="ov-menu-grupo" id="mais-conta">Conta</h3>
+            <p class="ov-folha-conta"><i data-icone="circle-user"></i>Ana Souza</p>
+            <button class="ov-menu-item" type="button" data-tom="perigo">Sair</button>
+          </section>
         </div>
       </div>
     </div>
@@ -365,19 +399,20 @@
 
   <section class="secao">
     <h2 class="ov-titulo-1">Telas</h2>
-    <p class="ov-legenda">Precisa de você (com itens e vazio), indicadores em 4/2/1 colunas, visões, tabela (abaixo de 768px, lista de linhas: a tabela tem td.nome), esqueleto e barra de ações em massa flutuante (data-flutuante). Cada moldura faz o papel da tela.</p>
+    <p class="ov-legenda">Precisa de você (com o miolo do item: estado, identificador, título, contexto e seta; o último sem link), indicadores em 4/2/1 colunas, visões (tablist) e abas de rota (link com aria-current), cartões com o aberto (aria-current), tabela (abaixo de 768px, lista de linhas: a tabela tem td.nome, o rótulo .ov-so-no-celular aparece e a coluna .ov-fora-do-celular some), esqueleto e barra de ações em massa flutuante (data-flutuante). Cada moldura faz o papel da tela.</p>
 
     <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
     <div class="telas-moldura" data-theme="escuro">
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv-escuro">
         <div class="ov-pendencias-cab">
           <h2 class="ov-titulo-3" id="pv-escuro">Precisa de você</h2>
-          <span class="ov-contador-destaque">2</span>
+          <span class="ov-contador-destaque">3</span>
           <a class="ov-pendencias-ver-tudo" href="#">Ver tudo</a>
         </div>
         <ul class="ov-pendencias-lista">
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado" data-tom="atencao">Sem leito</span><span>João Pereira</span><span class="ov-legenda">embarcou hoje, 08:10</span></a></li>
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado" data-tom="erro">Vencido</span><span>Desembarque previsto de Ana Lima</span><span class="ov-legenda">era 16/10</span></a></li>
+          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><div class="ov-pendencia"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
         </ul>
       </section>
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv0-escuro">
@@ -391,13 +426,18 @@
         <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Camarotes sem ocupação</div><div class="ov-indicador-valor">5</div><div class="ov-indicador-nota">de 42</div></a>
       </div>
       <div class="ov-visoes" role="tablist"><button class="ov-visao" role="tab" aria-selected="true">Não embarcados <span class="ov-tnum">12</span></button><button class="ov-visao" role="tab" aria-selected="false">A bordo <span class="ov-tnum">86</span></button></div>
+      <nav class="ov-visoes" aria-label="Conveses"><a class="ov-visao" href="#" aria-current="page">Principal</a><a class="ov-visao" href="#">Superior</a><a class="ov-visao" href="#">Castelo de proa</a></nav>
+      <ul class="cartoes" aria-label="Templates">
+        <li><a class="ov-cartao" href="#" aria-current="true"><b>Troca de turma de outubro</b><br><span class="ov-legenda">Salvo em 18/10 · 42 leitos ocupados</span></a></li>
+        <li><a class="ov-cartao" href="#"><b>Parada técnica</b><br><span class="ov-legenda">Salvo em 02/10 · 58 leitos ocupados</span></a></li>
+      </ul>
       <div class="ov-cartao">
         <table class="ov-tabela">
-          <thead><tr><th><input class="ov-check" type="checkbox" aria-label="Selecionar todos"></th><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th class="num">Dias</th></tr></thead>
+          <thead><tr><th><input class="ov-check" type="checkbox" aria-label="Selecionar todos"></th><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th class="num">Dias</th><th class="ov-fora-do-celular"><span class="ov-sr">Ação</span></th></tr></thead>
           <tbody>
-            <tr aria-selected="true"><td><input class="ov-check" type="checkbox" checked aria-label="Selecionar João Pereira"></td><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="num">14</td></tr>
-            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Lima"></td><td class="nome">Ana Lima</td><td>Técnica de segurança</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="num">3</td></tr>
-            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Carlos Souza"></td><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td></td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="num">1</td></tr>
+            <tr aria-selected="true"><td><input class="ov-check" type="checkbox" checked aria-label="Selecionar João Pereira"></td><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
+            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Lima"></td><td class="nome">Ana Lima</td><td>Técnica de segurança</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
+            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Carlos Souza"></td><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td></td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="num">1<span class="ov-so-no-celular"> dia a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -416,12 +456,13 @@
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv-claro">
         <div class="ov-pendencias-cab">
           <h2 class="ov-titulo-3" id="pv-claro">Precisa de você</h2>
-          <span class="ov-contador-destaque">2</span>
+          <span class="ov-contador-destaque">3</span>
           <a class="ov-pendencias-ver-tudo" href="#">Ver tudo</a>
         </div>
         <ul class="ov-pendencias-lista">
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado" data-tom="atencao">Sem leito</span><span>João Pereira</span><span class="ov-legenda">embarcou hoje, 08:10</span></a></li>
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado" data-tom="erro">Vencido</span><span>Desembarque previsto de Ana Lima</span><span class="ov-legenda">era 16/10</span></a></li>
+          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><div class="ov-pendencia"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
         </ul>
       </section>
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv0-claro">
@@ -435,13 +476,18 @@
         <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Camarotes sem ocupação</div><div class="ov-indicador-valor">5</div><div class="ov-indicador-nota">de 42</div></a>
       </div>
       <div class="ov-visoes" role="tablist"><button class="ov-visao" role="tab" aria-selected="true">Não embarcados <span class="ov-tnum">12</span></button><button class="ov-visao" role="tab" aria-selected="false">A bordo <span class="ov-tnum">86</span></button></div>
+      <nav class="ov-visoes" aria-label="Conveses"><a class="ov-visao" href="#" aria-current="page">Principal</a><a class="ov-visao" href="#">Superior</a><a class="ov-visao" href="#">Castelo de proa</a></nav>
+      <ul class="cartoes" aria-label="Templates">
+        <li><a class="ov-cartao" href="#" aria-current="true"><b>Troca de turma de outubro</b><br><span class="ov-legenda">Salvo em 18/10 · 42 leitos ocupados</span></a></li>
+        <li><a class="ov-cartao" href="#"><b>Parada técnica</b><br><span class="ov-legenda">Salvo em 02/10 · 58 leitos ocupados</span></a></li>
+      </ul>
       <div class="ov-cartao">
         <table class="ov-tabela">
-          <thead><tr><th><input class="ov-check" type="checkbox" aria-label="Selecionar todos"></th><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th class="num">Dias</th></tr></thead>
+          <thead><tr><th><input class="ov-check" type="checkbox" aria-label="Selecionar todos"></th><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th class="num">Dias</th><th class="ov-fora-do-celular"><span class="ov-sr">Ação</span></th></tr></thead>
           <tbody>
-            <tr aria-selected="true"><td><input class="ov-check" type="checkbox" checked aria-label="Selecionar João Pereira"></td><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="num">14</td></tr>
-            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Lima"></td><td class="nome">Ana Lima</td><td>Técnica de segurança</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="num">3</td></tr>
-            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Carlos Souza"></td><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td></td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="num">1</td></tr>
+            <tr aria-selected="true"><td><input class="ov-check" type="checkbox" checked aria-label="Selecionar João Pereira"></td><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
+            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Lima"></td><td class="nome">Ana Lima</td><td>Técnica de segurança</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
+            <tr><td><input class="ov-check" type="checkbox" aria-label="Selecionar Carlos Souza"></td><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td></td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="num">1<span class="ov-so-no-celular"> dia a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-sm" type="button">Excluir</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -510,12 +556,15 @@
     send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
     'refresh-cw': '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
     eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    'chevron-right': '<path d="m9 18 6-6-6-6"/>',
     lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   }
   for (const el of document.querySelectorAll('i[data-icone]')) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     for (const [k, v] of Object.entries({ width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' })) svg.setAttribute(k, v)
     svg.innerHTML = ICONES[el.dataset.icone] ?? ''
+    if (el.className) svg.setAttribute('class', el.className)
     el.replaceWith(svg)
   }
 

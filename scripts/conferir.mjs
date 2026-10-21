@@ -7,7 +7,10 @@
 //   body, :root, *, a ou button soltos, tamanho de fonte fora de classe ou
 //   @media print / @page (os quatro são importáveis sozinhos), ou casca.css,
 //   janelas.css ou telas.css não tiver prefers-reduced-motion;
-// - relatorio.css tiver regra que não seja .rel-*;
+// - relatorio.css tiver regra que não seja .rel-*, ou não importar previa.css;
+// - previa.css tiver regra que não seja a barra (.rel-barra, .rel-barra-titulo
+//   e .rel-area), @page, base, ou impressão que não seja esconder a barra e
+//   tirar o fundo da área;
 // - impressao.css tiver @page sem nome, visibility, position: absolute ou
 //   regra que não seja .rel-*;
 // - algum seletor estiver em dois de casca.css, janelas.css, telas.css,
@@ -35,6 +38,7 @@ const casca = ler('css/casca.css')
 const janelas = ler('css/janelas.css')
 const telas = ler('css/telas.css')
 const relatorio = ler('css/relatorio.css')
+const previa = ler('css/previa.css')
 const impressao = semComentario(ler('css/impressao.css'))
 const onevessel = semComentario(ler('css/onevessel.css'))
 
@@ -42,6 +46,18 @@ const onevessel = semComentario(ler('css/onevessel.css'))
 //    relatorio.css só com .rel-*.
 erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas), ...problemasDeBase('telas.css', telas), ...problemasDeBase('relatorio.css', relatorio))
 for (const s of seletores(relatorio)) if (!s.startsWith('.rel-')) erros.push(`relatorio.css tem regra fora de .rel-*: ${s}`)
+if (!/@import\s+url\(["']\.\/previa\.css["']\)/.test(semComentario(relatorio))) erros.push('relatorio.css não importa ./previa.css')
+
+// 1a. previa.css: só a barra e a área, sem @page nem base; no papel, só
+//     esconde a barra e tira o fundo da área. Os oficiais o importam.
+const DA_PREVIA = ['.rel-barra', '.rel-barra-titulo', '.rel-area']
+erros.push(...problemasDeBase('previa.css', previa).filter((p) => p !== 'previa.css tem @media print'))
+for (const { seletores: ss, corpo, media } of regras(previa)) {
+  for (const s of ss) {
+    if (!DA_PREVIA.includes(s)) erros.push(`previa.css tem regra fora da barra: ${media} ${s}`)
+    if (/print/.test(media) && !/^\s*(display:\s*none|padding:\s*0;\s*background:\s*none)\s*;?\s*$/.test(corpo)) erros.push(`previa.css muda o papel além de esconder a barra: ${s}`)
+  }
+}
 
 // 1b. impressao.css sem seletor global: só .rel-* e @page com nome.
 for (const s of seletores(impressao)) {
@@ -53,7 +69,7 @@ if (/visibility\s*:/.test(impressao)) erros.push('impressao.css tem visibility')
 if (/position\s*:\s*absolute/.test(impressao)) erros.push('impressao.css tem position: absolute')
 
 // 2. Nenhum seletor em dois arquivos.
-const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'relatorio.css': seletores(relatorio), 'onevessel.css': seletores(onevessel) }
+const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'relatorio.css': seletores(relatorio), 'previa.css': seletores(previa), 'onevessel.css': seletores(onevessel) }
 const nomes = Object.keys(arquivos)
 for (const [n, a] of nomes.entries()) {
   for (const b of nomes.slice(n + 1)) {

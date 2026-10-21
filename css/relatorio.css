@@ -4,11 +4,12 @@
    impressao.css). Depende de tokens.css (--rel-*, --font-rel-sans e, na
    barra, --ov-*) e de fontes.css (IBM Plex Sans).
    A folha (.rel-pagina e o que vai dentro) é papel: IBM Plex e tokens --rel-*.
-   A barra (.rel-barra) e a área em volta (.rel-area) são interface: fonte do
-   sistema e tokens --ov-*.
+   A barra (.rel-barra) e a área em volta (.rel-area) são interface e moram
+   em previa.css desde a v3.11.0 (BV-8), que este arquivo importa.
    O app importa este arquivo e o impressao.css só nas rotas dos relatórios
    internos; nenhum dos dois chega a um formulário oficial. O onevessel.css
    já importa este arquivo (o Materiais o recebe pelo CSS global, sem dano). */
+@import url("./previa.css");
 
 /* ---------- Folha ---------- */
 .rel-pagina { max-width: 210mm; margin: 0 auto; padding: 16mm; background: var(--rel-papel); color: var(--rel-texto); font: 400 13.3px/1.4 var(--font-rel-sans); page: relatorio; }
@@ -40,9 +41,3 @@
 
 /* ---------- Rodapé da folha (só na tela; no papel, as caixas de margem) ---------- */
 .rel-rodape { display: flex; justify-content: space-between; margin-top: 18px; padding-top: 8px; border-top: .5px solid var(--rel-linha); font-size: 11px; color: var(--rel-mudo); }
-
-/* ---------- Página de impressão: barra e área (interface) ---------- */
-/* Voltar | título (ocupa o resto) | ação à direita. Ocupa a largura da área. */
-.rel-barra { display: flex; align-items: center; gap: 8px; padding: 12px 0; font: var(--ov-fonte-corpo); color: var(--ov-texto); }
-.rel-barra-titulo { flex: 1; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--ov-fonte-titulo-3); color: var(--ov-texto); }
-.rel-area { background: var(--ov-fundo); padding: 24px 16px; }

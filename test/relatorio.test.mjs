@@ -12,6 +12,8 @@ import { problemasDeBase, regras, semComentario, seletores } from '../scripts/cs
 const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const relatorio = ler('css/relatorio.css');
 const impressao = ler('css/impressao.css');
+// A barra e a área moram no previa.css desde a v3.11.0 (BV-8).
+const previa = ler('css/previa.css');
 const onevessel = ler('css/onevessel.css');
 // A v3.10.0 contra a v3.9.0 é fixture com fixture: os CSS da tag v3.10.1
 // (a v3.10.1 só mexeu no tokens.css). O que a v3.11.0 mudou fica com
@@ -94,7 +96,7 @@ test('alteradas: a folha pede a página "relatorio"; o th sobe para 8,5pt; a bar
   th.delete('font-size'); thAntes.delete('font-size');
   assert.deepEqual(th, thAntes, 'só o tamanho mudou');
 
-  const barra = mapa(declaracoesEm(relatorio, '', '.rel-barra'));
+  const barra = mapa(declaracoesEm(previa, '', '.rel-barra'));
   assert.ok(!barra.has('max-width') && !barra.has('margin'), 'sem a largura da folha');
   assert.equal(barra.get('font'), 'var(--ov-fonte-corpo)');
   assert.equal(barra.get('color'), 'var(--ov-texto)');
@@ -139,11 +141,11 @@ test('coluna numérica à direita com tabular-nums, também no th; estado sem fu
 });
 
 test('barra: o título ocupa o resto e a barra só usa tokens --ov-* e a fonte do sistema', () => {
-  const titulo = mapa(declaracoesEm(relatorio, '', '.rel-barra-titulo'));
+  const titulo = mapa(declaracoesEm(previa, '', '.rel-barra-titulo'));
   assert.equal(titulo.get('flex'), '1');
   assert.equal(titulo.get('min-width'), '0');
   for (const s of ['.rel-barra', '.rel-barra-titulo']) {
-    const texto = declaracoesEm(relatorio, '', s).join('; ');
+    const texto = declaracoesEm(previa, '', s).join('; ');
     assert.doesNotMatch(texto, /--rel-|--font-rel|#[0-9a-f]{3,6}\b/i, s);
   }
 });
@@ -183,7 +185,7 @@ test('as duas páginas: A4 em pé e deitado, 16mm, rodapé de --rel-rodape e "p�
 });
 
 test('@media print: barra e rodapé da folha somem, preto e branco, logo de 10mm, linha inteira e cabeçalho repetido', () => {
-  const em = (s) => mapa(declaracoesEm(impressao, PRINT, s));
+  const em = (s) => mapa(declaracoesEm(impressao, PRINT, s) ?? declaracoesEm(previa, PRINT, s));
   assert.equal(em('.rel-barra').get('display'), 'none');
   assert.equal(em('.rel-rodape').get('display'), 'none');
   assert.equal(em('.rel-timbre').get('border-bottom-color'), '#000');

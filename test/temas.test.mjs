@@ -9,7 +9,6 @@ import { fileURLToPath } from 'node:url';
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const ler = (caminho) => readFileSync(resolve(raiz, caminho), 'utf8');
 const tokens = ler('css/tokens.css');
-const pacote = JSON.parse(ler('package.json'));
 
 // Seletor da regra -> valores de color-scheme declarados nela.
 const regras = [...tokens.matchAll(/([^{}]+)\{([^}]*)\}/g)].map((m) => ({
@@ -35,6 +34,4 @@ test('tokens.css: color-scheme só nos três seletores de tema', () => {
   assert.deepEqual(fora, []);
 });
 
-test('pacote: versão 3.10.1', () => {
-  assert.equal(pacote.version, '3.10.1');
-});
+// A versão do pacote fica com o teste da versão mais nova (test/v3.11.0.test.mjs).

@@ -16,7 +16,8 @@
 :where(.ov-casca, .ov-conteudo, .ov-lateral, .ov-lateral-marca, .ov-lateral-grupo, .ov-lateral-rodape,
   .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-superior, .ov-superior-direita,
   .ov-sincronizacao, .ov-tela, .ov-cabecalho-movel, .ov-barra-inferior, .ov-barra-inferior-item,
-  .ov-paleta, .ov-paleta-item, .ov-menu, .ov-menu-item, .ov-faixa, .ov-vazio, .ov-somente-leitura) {
+  .ov-paleta, .ov-paleta-item, .ov-menu, .ov-menu-item, .ov-faixa, .ov-vazio, .ov-somente-leitura,
+  .ov-menu-grupo, .ov-folha-topo, .ov-folha-menu, .ov-folha-conta) {
   box-sizing: border-box;
 }
 :where(.ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-barra-inferior-item, .ov-menu-item):focus-visible {
@@ -107,6 +108,13 @@
 .ov-menu-item svg { color: var(--ov-texto-terciario); }
 .ov-menu-item .ov-tecla { margin-left: auto; }
 .ov-menu-item[data-tom="perigo"], .ov-menu-item[data-tom="perigo"] svg { color: var(--ov-erro); }
+/* Item da seção aberta (v3.11; no "Mais", a seção que mora nele): o mesmo
+   desenho do .ov-nav ativo. Vem depois do :hover e vence ele. */
+.ov-menu-item[aria-current="page"] { background: var(--ov-item-ativo); }
+.ov-menu-item[aria-current="page"] svg { color: var(--ov-acao-texto); }
+/* Rótulo de grupo no menu e na folha do "Mais" (v3.11). Não é item: num
+   menu, o app põe aria-hidden; na folha, é o h3 da seção. */
+.ov-menu-grupo { margin: 0; padding: 8px 10px 4px; font: var(--ov-fonte-rotulo); color: var(--ov-texto-terciario); }
 .ov-menu-sep { height: 1px; margin: 4px; background: var(--ov-borda); }
 
 /* ---------- Véu e paleta de comandos ---------- */
@@ -122,8 +130,27 @@
 
 /* ---------- Folha móvel (o "Mais" do celular) ---------- */
 .ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
-.ov-folha-alca { display: grid; place-items: center; height: 20px; }
+.ov-folha-alca { display: grid; place-items: center; height: 20px; touch-action: none; }
 .ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
+/* Miolo do "Mais" (v3.11): o topo (título e o Fechar do app) é puxador,
+   como a alça: o dedo arrasta a folha, não a página. A lista rola por
+   dentro, com a área segura de baixo (o "Mais" não tem .ov-folha-rodape),
+   e os itens têm alvo de toque. Cada caixa declara a própria fonte e cor.
+     <div class="ov-folha" role="dialog" aria-modal="true" aria-labelledby="t">
+       <div class="ov-folha-alca"></div>
+       <div class="ov-folha-topo"><h2 class="ov-folha-titulo" id="t">Mais</h2>…Fechar…</div>
+       <div class="ov-folha-menu">
+         <a class="ov-menu-item" aria-current="page">…</a>
+         <h3 class="ov-menu-grupo">Conta</h3>
+         <p class="ov-folha-conta"><svg>…</svg>Nome da pessoa</p>
+       </div>
+     </div> */
+.ov-folha-topo { display: flex; align-items: center; gap: 8px; padding: 0 4px 4px 16px; touch-action: none; color: var(--ov-texto); }
+.ov-folha-titulo { flex: 1; min-width: 0; margin: 0; font: var(--ov-fonte-titulo-2); }
+.ov-folha-menu { overflow-y: auto; overscroll-behavior: contain; padding: 0 8px calc(12px + env(safe-area-inset-bottom, 0px)); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-folha-menu .ov-menu-item { height: var(--ov-altura-toque); }
+.ov-folha-conta { display: flex; align-items: center; gap: 10px; margin: 0; padding: 4px 10px 8px; color: var(--ov-texto-secundario); }
+.ov-folha-conta svg { color: var(--ov-texto-terciario); }
 /* ovSobe: a folha sobe; o .ov-toast, o painel e o diálogo de formulário do
    janelas.css também usam esta animação (o janelas.css depende da casca).
    O rodapé e as alturas da folha (data-altura) moram no janelas.css. */

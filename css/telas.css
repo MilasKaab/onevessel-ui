@@ -48,8 +48,15 @@
 .ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }
 
 /* ---------- Cartões e indicadores ---------- */
+/* Cartão em repouso se separa por borda, não por sombra, nos dois temas
+   (livro da marca; a sombra do tema claro saiu na v3.11). */
 .ov-cartao { background: var(--ov-superficie); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); }
-[data-theme="claro"] .ov-cartao { box-shadow: 0 1px 2px rgba(14,20,27,.04); }
+/* Cartão aberto (v3.11): o registro do painel, com aria-current="true" no
+   cartão. Borda ov-acao e fundo ov-acao-suave sobre a ov-superficie do
+   cartão (a ov-acao-suave é translúcida: vai como imagem, por cima da cor),
+   como a linha selecionada da tabela. O :where deixa a regra fraca: a borda
+   de alerta que o app põe numa classe dele continua vencendo. */
+.ov-cartao:where([aria-current="true"]) { border-color: var(--ov-acao); background-image: linear-gradient(var(--ov-acao-suave), var(--ov-acao-suave)); }
 .ov-indicador { display: block; padding: 20px; color: inherit; transition: border-color .12s; }
 a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }

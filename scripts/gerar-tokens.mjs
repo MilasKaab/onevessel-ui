@@ -24,8 +24,11 @@ function porTema(token, tema) {
   return v[tema] ?? null
 }
 
-function blocoTema(tema, seletor) {
-  const linhas = []
+// O color-scheme vai junto do tema: sem ele o navegador pinta os controles
+// nativos (o ícone do calendário e do relógio do input de data e hora) para
+// fundo claro, e no escuro eles somem.
+function blocoTema(tema, seletor, esquema) {
+  const linhas = [`  color-scheme: ${esquema};`]
   for (const c of t.color.tokens) {
     const v = porTema(c, tema)
     if (v !== null) linhas.push(linha(c.name, v))
@@ -64,6 +67,7 @@ const css = `/* Gerado por scripts/gerar-tokens.mjs a partir de tokens/tokens.js
 
 :root,
 [data-theme="escuro"] {
+  color-scheme: dark;
 ${t.color.tokens
   .map((c) => porTema(c, 'escuro') !== null && linha(c.name, porTema(c, 'escuro')))
   .filter(Boolean)
@@ -74,7 +78,7 @@ ${t.shadow.tokens
   .join('\n')}
 }
 
-${blocoTema('claro', '[data-theme="claro"]')}
+${blocoTema('claro', '[data-theme="claro"]', 'light')}
 
 :root {
 ${fixos.join('\n')}

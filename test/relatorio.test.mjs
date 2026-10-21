@@ -202,8 +202,8 @@ test('logo: marca/bram-offshore-horizontal.png com os bytes do design system (24
   assert.equal(bytes.readUInt32BE(20), 1073);
 });
 
-test('pacote: relatorio.css e marca/ em exports e files; versão 3.10.0', () => {
-  assert.equal(pacote.version, '3.10.0');
+// A versão do pacote fica com o teste da versão mais nova (test/temas.test.mjs).
+test('pacote: relatorio.css e marca/ em exports e files', () => {
   assert.equal(pacote.exports['./css/relatorio.css'], './css/relatorio.css');
   assert.equal(pacote.exports['./css/impressao.css'], './css/impressao.css');
   assert.equal(pacote.exports['./marca/*'], './marca/*');

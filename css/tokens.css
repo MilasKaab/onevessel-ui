@@ -3,6 +3,7 @@
 
 :root,
 [data-theme="escuro"] {
+  color-scheme: dark;
   --ov-fundo: #040a12;
   --ov-fundo-barra: rgba(4,10,18,.92);
   --ov-superficie: #0b1a2b;
@@ -50,6 +51,7 @@
 }
 
 [data-theme="claro"] {
+  color-scheme: light;
   --ov-fundo: #eef2f6;
   --ov-fundo-barra: rgba(255,255,255,.93);
   --ov-superficie: #ffffff;

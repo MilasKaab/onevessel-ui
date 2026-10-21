@@ -25,7 +25,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `relatorio.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*` e sem base; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; e `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -39,7 +39,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.10.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.10.1"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -407,6 +407,8 @@ document.documentElement.dataset.theme = 'claro'
 ```
 
 Guarde a escolha da pessoa e aplique antes da primeira pintura, para a tela não piscar.
+
+O `tokens.css` declara o `color-scheme` junto do tema (v3.10.1): `dark` na raiz e no `[data-theme="escuro"]`, `light` no `[data-theme="claro"]`. É o que faz o navegador pintar os controles nativos (o ícone do calendário e do relógio dos campos de data e hora, a barra de rolagem) para o tema certo. Os apps não repetem isso no CSS deles.
 
 ## Ícones de PWA
 

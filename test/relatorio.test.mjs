@@ -13,7 +13,12 @@ const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const relatorio = ler('css/relatorio.css');
 const impressao = ler('css/impressao.css');
 const onevessel = ler('css/onevessel.css');
-const soma = ['css/casca.css', 'css/janelas.css', 'css/telas.css', 'css/relatorio.css'].map(ler).concat(onevessel).join('\n');
+// A v3.10.0 contra a v3.9.0 é fixture com fixture: os CSS da tag v3.10.1
+// (a v3.10.1 só mexeu no tokens.css). O que a v3.11.0 mudou fica com
+// test/v3.11.0.test.mjs.
+const relatorioV3101 = ler('test/fixtures/relatorio-v3.10.1.css');
+const onevesselV3101 = ler('test/fixtures/onevessel-v3.10.1.css');
+const soma = ['casca', 'janelas', 'telas', 'relatorio', 'onevessel'].map((n) => ler(`test/fixtures/${n}-v3.10.1.css`)).join('\n');
 const daV390 = ler('test/fixtures/onevessel-v3.9.0.css');
 const pacote = JSON.parse(ler('package.json'));
 
@@ -68,12 +73,12 @@ test('minor: toda regra do onevessel.css da v3.9.0 igual no pacote, fora as trê
   // O que nasceu no onevessel.css e no relatorio.css é exatamente a lista (a
   // casca, as janelas e as telas não mudaram na v3.10.0).
   const v390 = seletores(daV390);
-  assert.deepEqual([...seletores(onevessel + relatorio)].filter((s) => !v390.has(s)), NOVOS);
+  assert.deepEqual([...seletores(onevesselV3101 + relatorioV3101)].filter((s) => !v390.has(s)), NOVOS);
 });
 
 test('as .rel-* da v3.9.0 moram no relatorio.css, na mesma ordem', () => {
   const ordem = (css) => regras(css).filter((r) => !r.media).flatMap((r) => r.seletores).filter((s) => s.startsWith('.rel-'));
-  assert.deepEqual(ordem(relatorio).filter((s) => !NOVOS.includes(s)), ordem(daV390));
+  assert.deepEqual(ordem(relatorioV3101).filter((s) => !NOVOS.includes(s)), ordem(daV390));
 });
 
 test('alteradas: a folha pede a página "relatorio"; o th sobe para 8,5pt; a barra é interface e ocupa a área', () => {

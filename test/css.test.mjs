@@ -20,6 +20,15 @@ const antes = ler('test/fixtures/onevessel-v3.4.0.css');
 const daV350 = ler('test/fixtures/onevessel-v3.5.0.css');
 const daV360 = ler('test/fixtures/onevessel-v3.6.0.css');
 
+// Os CSS da tag v3.10.1, fixos. Os testes das versões até a v3.10 comparam
+// fixture com fixture: o que a v3.11.0 mudou fica com test/v3.11.0.test.mjs.
+const fixo = (nome) => ler(`test/fixtures/${nome}-v3.10.1.css`);
+const cascaV3101 = fixo('casca');
+const janelasV3101 = fixo('janelas');
+const telasV3101 = fixo('telas');
+const onevesselV3101 = fixo('onevessel');
+const relatorioV3101 = fixo('relatorio');
+
 // O que saiu do onevessel.css na v3.5.0.
 const MOVIDOS = [
   '.ov-btn-perigo',
@@ -220,20 +229,20 @@ test('onevessel.css importa telas.css depois de janelas.css e não repete nenhum
 
 test('o que saiu do onevessel.css na v3.7.0 é exatamente a lista das telas, e nada entrou', () => {
   // As .rel-* saíram na v3.10.0 para o relatorio.css (test/relatorio.test.mjs).
-  const depois = seletores(onevessel);
+  const depois = seletores(onevesselV3101);
   const v360 = seletores(daV360);
-  const doRelatorio = seletores(relatorio);
+  const doRelatorio = seletores(relatorioV3101);
   assert.deepEqual([...v360].filter((s) => !depois.has(s) && !doRelatorio.has(s)), PARA_AS_TELAS);
   assert.deepEqual([...depois].filter((s) => !v360.has(s)), []);
 });
 
 test('todo seletor movido mora no telas.css com as declarações da v3.6.0, na mesma ordem', () => {
-  const deTelas = seletores(telas);
+  const deTelas = seletores(telasV3101);
   for (const s of PARA_AS_TELAS) {
     assert.ok(deTelas.has(s), `falta no telas.css: ${s}`);
-    assert.deepEqual(declaracoes(telas, s), declaracoes(daV360, s), `${s} mudou`);
+    assert.deepEqual(declaracoes(telasV3101, s), declaracoes(daV360, s), `${s} mudou`);
   }
-  const ordem = regras(telas).filter((r) => !r.media).flatMap((r) => r.seletores).filter((s) => PARA_AS_TELAS.includes(s));
+  const ordem = regras(telasV3101).filter((r) => !r.media).flatMap((r) => r.seletores).filter((s) => PARA_AS_TELAS.includes(s));
   const original = regras(daV360).filter((r) => !r.media).flatMap((r) => r.seletores).filter((s) => PARA_AS_TELAS.includes(s));
   assert.deepEqual(ordem, original);
 });
@@ -243,7 +252,7 @@ test('minor: toda regra do onevessel.css da v3.6.0 continua com os mesmos valore
   // cada @media da v3.6.0, as mesmas declarações.
   // Desde a v3.10.0 a soma inclui o relatorio.css, e as três regras que ele
   // alterou ficam com o teste da v3.10.0 (test/relatorio.test.mjs).
-  const soma = [onevessel, casca, janelas, telas, relatorio].join('\n');
+  const soma = [onevesselV3101, cascaV3101, janelasV3101, telasV3101, relatorioV3101].join('\n');
   for (const r of regras(daV360)) {
     for (const s of r.seletores) {
       if (s.startsWith('@')) { assert.ok(seletores(soma).has(s), s); continue; }
@@ -342,6 +351,7 @@ const nomesDaLista = (css) => {
 };
 
 test('minor: toda regra do telas.css da v3.7.0 continua com as mesmas declarações, fora a lista de box-sizing', () => {
+  const telas = telasV3101;
   const deTelas = seletores(telas);
   for (const r of regras(daV370)) {
     for (const s of r.seletores) {
@@ -360,9 +370,9 @@ test('minor: toda regra do telas.css da v3.7.0 continua com as mesmas declaraç�
 
 test('o que entrou no telas.css na v3.8.0 é exatamente o miolo e o cartão que estica', () => {
   const v370 = seletores(daV370);
-  const novos = [...seletores(telas)].filter((s) => !v370.has(s) && !ehListaDeCaixa(s));
+  const novos = [...seletores(telasV3101)].filter((s) => !v370.has(s) && !ehListaDeCaixa(s));
   assert.deepEqual(novos, [...ESTICA, ...MIOLO]);
-  for (const s of [...MIOLO, ...ESTICA]) assert.ok(regras(telas).some((r) => !r.media && r.seletores.includes(s)), `fora de @media: ${s}`);
+  for (const s of [...MIOLO, ...ESTICA]) assert.ok(regras(telasV3101).some((r) => !r.media && r.seletores.includes(s)), `fora de @media: ${s}`);
 });
 
 test('miolo do item: coluna de 88px, elipse, 600, mono 12/16 e terciário no identificador, no contexto e na seta', () => {
@@ -528,11 +538,14 @@ const semRecuo = (valor, beiras) => {
   return v;
 };
 
-for (const [nome, atual, fixo] of [['casca.css', casca, cascaV380], ['janelas.css', janelas, janelasV380]]) {
+for (const [nome, atual, fixo, daV3101] of [['casca.css', casca, cascaV380, cascaV3101], ['janelas.css', janelas, janelasV380, janelasV3101]]) {
   const lista = COM_RECUO[nome];
   const recuoDe = (media, s) => lista.find(([m, x]) => m === media && x === s)?.[2];
 
+  // A v3.9.0 contra a v3.8.0, fixture com fixture (a v3.10 não mexeu na casca
+  // nem nas janelas).
   test(`minor: toda regra do ${nome} da v3.8.0 igual, fora a lista do recuo`, () => {
+    const atual = daV3101;
     const deAgora = regras(atual).flatMap((r) => r.seletores.map((s) => `${r.media}|${s}`));
     const deAntes = regras(fixo).flatMap((r) => r.seletores.map((s) => `${r.media}|${s}`));
     assert.deepEqual(deAgora, deAntes, 'as mesmas regras, na mesma ordem');

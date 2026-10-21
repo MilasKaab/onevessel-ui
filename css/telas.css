@@ -120,6 +120,10 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
 .ov-tabela .meta { color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
 .ov-tabela[data-densidade="compacta"] td { height: 36px; }
 .ov-tabela[data-densidade="conforto"] td { height: 56px; }
+/* O que só a lista do celular mostra (v3.11): o rótulo de um número solto,
+   onde o cabeçalho sai ("12 atividades"). O par, .ov-fora-do-celular, some
+   na lista e fica de 768px para cima, no tablet também (abaixo). */
+.ov-tabela .ov-so-no-celular { display: none; }
 
 /* ---------- Barra de ações em massa ---------- */
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
@@ -169,6 +173,8 @@ a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
   .ov-tabela:has(td.nome) td:not(.nome, :empty, :has(.ov-check)) ~ td:not(.nome, :empty, :has(.ov-check))::before { content: "·"; content: "·" / ""; padding: 0 6px; }
   .ov-tabela:has(td.nome) tbody tr:has(.ov-check) { padding-left: 46px; }
   .ov-tabela:has(td.nome) td:has(.ov-check) { position: absolute; left: 16px; top: 50%; display: flex; transform: translateY(-50%); }
+  .ov-tabela:has(td.nome) .ov-so-no-celular { display: inline; }
+  .ov-tabela:has(td.nome) .ov-fora-do-celular { display: none; }
 
   .ov-esqueleto-linha { height: auto; min-height: 64px; padding: 0 16px; }
 

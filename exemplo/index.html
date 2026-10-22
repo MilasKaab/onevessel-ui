@@ -36,7 +36,9 @@
   .cartoes button.ov-cartao { width: 100%; text-align: left; }
   .controles-moldura { border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); background: var(--ov-fundo); color: var(--ov-texto); font: var(--ov-fonte-corpo); padding: var(--ov-esp-6); display: flex; flex-direction: column; gap: var(--ov-esp-5); }
   .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-4); }
-  .campo-no-cartao { padding: var(--ov-esp-4); max-width: 480px; }
+  .campo-no-cartao { padding: var(--ov-esp-4); max-width: 480px; display: flex; flex-direction: column; gap: var(--ov-esp-4); }
+  .tabela-rolagem { overflow-x: auto; }
+  .tabela-rolagem .ov-campo { min-width: 112px; }
   .segmentado-grupo { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 6px; }
   .segmentado-grupo .ov-segmentado { align-self: flex-start; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
@@ -253,7 +255,7 @@
 
   <section class="secao">
     <h2 class="ov-titulo-1">Botões e campos</h2>
-    <p class="ov-legenda">Do controles.css: botões de 36px no computador e 48px no toque (o pequeno também); campo de 44px com texto de 16px, fundo recuado dentro e fora do cartão e o anel único no foco; rótulo, ajuda e erro; o segmentado com 48px no toque; e o cartão clicável (botão e link), com o realce no hover, e o aberto, que não muda.</p>
+    <p class="ov-legenda">Do controles.css: botões de 36px no computador e 48px no toque (o pequeno também); campo de 44px com texto de 16px, fundo recuado dentro e fora do cartão e o anel único no foco; rótulo, ajuda e erro (com o CircleAlert de 16px); o textarea, com a altura pelo rows; o campo de linha (data-densidade="linha"), com 36px e 14px no computador e o campo de 44 no toque; o segmentado com 48px no toque; e o cartão clicável (botão e link), com o realce no hover, e o aberto, que não muda.</p>
 
     <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
     <div class="controles-moldura" data-theme="escuro">
@@ -286,6 +288,19 @@
           <label class="ov-label" for="obs-escuro">Observação <small>(opcional)</small></label>
           <input class="ov-campo" id="obs-escuro" type="text" placeholder="Ex.: chega no voo das 14h">
         </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="motivo-escuro">Motivo</label>
+          <textarea class="ov-campo" id="motivo-escuro" rows="3">Troca de turma antecipada pela parada técnica.</textarea>
+        </div>
+      </div>
+      <div class="ov-cartao tabela-rolagem">
+        <table class="ov-tabela" aria-label="Edição em linha">
+          <thead><tr><th>Nome</th><th>Camarote</th><th>Balsa</th><th>Cenário</th></tr></thead>
+          <tbody>
+            <tr><td>João Pereira</td><td><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"></td><td><select class="ov-campo" data-densidade="linha" aria-label="Balsa de João Pereira"><option>Manhã</option><option>Tarde</option></select></td><td><textarea class="ov-campo" data-densidade="linha" rows="1" aria-label="Cenário de João Pereira">Sobe na troca</textarea></td></tr>
+            <tr><td>Ana Lima</td><td><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="" placeholder="—" aria-label="Camarote de Ana Lima"></td><td><select class="ov-campo" data-densidade="linha" aria-label="Balsa de Ana Lima"><option>Tarde</option><option>Manhã</option></select></td><td><textarea class="ov-campo" data-densidade="linha" rows="1" aria-label="Cenário de Ana Lima"></textarea></td></tr>
+          </tbody>
+        </table>
       </div>
       <ul class="cartoes" aria-label="Cartões clicáveis">
         <li><button class="ov-cartao" type="button"><b>Camarote 204</b><br><span class="ov-legenda">Botão · 2 de 4 leitos ocupados</span></button></li>
@@ -325,6 +340,19 @@
           <label class="ov-label" for="obs-claro">Observação <small>(opcional)</small></label>
           <input class="ov-campo" id="obs-claro" type="text" placeholder="Ex.: chega no voo das 14h">
         </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="motivo-claro">Motivo</label>
+          <textarea class="ov-campo" id="motivo-claro" rows="3">Troca de turma antecipada pela parada técnica.</textarea>
+        </div>
+      </div>
+      <div class="ov-cartao tabela-rolagem">
+        <table class="ov-tabela" aria-label="Edição em linha">
+          <thead><tr><th>Nome</th><th>Camarote</th><th>Balsa</th><th>Cenário</th></tr></thead>
+          <tbody>
+            <tr><td>João Pereira</td><td><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"></td><td><select class="ov-campo" data-densidade="linha" aria-label="Balsa de João Pereira"><option>Manhã</option><option>Tarde</option></select></td><td><textarea class="ov-campo" data-densidade="linha" rows="1" aria-label="Cenário de João Pereira">Sobe na troca</textarea></td></tr>
+            <tr><td>Ana Lima</td><td><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="" placeholder="—" aria-label="Camarote de Ana Lima"></td><td><select class="ov-campo" data-densidade="linha" aria-label="Balsa de Ana Lima"><option>Tarde</option><option>Manhã</option></select></td><td><textarea class="ov-campo" data-densidade="linha" rows="1" aria-label="Cenário de Ana Lima"></textarea></td></tr>
+          </tbody>
+        </table>
       </div>
       <ul class="cartoes" aria-label="Cartões clicáveis">
         <li><button class="ov-cartao" type="button"><b>Camarote 204</b><br><span class="ov-legenda">Botão · 2 de 4 leitos ocupados</span></button></li>

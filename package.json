@@ -16,6 +16,7 @@
     "./css/relatorio.css": "./css/relatorio.css",
     "./css/impressao.css": "./css/impressao.css",
     "./css/previa.css": "./css/previa.css",
+    "./css/controles.css": "./css/controles.css",
     "./js/paleta-nucleo.js": {
       "types": "./js/paleta-nucleo.d.ts",
       "default": "./js/paleta-nucleo.js"

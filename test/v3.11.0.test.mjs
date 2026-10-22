@@ -2,7 +2,9 @@
 // o miolo da paleta na casca, com o anel do campo; os utilitários da lista do
 // celular, o cartão aberto e a aba de rota nas telas; o cartão sem sombra; a
 // barra da Página de impressão no previa.css; o hover do primário legível.
-// `test/fixtures/*-v3.10.1.css` são os CSS da tag v3.10.1, fixos.
+// `test/fixtures/*-v3.10.1.css` são os CSS da tag v3.10.1 e
+// `test/fixtures/*-v3.11.0.css` os da v3.11.0, fixos: desde a v3.12.0 este
+// teste compara fixture com fixture.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -11,14 +13,14 @@ import { problemasDeBase, regras, semComentario, seletores } from '../scripts/cs
 
 const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const fixo = (nome) => ler(`test/fixtures/${nome}-v3.10.1.css`);
-const casca = ler('css/casca.css');
-const telas = ler('css/telas.css');
-const onevessel = ler('css/onevessel.css');
-const relatorio = ler('css/relatorio.css');
-const impressao = ler('css/impressao.css');
-const previa = ler('css/previa.css');
+const v3110 = (nome) => ler(`test/fixtures/${nome}-v3.11.0.css`);
+const casca = v3110('casca');
+const telas = v3110('telas');
+const onevessel = v3110('onevessel');
+const relatorio = v3110('relatorio');
+const impressao = v3110('impressao');
+const previa = v3110('previa');
 const tokens = ler('css/tokens.css');
-const pacote = JSON.parse(ler('package.json'));
 
 const CELULAR = '@media (max-width: 767px)';
 const PRINT = '@media print';
@@ -173,9 +175,9 @@ test('paleta: o campo com o anel único do livro, no próprio campo', () => {
   assert.doesNotMatch(semComentario(casca), /\.ov-paleta(-busca)?:focus-within/);
 });
 
-test('nenhum outline: none nos CSS do pacote, fora o .ov-campo (até a v3.12.0)', () => {
-  for (const nome of ['tokens', 'fontes', 'casca', 'janelas', 'telas', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    for (const { seletores: ss, corpo: c } of regras(ler(`css/${nome}.css`))) {
+test('nenhum outline: none nos CSS da v3.11.0, fora o .ov-campo (até a v3.12.0)', () => {
+  for (const nome of ['casca', 'janelas', 'telas', 'onevessel', 'relatorio', 'previa', 'impressao']) {
+    for (const { seletores: ss, corpo: c } of regras(v3110(nome))) {
       if (!/(^|;|\s)outline\s*:\s*(none|0)\s*(;|$)/.test(c)) continue;
       assert.deepEqual([nome, ss], ['onevessel', ['.ov-campo']], `${nome}.css: ${ss.join(', ')}`);
     }
@@ -231,13 +233,12 @@ test('barra: valores da v3.10.1, o título em titulo-3 (16px, 600)', () => {
   assert.match(tokens, /--ov-fonte-titulo-3:\s*600 16px\/24px var\(--font-sans\);/);
 });
 
-test('o relatorio.css importa o previa.css e não repete a barra; o impressao.css não fala mais dela; previa.css em exports', () => {
+test('o relatorio.css importa o previa.css e não repete a barra; o impressao.css não fala mais dela', () => {
   assert.match(semComentario(relatorio), /^\s*@import url\("\.\/previa\.css"\);/);
   for (const s of DA_PREVIA) {
     assert.ok(!seletores(relatorio).has(s), `relatorio.css: ${s}`);
     assert.ok(!seletores(impressao).has(s), `impressao.css: ${s}`);
   }
-  assert.equal(pacote.exports['./css/previa.css'], './css/previa.css');
 });
 
 // ---------- Contraste, pelos tokens, nos dois temas ----------
@@ -281,10 +282,3 @@ for (const [tema, t] of Object.entries(TEMAS)) {
     confere('ov-acao-texto', sobre(cor(t['ov-item-ativo']), paleta), 3, 'ícone do item aberto');
   });
 }
-
-// ---------- Pacote ----------
-
-// A versão do pacote fica com o teste da versão mais nova.
-test('pacote: versão 3.11.0', () => {
-  assert.equal(pacote.version, '3.11.0');
-});

@@ -1,0 +1,43 @@
+/* OneVessel — o papel dos relatórios internos (v3.10.0, D1 da F7).
+   Importável sozinho, como a casca: só classes .rel-*, sem body, html, :root,
+   * nem elemento solto, e sem @page nem @media print (moram em
+   impressao.css). Depende de tokens.css (--rel-*, --font-rel-sans e, na
+   barra, --ov-*) e de fontes.css (IBM Plex Sans).
+   A folha (.rel-pagina e o que vai dentro) é papel: IBM Plex e tokens --rel-*.
+   A barra (.rel-barra) e a área em volta (.rel-area) são interface e moram
+   em previa.css desde a v3.11.0 (BV-8), que este arquivo importa.
+   O app importa este arquivo e o impressao.css só nas rotas dos relatórios
+   internos; nenhum dos dois chega a um formulário oficial. O onevessel.css
+   já importa este arquivo (o Materiais o recebe pelo CSS global, sem dano). */
+@import url("./previa.css");
+
+/* ---------- Folha ---------- */
+.rel-pagina { max-width: 210mm; margin: 0 auto; padding: 16mm; background: var(--rel-papel); color: var(--rel-texto); font: 400 13.3px/1.4 var(--font-rel-sans); page: relatorio; }
+.rel-pagina[data-orientacao="paisagem"] { box-sizing: border-box; max-width: 297mm; aspect-ratio: 297 / 210; page: relatorio-paisagem; }
+
+/* ---------- Timbre ---------- */
+.rel-timbre { display: flex; align-items: center; gap: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--rel-filete); }
+.rel-timbre img { height: 40px; width: auto; display: block; }
+.rel-titulo { margin: 0; font: 600 24px/1.2 var(--font-rel-sans); letter-spacing: -.01em; color: var(--rel-texto); }
+.rel-sub { font-size: 13px; color: var(--rel-mudo); }
+.rel-meta { margin-left: auto; text-align: right; font-size: 12px; line-height: 1.5; color: var(--rel-mudo); font-variant-numeric: tabular-nums; }
+
+/* ---------- Resumo ---------- */
+.rel-resumo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; padding: 14px 16px; background: var(--rel-tinta); border-radius: 6px; }
+.rel-resumo b { display: block; font: 600 26px/1.1 var(--font-rel-sans); color: var(--rel-titulo); font-variant-numeric: tabular-nums; }
+.rel-resumo span { font-size: 12px; color: var(--rel-mudo); }
+
+/* ---------- Seções e tabelas ---------- */
+.rel-secao { margin: 18px 0 6px; font: 600 15px/1.3 var(--font-rel-sans); color: var(--rel-titulo); }
+.rel-tabela { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rel-tabela th { text-align: left; padding: 6px; font-size: 8.5pt; font-weight: 600; color: var(--rel-mudo); border-bottom: 1px solid var(--rel-texto); }
+.rel-tabela td { padding: 6px; border-bottom: .5px solid var(--rel-linha); font-variant-numeric: tabular-nums; }
+/* Coluna numérica: no th e no td da coluna. */
+.rel-num, .rel-tabela .rel-num { text-align: right; font-variant-numeric: tabular-nums; }
+/* Estado e prioridade: símbolo e palavra, legível sem cor. O app escreve o
+   símbolo (● ○ ▲ × △) num span com aria-hidden antes da palavra; a Plex não
+   tem esses glifos e eles caem na fonte do sistema. */
+.rel-estado { display: inline-flex; align-items: baseline; gap: .35em; white-space: nowrap; background: none; color: inherit; }
+
+/* ---------- Rodapé da folha (só na tela; no papel, as caixas de margem) ---------- */
+.rel-rodape { display: flex; justify-content: space-between; margin-top: 18px; padding-top: 8px; border-top: .5px solid var(--rel-linha); font-size: 11px; color: var(--rel-mudo); }

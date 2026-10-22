@@ -4,22 +4,25 @@
 // conferir perde a exceção do outline: none; o cartão clicável e o
 // indicador ganham o realce ov-linha-hover; .ov-visao e .ov-segmentado com
 // 48px no toque.
-// `test/fixtures/*-v3.11.0.css` são os CSS da tag v3.11.0, fixos.
+// `test/fixtures/*-v3.11.0.css` são os CSS da tag v3.11.0 e
+// `test/fixtures/*-v3.12.0.css` os da v3.12.0, fixos: desde a v3.13.0 este
+// teste compara fixture com fixture (casca, relatorio, previa e impressao
+// não mudaram na v3.12.0: as fixtures da v3.11.0 são os da v3.12.0).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 
 import { problemasDeBase, regras, semComentario, seletores } from '../scripts/css-regras.mjs';
 
 const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const fixo = (nome) => ler(`test/fixtures/${nome}-v3.11.0.css`);
-const css = (nome) => ler(`css/${nome}.css`);
+const v3120 = (nome) => ler(`test/fixtures/${nome}-v3.12.0.css`);
+const css = (nome) => (['controles', 'onevessel', 'telas', 'janelas'].includes(nome) ? v3120(nome) : fixo(nome));
 const controles = css('controles');
 const onevessel = css('onevessel');
 const telas = css('telas');
 const janelas = css('janelas');
-const tokens = css('tokens');
-const pacote = JSON.parse(ler('package.json'));
+const tokens = ler('css/tokens.css');
 
 const TOQUE = '@media (pointer: coarse)';
 
@@ -131,13 +134,12 @@ test('controles.css: importável sozinho, sem base, sem import, sem :root, sem i
   assert.match(corpo(controles, '.ov-campo'), /color: var\(--ov-texto\)/);
 });
 
-test('onevessel.css: importa o controles.css por último e não repete nenhum seletor dele; a plataforma recebe tudo', () => {
+test('onevessel.css: importa o controles.css por último e não repete nenhum seletor dele', () => {
   const imports = [...semComentario(onevessel).matchAll(/@import url\("\.\/([\w-]+\.css)"\);/g)].map((m) => m[1]);
   assert.deepEqual(imports, ['casca.css', 'janelas.css', 'telas.css', 'relatorio.css', 'controles.css']);
   const deles = seletores(controles);
   for (const s of seletores(onevessel)) assert.ok(!deles.has(s), `repetido: ${s}`);
   for (const s of seletores(onevessel)) assert.doesNotMatch(s, /\.ov-(btn|campo|label|ajuda|erro-campo)/, s);
-  assert.equal(pacote.exports['./css/controles.css'], './css/controles.css');
 });
 
 test('janelas.css: o .ov-btn-perigo é só a cor, sobre a base do controles.css, sem import', () => {
@@ -186,9 +188,9 @@ test('rótulo: 14px/500 em ov-texto', () => {
 
 // ---------- Nenhum outline: none ----------
 
-test('nenhum outline: none em CSS nenhum do pacote, sem exceção', () => {
-  for (const nome of readdirSync(new URL('../css/', import.meta.url)).filter((n) => n.endsWith('.css'))) {
-    for (const { seletores: ss, corpo: c, media } of regras(ler(`css/${nome}`))) {
+test('nenhum outline: none nos CSS da v3.12.0, sem exceção', () => {
+  for (const nome of ['controles', 'casca', 'janelas', 'telas', 'onevessel', 'relatorio', 'previa', 'impressao']) {
+    for (const { seletores: ss, corpo: c, media } of regras(css(nome))) {
       assert.doesNotMatch(c, /(^|;|\s)outline\s*:\s*(none|0)\s*(;|$)/, `${nome}: ${media} ${ss.join(', ')}`);
     }
   }
@@ -260,10 +262,3 @@ for (const [tema, t] of Object.entries(TEMAS)) {
     for (const texto of ['ov-texto', 'ov-texto-secundario', 'ov-texto-terciario']) confere(texto, realce, 4.5, `${texto} no cartão sob o mouse`);
   });
 }
-
-// ---------- Pacote ----------
-
-// A versão do pacote fica com o teste da versão mais nova.
-test('pacote: versão 3.12.0', () => {
-  assert.equal(pacote.version, '3.12.0');
-});

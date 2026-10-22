@@ -34,4 +34,4 @@ test('tokens.css: color-scheme só nos três seletores de tema', () => {
   assert.deepEqual(fora, []);
 });
 
-// A versão do pacote fica com o teste da versão mais nova (test/v3.12.0.test.mjs).
+// A versão do pacote fica com o teste da versão mais nova (test/v3.13.0.test.mjs).

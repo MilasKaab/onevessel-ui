@@ -1,0 +1,45 @@
+/* OneVessel — folha de componentes compartilhada (v3.12).
+   Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
+   Traz a casca (casca.css, com o .ov-estado), as janelas (janelas.css:
+   Diálogo, Toast, Painel lateral, rodapé e alturas da folha, .ov-btn-perigo),
+   as telas (telas.css: tipografia, cartão e indicadores, Precisa de você,
+   visões e filtros, contador, progresso, segmentado, checkbox, tabela, barra
+   de ações em massa e esqueleto), o relatório (relatorio.css), os controles
+   (controles.css: botões e campo) e a base de 14px.
+   Desde a v3.12.0, .ov-btn*, .ov-campo e .ov-label moram em controles.css,
+   importado depois dos outros: as regras continuam depois das janelas e
+   das telas, como estavam.
+   Desde a v3.10.0, as .rel-* moram em relatorio.css; a impressão (@media
+   print, @page com nome) fica em impressao.css, só nas rotas de relatório.
+   Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
+   Tema: [data-theme="claro"] na raiz; sem atributo = escuro. */
+@import url("./casca.css");
+@import url("./janelas.css");
+@import url("./telas.css");
+@import url("./relatorio.css");
+@import url("./controles.css");
+
+/* ---------- Base ---------- */
+body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; }
+a { color: var(--ov-acao-texto); text-decoration: none; }
+a:hover { color: var(--ov-acao-hover); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+.ov-tnum { font-variant-numeric: tabular-nums; }
+.ov-codigo { font: 400 13px/20px var(--font-mono); }
+.ov-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* ---------- Ícone de app ---------- */
+.ov-icone-app { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; background: var(--ov-marca-azul); color: #ffffff; position: relative; overflow: hidden; }
+.ov-icone-app::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--ov-marca-laranja); }
+
+/* ---------- Matriz de permissões ---------- */
+.ov-matriz { width: 100%; border-collapse: collapse; }
+.ov-matriz th, .ov-matriz td { height: 44px; padding: 0 12px; border-bottom: 1px solid var(--ov-borda); text-align: center; white-space: nowrap; }
+.ov-matriz th { font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); }
+.ov-matriz th:first-child, .ov-matriz td:first-child { text-align: left; }
+.ov-matriz .modulo td { background: var(--ov-item-ativo); font-weight: 600; text-align: left; }
+.ov-matriz .herdado { color: var(--ov-texto-terciario); font-size: 12px; }
+.ov-matriz .excecao { box-shadow: inset 0 0 0 1px var(--ov-destaque); border-radius: 4px; }

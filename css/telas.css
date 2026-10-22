@@ -160,6 +160,10 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    Com ela na tela, a .ov-toasts leva data-com-barra (janelas.css). */
 .ov-acoes-massa[data-flutuante] { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: var(--ov-z-flutuante); width: max-content; max-width: calc(100vw - 32px); transform: translateX(-50%); white-space: nowrap; background: var(--ov-fundo-barra); color: var(--ov-texto); font: var(--ov-fonte-corpo-forte); animation: ovSobeCentro .18s cubic-bezier(.32,.72,0,1); }
 @keyframes ovSobeCentro { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+/* Toque (v3.13): os botões vão a 48px e a caixa, com a borda de 1px dentro
+   (border-box), passa a 50 para contê-los; com 48 eles passavam 1px em
+   cima e embaixo, por cima da borda. */
+@media (pointer: coarse) { .ov-acoes-massa { height: calc(var(--ov-altura-toque) + 2px); } }
 
 /* ---------- Esqueleto ---------- */
 /* Carregando no formato da tela, sem spinner. .ov-esqueleto é o bloco (o

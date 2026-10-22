@@ -1,6 +1,6 @@
 {
   "name": "onevessel-ui",
-  "version": "3.12.0",
+  "version": "3.13.0",
   "description": "Identidade compartilhada dos apps OneVessel: tokens, CSS de componentes, fontes, ícones de PWA e o logo dos relatórios.",
   "license": "UNLICENSED",
   "sideEffects": [

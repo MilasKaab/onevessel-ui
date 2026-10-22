@@ -14,7 +14,10 @@
    Campo: 44px em qualquer tela, texto de 16px, fundo ov-superficie-recuada
    (o do livro para o campo dentro de cartão; o mesmo fora dele), borda
    ov-borda-controle. O foco é o anel único do livro, sem halo e sem trocar
-   a borda: o halo era sombra, e sombra some nas cores forçadas. */
+   a borda: o halo era sombra, e sombra some nas cores forçadas.
+   Desde a v3.13: o textarea.ov-campo (altura pelo rows, mínimo de 44) e o
+   campo de linha, .ov-campo[data-densidade="linha"] (36px e 14px no
+   computador, a exceção do livro para a célula editada na linha). */
 
 :where(.ov-btn, .ov-campo-grupo, .ov-campo) { box-sizing: border-box; }
 
@@ -46,5 +49,28 @@
 .ov-campo::placeholder { color: var(--ov-texto-terciario); }
 .ov-campo:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
 .ov-campo[aria-invalid="true"] { border-color: var(--ov-erro); }
+/* textarea (v3.13): a altura vem do rows do app, com o mínimo do campo; o
+   padding de 9px põe a primeira linha de 16/24 na mesma altura do texto do
+   input (1 de borda + 9 = 10, o que sobra de 44 - 24 dividido por dois). */
+textarea.ov-campo { height: auto; min-height: var(--ov-altura-campo); padding: 9px 12px; resize: vertical; }
+/* Campo de linha (v3.13, a exceção do livro): o que edita uma célula dentro
+   da linha da tabela (ou da lista densa) fica com 36px e texto de 14px, para
+   a linha não crescer; fundo, borda e anel do .ov-campo. Fica no meio da
+   célula (vertical-align): na linha de base, o espaço do descendente
+   embaixo fazia a linha crescer. No textarea, o mínimo é o de 36 e o
+   padding de 7px alinha o 14/20 do mesmo jeito.
+   Formulário é sempre o .ov-campo de 44. */
+.ov-campo[data-densidade="linha"] { height: var(--ov-altura-controle); font-size: 14px; line-height: 20px; vertical-align: middle; }
+textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-altura-controle); padding: 7px 12px; }
+/* No toque, o campo de linha é o .ov-campo de 44 e 16px: o campo não vai a
+   48 em tela nenhuma, e texto abaixo de 16px faz o Safari do iPhone dar zoom
+   no foco. */
+@media (pointer: coarse) {
+  .ov-campo[data-densidade="linha"] { height: var(--ov-altura-campo); font-size: 16px; line-height: 24px; }
+  textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-altura-campo); padding: 9px 12px; }
+}
 .ov-ajuda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
 .ov-erro-campo { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 18px; color: var(--ov-erro); }
+/* O ícone do erro (v3.13): o CircleAlert de 16px, aria-hidden, centrado na
+   primeira linha de 18px e sem encolher quando o texto quebra. */
+.ov-erro-campo > svg { flex: none; width: 16px; height: 16px; margin-top: 1px; }

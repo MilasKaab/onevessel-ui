@@ -1,0 +1,50 @@
+/* OneVessel — controles (v3.12): botões (.ov-btn e as variantes) e o campo
+   de formulário (.ov-campo-grupo, .ov-label, .ov-campo, .ov-ajuda,
+   .ov-erro-campo), a régua do livro para a suíte inteira (V17, PV-2, PV-3,
+   BV-4, BV-9, BV-10).
+   Importável sozinho, como a casca, as janelas e as telas: depende só de
+   tokens.css. Sem regra de html, body, a, button, *, tamanho de fonte base,
+   movimento reduzido global ou impressão; cada caixa declara a própria
+   fonte e cor. O .ov-btn-perigo (janelas.css) é só a cor sobre a base
+   daqui; quem importa o janelas.css importa também este arquivo.
+
+   Botão: 36px no computador e 48px em pointer: coarse, peso 500, raio
+   ov-raio-md. O .ov-btn-sm (28px) é só do computador: no toque vai a 48
+   como os outros.
+   Campo: 44px em qualquer tela, texto de 16px, fundo ov-superficie-recuada
+   (o do livro para o campo dentro de cartão; o mesmo fora dele), borda
+   ov-borda-controle. O foco é o anel único do livro, sem halo e sem trocar
+   a borda: o halo era sombra, e sombra some nas cores forçadas. */
+
+:where(.ov-btn, .ov-campo-grupo, .ov-campo) { box-sizing: border-box; }
+
+/* ---------- Botões ---------- */
+.ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
+.ov-btn:disabled { opacity: .45; cursor: not-allowed; }
+.ov-btn-primario { background: var(--ov-acao); color: var(--ov-sobre-acao); }
+/* No hover o texto vira ov-fundo (v3.11, PV-4): o ciano do escuro com o
+   ov-sobre-acao dava 1,72:1. ov-fundo sobre ov-acao-hover: 10,99:1 no escuro
+   e 6,40:1 no claro. O token não escurece: ele é também a cor do link sob o
+   mouse, sobre ov-fundo, e um tom escuro o bastante para o texto claro (o
+   petrol da ação dá 5,10:1 com ele) fica em 3,71:1 ali. */
+.ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); color: var(--ov-fundo); }
+.ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); color: var(--ov-texto); }
+.ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
+.ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
+.ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
+.ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
+.ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
+/* Toque: 48px, o alvo do livro (era 44 até a v3.11). O .ov-btn vem depois
+   do .ov-btn-sm, com a mesma força: o pequeno também sobe. */
+@media (pointer: coarse) { .ov-btn { height: var(--ov-altura-toque); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } }
+
+/* ---------- Campos ---------- */
+.ov-campo-grupo { display: flex; flex-direction: column; gap: 6px; }
+.ov-label { font: 500 14px/20px var(--font-sans); color: var(--ov-texto); }
+.ov-label small { font-weight: 400; color: var(--ov-texto-terciario); font-size: 13px; }
+.ov-campo { width: 100%; height: var(--ov-altura-campo); padding: 0 12px; border-radius: var(--ov-raio-md); border: 1px solid var(--ov-borda-controle); background: var(--ov-superficie-recuada); color: var(--ov-texto); font: 400 16px/24px var(--font-sans); transition: border-color .12s; }
+.ov-campo::placeholder { color: var(--ov-texto-terciario); }
+.ov-campo:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+.ov-campo[aria-invalid="true"] { border-color: var(--ov-erro); }
+.ov-ajuda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
+.ov-erro-campo { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 18px; color: var(--ov-erro); }

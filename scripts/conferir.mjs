@@ -3,9 +3,9 @@
 //   npm run conferir
 //
 // Falha se:
-// - casca.css, janelas.css, telas.css ou relatorio.css tiver regra de html,
-//   body, :root, *, a ou button soltos, tamanho de fonte fora de classe ou
-//   @media print / @page (os quatro são importáveis sozinhos), ou casca.css,
+// - casca.css, janelas.css, telas.css, controles.css ou relatorio.css tiver
+//   regra de html, body, :root, *, a ou button soltos, tamanho de fonte fora
+//   de classe ou @media print / @page (os cinco são importáveis sozinhos), ou casca.css,
 //   janelas.css ou telas.css não tiver prefers-reduced-motion;
 // - relatorio.css tiver regra que não seja .rel-*, ou não importar previa.css;
 // - previa.css tiver regra que não seja a barra (.rel-barra, .rel-barra-titulo
@@ -14,16 +14,16 @@
 // - impressao.css tiver @page sem nome, visibility, position: absolute ou
 //   regra que não seja .rel-*;
 // - algum seletor estiver em dois de casca.css, janelas.css, telas.css,
-//   relatorio.css e onevessel.css;
+//   controles.css, relatorio.css, previa.css e onevessel.css;
 // - onevessel.css ainda tiver @media print, @page ou .rel-* (moram em
 //   impressao.css e relatorio.css), ou não importar casca.css, janelas.css,
-//   telas.css e relatorio.css;
+//   telas.css, relatorio.css e controles.css;
 // - algum CSS de css/ faltar em exports;
 // - sobrar o nome antigo do Paradas em qualquer arquivo ou pasta do pacote;
 // - algum arquivo de js/ importar pacote (só caminho relativo), algum .js de
 //   js/ não tiver o seu .d.ts ou algum arquivo de js/ faltar em exports;
-// - algum CSS de css/ tiver outline: none (ou 0) fora da exceção pelo nome
-//   (v3.11.0, U17-13): o foco perde o anel do livro.
+// - algum CSS de css/ tiver outline: none (ou 0), sem exceção (v3.12.0; a
+//   do .ov-campo valeu de U17-13 até a v3.12.0): o foco perde o anel do livro.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -37,14 +37,15 @@ const semComentarioJs = (js) => semComentario(js).replace(/^\s*\/\/.*$/gm, '')
 const casca = ler('css/casca.css')
 const janelas = ler('css/janelas.css')
 const telas = ler('css/telas.css')
+const controles = ler('css/controles.css')
 const relatorio = ler('css/relatorio.css')
 const previa = ler('css/previa.css')
 const impressao = semComentario(ler('css/impressao.css'))
 const onevessel = semComentario(ler('css/onevessel.css'))
 
-// 1. casca.css, janelas.css, telas.css e relatorio.css sem base nem impressão;
-//    relatorio.css só com .rel-*.
-erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas), ...problemasDeBase('telas.css', telas), ...problemasDeBase('relatorio.css', relatorio))
+// 1. casca.css, janelas.css, telas.css, controles.css e relatorio.css sem
+//    base nem impressão; relatorio.css só com .rel-*.
+erros.push(...problemasDeBase('casca.css', casca), ...problemasDeBase('janelas.css', janelas), ...problemasDeBase('telas.css', telas), ...problemasDeBase('controles.css', controles), ...problemasDeBase('relatorio.css', relatorio))
 for (const s of seletores(relatorio)) if (!s.startsWith('.rel-')) erros.push(`relatorio.css tem regra fora de .rel-*: ${s}`)
 if (!/@import\s+url\(["']\.\/previa\.css["']\)/.test(semComentario(relatorio))) erros.push('relatorio.css não importa ./previa.css')
 
@@ -69,7 +70,7 @@ if (/visibility\s*:/.test(impressao)) erros.push('impressao.css tem visibility')
 if (/position\s*:\s*absolute/.test(impressao)) erros.push('impressao.css tem position: absolute')
 
 // 2. Nenhum seletor em dois arquivos.
-const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'relatorio.css': seletores(relatorio), 'previa.css': seletores(previa), 'onevessel.css': seletores(onevessel) }
+const arquivos = { 'casca.css': seletores(casca), 'janelas.css': seletores(janelas), 'telas.css': seletores(telas), 'controles.css': seletores(controles), 'relatorio.css': seletores(relatorio), 'previa.css': seletores(previa), 'onevessel.css': seletores(onevessel) }
 const nomes = Object.keys(arquivos)
 for (const [n, a] of nomes.entries()) {
   for (const b of nomes.slice(n + 1)) {
@@ -78,28 +79,26 @@ for (const [n, a] of nomes.entries()) {
 }
 
 // 3. onevessel.css sem impressão nem .rel-*, e importando a casca, as janelas,
-//    as telas e o relatório.
+//    as telas, o relatório e os controles.
 if (/@media\s+print/.test(onevessel)) erros.push('onevessel.css ainda tem @media print')
 if (/@page/.test(onevessel)) erros.push('onevessel.css ainda tem @page')
 if (!/@import\s+url\(["']\.\/casca\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./casca.css')
 if (!/@import\s+url\(["']\.\/janelas\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./janelas.css')
 if (!/@import\s+url\(["']\.\/telas\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./telas.css')
 if (!/@import\s+url\(["']\.\/relatorio\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./relatorio.css')
+if (!/@import\s+url\(["']\.\/controles\.css["']\)/.test(onevessel)) erros.push('onevessel.css não importa ./controles.css')
 for (const s of arquivos['onevessel.css']) if (s.startsWith('.rel-')) erros.push(`onevessel.css ainda tem ${s} (mora em relatorio.css)`)
 if (/impressao\.css/.test(onevessel)) erros.push('onevessel.css importa impressao.css')
 for (const nome of ['casca.css', 'janelas.css', 'telas.css']) {
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)/.test(ler(`css/${nome}`))) erros.push(`${nome} sem prefers-reduced-motion`)
 }
 
-// 3b. Nenhum outline: none. A exceção é o .ov-campo, que marca o foco com a
-//     borda ov-acao e o halo até o BV-4 decidir o campo (v3.12.0).
-const OUTLINE_NONE_PERMITIDO = { 'onevessel.css': ['.ov-campo'] }
+// 3b. Nenhum outline: none, em CSS nenhum. O .ov-campo, a última exceção,
+//     passou ao anel do livro na v3.12.0 (BV-4).
 for (const nome of readdirSync(resolve(raiz, 'css')).filter((n) => n.endsWith('.css'))) {
   for (const { seletores: ss, corpo, media } of regras(ler(`css/${nome}`))) {
     if (!/(^|;|\s)outline\s*:\s*(none|0)\s*(;|$)/.test(corpo)) continue
-    for (const s of ss) {
-      if (!OUTLINE_NONE_PERMITIDO[nome]?.includes(s)) erros.push(`${nome} tem outline: none em ${media ? media + ' ' : ''}${s}`)
-    }
+    for (const s of ss) erros.push(`${nome} tem outline: none em ${media ? media + ' ' : ''}${s}`)
   }
 }
 
@@ -152,4 +151,4 @@ if (erros.length) {
   console.error(`conferir: ${erros.length} problema(s)\n- ` + erros.join('\n- '))
   process.exit(1)
 }
-console.log(`conferir: ok (${arquivos['casca.css'].size} seletores em casca.css, ${arquivos['janelas.css'].size} em janelas.css, ${arquivos['telas.css'].size} em telas.css e ${arquivos['relatorio.css'].size} em relatorio.css, nenhum repetido; ${deJs.length} arquivos em js/)`)
+console.log(`conferir: ok (${arquivos['casca.css'].size} seletores em casca.css, ${arquivos['janelas.css'].size} em janelas.css, ${arquivos['telas.css'].size} em telas.css, ${arquivos['controles.css'].size} em controles.css e ${arquivos['relatorio.css'].size} em relatorio.css, nenhum repetido; ${deJs.length} arquivos em js/)`)

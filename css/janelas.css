@@ -3,8 +3,10 @@
    Importável sozinho, como a casca: depende de tokens.css e de casca.css
    (véu .ov-veu, .ov-folha, .ov-folha-alca, @keyframes ovSobe e ovFade).
    Sem regra de html, body, a, button, tamanho de fonte base ou impressão;
-   cada caixa declara a própria fonte e cor. A base do botão (.ov-btn) é do
-   app: aqui saem só as cores do perigo.
+   cada caixa declara a própria fonte e cor. A base do botão (.ov-btn) mora
+   em controles.css desde a v3.12.0: aqui saem só as cores do perigo, e quem
+   importa este arquivo importa também aquele (não há @import aqui, como não
+   há o da casca: a soma do onevessel.css repetiria as regras).
 
    Larguras: abaixo de 1024px o Painel lateral vira Folha móvel de 90% (é
    modal: o app põe o .ov-veu e prende o foco); abaixo de 768px o Diálogo de
@@ -75,7 +77,7 @@
 .ov-folha-corpo { flex: 1; min-height: 0; overflow-y: auto; }
 .ov-folha-rodape { margin-top: auto; display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--ov-borda); }
 /* Botões de 48px, mesma largura. O segundo seletor vence a altura do .ov-btn
-   do onevessel.css, que vem depois deste arquivo. */
+   do controles.css, que vem depois deste arquivo no onevessel.css. */
 .ov-folha-rodape > *, .ov-folha-rodape > .ov-btn { flex: 1; height: var(--ov-altura-toque); }
 .ov-folha[data-altura="rapida"] { height: 40vh; height: 40dvh; }
 .ov-folha[data-altura="detalhe"] { height: 90vh; height: 90dvh; }

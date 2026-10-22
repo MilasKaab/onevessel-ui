@@ -1,10 +1,14 @@
-/* OneVessel — folha de componentes compartilhada (v3.7).
+/* OneVessel — folha de componentes compartilhada (v3.12).
    Depende de tokens.css (--ov-*, --font-sans, --font-mono, --font-rel-sans).
    Traz a casca (casca.css, com o .ov-estado), as janelas (janelas.css:
    Diálogo, Toast, Painel lateral, rodapé e alturas da folha, .ov-btn-perigo),
    as telas (telas.css: tipografia, cartão e indicadores, Precisa de você,
    visões e filtros, contador, progresso, segmentado, checkbox, tabela, barra
-   de ações em massa e esqueleto), o relatório (relatorio.css) e a base de 14px.
+   de ações em massa e esqueleto), o relatório (relatorio.css), os controles
+   (controles.css: botões e campo) e a base de 14px.
+   Desde a v3.12.0, .ov-btn*, .ov-campo e .ov-label moram em controles.css,
+   importado depois dos outros: as regras continuam depois das janelas e
+   das telas, como estavam.
    Desde a v3.10.0, as .rel-* moram em relatorio.css; a impressão (@media
    print, @page com nome) fica em impressao.css, só nas rotas de relatório.
    Interface na fonte do sistema; o que é impresso (.rel-*) em IBM Plex.
@@ -13,6 +17,7 @@
 @import url("./janelas.css");
 @import url("./telas.css");
 @import url("./relatorio.css");
+@import url("./controles.css");
 
 /* ---------- Base ---------- */
 body { margin: 0; background: var(--ov-fundo); color: var(--ov-texto); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -29,35 +34,6 @@ button { font: inherit; color: inherit; }
 /* ---------- Ícone de app ---------- */
 .ov-icone-app { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; background: var(--ov-marca-azul); color: #ffffff; position: relative; overflow: hidden; }
 .ov-icone-app::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--ov-marca-laranja); }
-
-/* ---------- Botões ---------- */
-.ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
-.ov-btn:disabled { opacity: .45; cursor: not-allowed; }
-.ov-btn-primario { background: var(--ov-acao); color: var(--ov-sobre-acao); }
-/* No hover o texto vira ov-fundo (v3.11, PV-4): o ciano do escuro com o
-   ov-sobre-acao dava 1,72:1. ov-fundo sobre ov-acao-hover: 10,99:1 no escuro
-   e 6,40:1 no claro. O token não escurece: ele é também a cor do link sob o
-   mouse, sobre ov-fundo, e um tom escuro o bastante para o texto claro (o
-   petrol da ação dá 5,10:1 com ele) fica em 3,71:1 ali. */
-.ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); color: var(--ov-fundo); }
-.ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); color: var(--ov-texto); }
-.ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
-.ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
-.ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
-.ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
-.ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
-@media (pointer: coarse) { .ov-btn { height: var(--ov-altura-campo); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } }
-
-/* ---------- Campos ---------- */
-.ov-campo-grupo { display: flex; flex-direction: column; gap: 6px; }
-.ov-label { font: 500 14px/20px var(--font-sans); color: var(--ov-texto); }
-.ov-label small { font-weight: 400; color: var(--ov-texto-terciario); font-size: 13px; }
-.ov-campo { width: 100%; height: var(--ov-altura-campo); padding: 0 12px; border-radius: var(--ov-raio-md); border: 1px solid var(--ov-borda-controle); background: var(--ov-fundo); color: var(--ov-texto); font: 400 16px/24px var(--font-sans); outline: none; transition: border-color .12s, box-shadow .12s; }
-.ov-campo::placeholder { color: var(--ov-texto-terciario); }
-.ov-campo:focus { border-color: var(--ov-acao); box-shadow: 0 0 0 3px var(--ov-acao-suave); }
-.ov-campo[aria-invalid="true"] { border-color: var(--ov-erro); }
-.ov-ajuda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
-.ov-erro-campo { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 18px; color: var(--ov-erro); }
 
 /* ---------- Matriz de permissões ---------- */
 .ov-matriz { width: 100%; border-collapse: collapse; }

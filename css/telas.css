@@ -1,4 +1,4 @@
-/* OneVessel — telas (v3.8): tipografia, cartão e indicadores, Precisa de
+/* OneVessel — telas (v3.12): tipografia, cartão e indicadores, Precisa de
    você (com o miolo do item), visões e filtros, contador, progresso, segmentado, checkbox,
    tabela, barra de ações em massa e esqueleto.
    Importável sozinho, como a casca e as janelas: depende de tokens.css e,
@@ -31,6 +31,9 @@
 .ov-segmentado { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--ov-raio-md); background: var(--ov-fundo); border: 1px solid var(--ov-borda-forte); }
 .ov-segmentado button { height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-texto-secundario); font-weight: 500; cursor: pointer; }
 .ov-segmentado button[aria-pressed="true"] { background: var(--ov-superficie-elevada); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+/* Toque: os botões vão aos 48px do livro (eram 30); o segmentado fica com
+   56 (48 + 3 + 3 de recuo + a borda). */
+@media (pointer: coarse) { .ov-segmentado button { min-height: var(--ov-altura-toque); } }
 
 /* ---------- Visões salvas e filtros ---------- */
 /* "+ Filtro" e "Exibir" são .ov-menu da casca. */
@@ -42,6 +45,10 @@
 .ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
 a.ov-visao { text-decoration: none; }
 .ov-visao .ov-tnum { color: var(--ov-texto-terciario); }
+/* Toque: 48px de altura mínima (eram 32), o alvo do livro. Uma linha de
+   .ov-visoes que quebra ganha outra fileira de 48px, 4px abaixo (o gap vale
+   nas duas direções): 52px a mais por fileira. */
+@media (pointer: coarse) { .ov-visao { min-height: var(--ov-altura-toque); } }
 .ov-chip-filtro { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--ov-raio-sm); border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font-size: 13px; color: var(--ov-texto); }
 .ov-chip-filtro .campo { color: var(--ov-texto-terciario); }
 .ov-chip-filtro button { width: 22px; height: 22px; display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: var(--ov-texto-terciario); cursor: pointer; }
@@ -61,8 +68,17 @@ a.ov-visao { text-decoration: none; }
    como a linha selecionada da tabela. O :where deixa a regra fraca: a borda
    de alerta que o app põe numa classe dele continua vencendo. */
 .ov-cartao:where([aria-current="true"]) { border-color: var(--ov-acao); background-image: linear-gradient(var(--ov-acao-suave), var(--ov-acao-suave)); }
+/* Cartão clicável (v3.12): o cartão que é link ou botão. No hover, o realce
+   do livro, ov-linha-hover, como imagem por cima da ov-superficie (é
+   translúcido: como cor de fundo, deixaria ver a página); a borda não muda.
+   O aberto não muda no hover. Regras fracas (:where), como a do aberto: a
+   borda e o fundo que o app põe numa classe dele continuam vencendo. */
+.ov-cartao:where(a, button:not(:disabled)) { cursor: pointer; }
+.ov-cartao:where(a:hover, button:hover:not(:disabled)):where(:not([aria-current="true"])) { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); }
 .ov-indicador { display: block; padding: 20px; color: inherit; transition: border-color .12s; }
-a.ov-indicador:hover { border-color: var(--ov-borda-forte); color: inherit; }
+/* O indicador que é link: o mesmo realce do cartão clicável (v3.12; até a
+   v3.11 a borda ia a ov-borda-forte e escondia a borda de alerta). */
+a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); color: inherit; }
 .ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }
 .ov-indicador-rotulo { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ov-texto-secundario); }
 .ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque); }

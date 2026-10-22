@@ -61,12 +61,13 @@ chave de função (não há servidor). O resto vale igual.
   `css/janelas.css`; o que vai dentro da tela no `css/telas.css`; o papel dos
   relatórios no `css/relatorio.css`; a barra da Página de impressão no
   `css/previa.css`; o `@page` e o `@media print` do papel no `css/impressao.css`;
-  a base de 14 px e os botões e campos no `css/onevessel.css`.
+  os botões e o campo no `css/controles.css`; a base de 14 px no
+  `css/onevessel.css`.
 - Os importáveis sozinhos não têm regra de base (`html`, `body`, `*`, `a` ou
   `button` soltos), fonte fora de classe nem impressão; cada caixa declara a
   própria fonte e cor. Nenhum seletor em dois arquivos.
-- Nenhum `outline: none` sem anel no lugar (o `conferir` cobra; a única
-  exceção, pelo nome, é o `.ov-campo` até a v3.12.0).
+- Nenhum `outline: none` em CSS nenhum (o `conferir` cobra, sem exceção desde
+  a v3.12.0).
 - `css/tokens.css` só pelo `npm run build`, a partir de `tokens/tokens.json`.
   `npm run icones` precisa do Playwright e só roda quando muda cor da marca ou
   glifo.

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Gera os ícones de PWA de cada app a partir dos glifos abaixo.
-// Saída: icons/<app>/icone-192.png, icone-512.png, mascaravel-512.png,
-//        apple-touch-icon-180.png e icone.svg.
+// Gera os ícones de cada app a partir dos glifos abaixo.
+// Saída: icons/<app>/icone.svg de todos; só a plataforma, o único instalável
+// (um PWA só, o da OneVessel; módulos não instaláveis, v3.14.0), ganha também
+// icone-192.png, icone-512.png, mascaravel-512.png e apple-touch-icon-180.png.
 //
 //   npm i -D playwright && npx playwright install chromium
 //   node scripts/gerar-icones.mjs              (todos)
@@ -23,7 +24,7 @@ const LARANJA = '#ec6a3b'
 // Glifos em viewBox 24×24, traço 2. `d` e `circulos` herdam o traço branco;
 // `extras` é SVG cru, para o que tem cor própria.
 const APPS = [
-  { pasta: 'plataforma', nome: 'OneVessel', glifo: 'âncora',
+  { pasta: 'plataforma', nome: 'OneVessel', glifo: 'âncora', instalavel: true,
     d: ['M12 22V8M5 12H2a10 10 0 0 0 20 0h-3'], circulos: [[12, 5, 3]] },
   { pasta: 'materiais', nome: 'Materiais', glifo: 'caixa',
     d: ['M21 16V8l-9-5-9 5v8l9 5 9-5Z', 'm3.3 7 8.7 5 8.7-5M12 22V12'] },
@@ -84,7 +85,7 @@ for (const app of alvo) {
     ['apple-touch-icon-180.png', 180, 1],
   ]
   writeFileSync(resolve(pasta, 'icone.svg'), svg(app, 512, 1))
-  for (const [arquivo, lado, escala] of saidas) {
+  for (const [arquivo, lado, escala] of app.instalavel ? saidas : []) {
     const pagina = await navegador.newPage({ viewport: { width: lado, height: lado } })
     await pagina.setContent(
       `<!doctype html><html><body style="margin:0">${svg(app, lado, escala)}</body></html>`

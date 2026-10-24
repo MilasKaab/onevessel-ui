@@ -18,7 +18,6 @@ const css = (nome) => ler(`css/${nome}.css`);
 const controles = css('controles');
 const telas = css('telas');
 const tokens = css('tokens');
-const pacote = JSON.parse(ler('package.json'));
 const exemplo = ler('exemplo/index.html');
 
 const TOQUE = '@media (pointer: coarse)';
@@ -182,9 +181,3 @@ test('exemplo: textarea, campo de linha (input, select e textarea) e o erro com 
   assert.match(exemplo, /width: 16, height: 16, viewBox: '0 0 24 24'.*'aria-hidden': 'true'/);
 });
 
-// ---------- Pacote ----------
-
-// A versão do pacote fica com o teste da versão mais nova.
-test('pacote: versão 3.13.0', () => {
-  assert.equal(pacote.version, '3.13.0');
-});

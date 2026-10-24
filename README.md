@@ -21,13 +21,13 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `css/fontes.css` | IBM Plex Sans e Mono servidas pelo próprio app, sem Google Fonts. Só para o que é impresso: a interface usa a fonte do sistema |
 | `fonts/` | Os `.woff2` do subconjunto latino (400, 500, 600) |
 | `tailwind/preset.js` | Preset do Tailwind 3 que aponta para as mesmas variáveis |
-| `icons/` | Ícones de PWA de cada app (192, 512, maskable, apple-touch-icon) e o SVG de origem |
+| `icons/` | `plataforma/`: os ícones do PWA da OneVessel (192, 512, maskable, apple-touch-icon e o SVG de origem); `bordo/`, `paradas/` e `materiais/`: só o `icone.svg` de cada módulo, que não é instalável (v3.14.0) |
 | `marca/` | O logo horizontal da BRAM Offshore (`bram-offshore-horizontal.png`, 2425×1073, fundo transparente), para o timbre dos relatórios (v3.10.0) |
-| `manifestos/` | Modelos de `.webmanifest` dos quatro instaláveis (plataforma, Materiais, Paradas, Bordo) |
+| `manifestos/` | O `plataforma.webmanifest`, modelo do manifesto do PWA da OneVessel, o único instalável (desde a v3.14.0; os dos módulos saíram) |
 | `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `controles.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (sem exceção desde a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo. Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo. Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.13.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.14.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -483,14 +483,16 @@ O `tokens.css` declara o `color-scheme` junto do tema (v3.10.1): `dark` na raiz 
 
 ## Ícones de PWA
 
-Copie a pasta do app para dentro do seu `public/` e use o manifesto correspondente:
+Um PWA só, o da OneVessel; módulos não instaláveis (v3.14.0). A plataforma é o único instalável e copia o manifesto e os ícones dela:
 
 ```
-public/icones/            ← icons/materiais/*
-public/manifest.webmanifest ← manifestos/materiais.webmanifest
+public/icones/              ← icons/plataforma/*
+public/manifest.webmanifest ← manifestos/plataforma.webmanifest
 ```
 
-Os caminhos dentro do manifesto já apontam para o escopo do app (`/materiais/`). Ajuste se o endereço do app for outro.
+Os módulos (Bordo, Paradas, Materiais) não têm manifesto nem PNG: copiam só o `icons/<app>/icone.svg`, como favicon, e apontam para o manifesto da OneVessel. A plataforma também copia o `icone.svg` de cada módulo para a escolha do módulo. Toda cópia tem teste de sha256 contra o pacote, como o logo dos relatórios.
+
+**Por que a v3.14.0 é minor:** saíram os manifestos dos três módulos e os PNGs deles (192, 512, maskable, apple-touch-icon), que nenhum app usa desde que os módulos deixaram de ser instaláveis. Os 9 arquivos que ficam têm os mesmos bytes da v3.13.0, e nenhum CSS mudou: nenhum app perde arquivo que usa.
 
 ## Logo dos relatórios
 
@@ -508,7 +510,7 @@ public/marca/bram-offshore-horizontal.png ← marca/bram-offshore-horizontal.png
 2. `npm run build` (regenera `css/tokens.css`).
 3. `npm run conferir` e `npm run testar`.
 4. Abra `exemplo/index.html` e confira nos dois temas, com a janela larga, entre 768 e 1023px e abaixo de 768px.
-5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas.
+5. `npm run icones` só quando mudar cor da marca ou glifo (precisa do Playwright). `npm run icones -- paradas bordo` gera só essas pastas. Gera os PNGs só para a plataforma, o único instalável; os módulos ficam só com o `icone.svg` (v3.14.0).
 6. Suba uma tag nova (`v3.12.1`) e avise os apps.
 
 Decisão de design não nasce aqui: ela vem da conversa da design system, e este repositório só a publica.

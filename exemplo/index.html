@@ -41,6 +41,9 @@
   .tabela-rolagem .ov-campo { min-width: 112px; }
   .segmentado-grupo { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 6px; }
   .segmentado-grupo .ov-segmentado { align-self: flex-start; }
+  .largura { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .largura > h2 { margin: 0 0 var(--ov-esp-4); }
+  .largura .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -637,6 +640,145 @@
   </section>
 
 </main>
+
+<section class="largura">
+  <h2 class="ov-titulo-1">Largura da tela</h2>
+  <p class="ov-legenda">Fora da coluna de 1280px desta página, para a diferença aparecer. Cada tela declara a largura: <code class="ov-codigo">data-largura="larga"</code> nas telas de lista ou grade, até <code class="ov-codigo">--ov-conteudo-largo</code> (1864px), e o nome da tabela perde o teto de 320px a partir de 1024px; sem o atributo, o teto de leitura de 1280px. Recolher a lateral dá à tela larga o espaço da lateral; a de 1280 só cresce se a janela for estreita. Abaixo de 1024px as duas são iguais (v3.16.0).</p>
+
+    <p class="ov-rotulo moldura-rotulo">Tela larga · tema escuro · Pessoas (lista)</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="ov-casca">
+        <nav class="ov-lateral" aria-label="Bordo">
+          <div class="ov-lateral-marca">
+            <i data-icone="ship"></i>
+            <div class="ov-lateral-marca-texto">
+              <span class="ov-lateral-marca-nome">Bordo</span>
+              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+            </div>
+          </div>
+          <div class="ov-lateral-grupo">Bordo</div>
+          <a class="ov-nav" href="#" title="Conveses"><i data-icone="layout-grid"></i><span class="ov-lateral-texto">Conveses</span></a>
+          <a class="ov-nav" href="#" aria-current="page" title="Pessoas"><i data-icone="users"></i><span class="ov-lateral-texto">Pessoas</span></a>
+          <a class="ov-nav" href="#" title="Indicadores"><i data-icone="bar-chart-3"></i><span class="ov-lateral-texto">Indicadores</span></a>
+          <div class="ov-lateral-rodape">
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
+            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
+          </div>
+        </nav>
+        <div class="ov-conteudo">
+          <header class="ov-superior">
+            <div class="ov-trilha">Bordo / <b>Pessoas</b></div>
+            <div class="ov-superior-direita">
+              <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false"><i data-icone="circle-user"></i><span>Ana Souza</span></button>
+            </div>
+          </header>
+          <main class="ov-tela" data-largura="larga">
+            <h1 class="ov-titulo-1">Pessoas</h1>
+            <div class="ov-cartao">
+              <table class="ov-tabela" aria-label="Pessoas">
+                <thead><tr><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th>Camarote</th><th>Embarque</th><th>Desembarque</th><th class="num">Dias</th></tr></thead>
+                <tbody>
+                <tr><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="meta">C-12</td><td class="meta">13/10/2026</td><td class="meta">10/11/2026</td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                <tr><td class="nome">Maria Aparecida dos Santos Figueiredo</td><td>Técnica de segurança do trabalho</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="meta">C-07</td><td class="meta">24/10/2026</td><td class="meta">07/11/2026</td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                <tr><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td>BRAM</td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="meta"></td><td class="meta">26/10/2026</td><td class="meta">09/11/2026</td><td class="num">1<span class="ov-so-no-celular"> dia a bordo</span></td></tr>
+                <tr><td class="nome">Fernanda Lopes de Albuquerque Cavalcanti</td><td>Operadora de guindaste offshore</td><td>Oceaneering</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="meta">C-21</td><td class="meta">06/10/2026</td><td class="meta">03/11/2026</td><td class="num">21<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tela larga · tema claro · Pessoas (lista)</p>
+    <div class="moldura" data-theme="claro">
+      <div class="ov-casca">
+        <nav class="ov-lateral" aria-label="Bordo">
+          <div class="ov-lateral-marca">
+            <i data-icone="ship"></i>
+            <div class="ov-lateral-marca-texto">
+              <span class="ov-lateral-marca-nome">Bordo</span>
+              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+            </div>
+          </div>
+          <div class="ov-lateral-grupo">Bordo</div>
+          <a class="ov-nav" href="#" title="Conveses"><i data-icone="layout-grid"></i><span class="ov-lateral-texto">Conveses</span></a>
+          <a class="ov-nav" href="#" aria-current="page" title="Pessoas"><i data-icone="users"></i><span class="ov-lateral-texto">Pessoas</span></a>
+          <a class="ov-nav" href="#" title="Indicadores"><i data-icone="bar-chart-3"></i><span class="ov-lateral-texto">Indicadores</span></a>
+          <div class="ov-lateral-rodape">
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
+            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
+          </div>
+        </nav>
+        <div class="ov-conteudo">
+          <header class="ov-superior">
+            <div class="ov-trilha">Bordo / <b>Pessoas</b></div>
+            <div class="ov-superior-direita">
+              <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false"><i data-icone="circle-user"></i><span>Ana Souza</span></button>
+            </div>
+          </header>
+          <main class="ov-tela" data-largura="larga">
+            <h1 class="ov-titulo-1">Pessoas</h1>
+            <div class="ov-cartao">
+              <table class="ov-tabela" aria-label="Pessoas">
+                <thead><tr><th>Nome</th><th>Função</th><th>Empresa</th><th>Estado</th><th>Camarote</th><th>Embarque</th><th>Desembarque</th><th class="num">Dias</th></tr></thead>
+                <tbody>
+                <tr><td class="nome">João Pereira</td><td>Mecânico</td><td>BRAM</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="meta">C-12</td><td class="meta">13/10/2026</td><td class="meta">10/11/2026</td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                <tr><td class="nome">Maria Aparecida dos Santos Figueiredo</td><td>Técnica de segurança do trabalho</td><td>Petrobras</td><td><span class="ov-estado">Reservado</span></td><td class="meta">C-07</td><td class="meta">24/10/2026</td><td class="meta">07/11/2026</td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                <tr><td class="nome">Carlos Souza</td><td>Cozinheiro</td><td>BRAM</td><td><span class="ov-estado" data-tom="atencao">Sem leito</span></td><td class="meta"></td><td class="meta">26/10/2026</td><td class="meta">09/11/2026</td><td class="num">1<span class="ov-so-no-celular"> dia a bordo</span></td></tr>
+                <tr><td class="nome">Fernanda Lopes de Albuquerque Cavalcanti</td><td>Operadora de guindaste offshore</td><td>Oceaneering</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td><td class="meta">C-21</td><td class="meta">06/10/2026</td><td class="meta">03/11/2026</td><td class="num">21<span class="ov-so-no-celular"> dias a bordo</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tela de 1280px · tema claro · Indicadores (painel, sem o atributo)</p>
+    <div class="moldura" data-theme="claro">
+      <div class="ov-casca">
+        <nav class="ov-lateral" aria-label="Bordo">
+          <div class="ov-lateral-marca">
+            <i data-icone="ship"></i>
+            <div class="ov-lateral-marca-texto">
+              <span class="ov-lateral-marca-nome">Bordo</span>
+              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+            </div>
+          </div>
+          <div class="ov-lateral-grupo">Bordo</div>
+          <a class="ov-nav" href="#" title="Conveses"><i data-icone="layout-grid"></i><span class="ov-lateral-texto">Conveses</span></a>
+          <a class="ov-nav" href="#" title="Pessoas"><i data-icone="users"></i><span class="ov-lateral-texto">Pessoas</span></a>
+          <a class="ov-nav" href="#" aria-current="page" title="Indicadores"><i data-icone="bar-chart-3"></i><span class="ov-lateral-texto">Indicadores</span></a>
+          <div class="ov-lateral-rodape">
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
+            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
+          </div>
+        </nav>
+        <div class="ov-conteudo">
+          <header class="ov-superior">
+            <div class="ov-trilha">Bordo / <b>Indicadores</b></div>
+            <div class="ov-superior-direita">
+              <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false"><i data-icone="circle-user"></i><span>Ana Souza</span></button>
+            </div>
+          </header>
+          <main class="ov-tela">
+            <h1 class="ov-titulo-1">Indicadores</h1>
+            <div class="ov-indicadores">
+              <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Ocupação a bordo</div><div class="ov-indicador-valor">86</div><div class="ov-indicador-nota">de 120 leitos</div></a>
+              <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Leitos vagos</div><div class="ov-indicador-valor">34</div><div class="ov-indicador-nota">28,3% do total</div></a>
+              <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Embarques na semana</div><div class="ov-indicador-valor">12</div><div class="ov-indicador-nota">até 02/11</div></a>
+              <a class="ov-cartao ov-indicador" href="#"><div class="ov-indicador-rotulo">Camarotes sem ocupação</div><div class="ov-indicador-valor">5</div><div class="ov-indicador-nota">de 42</div></a>
+            </div>
+            <div class="cartao"><p style="margin:0">Painel, formulário, texto e cartões de resumo ficam no teto de leitura de 1280px.</p></div>
+          </main>
+        </div>
+      </div>
+    </div>
+</section>
 
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo

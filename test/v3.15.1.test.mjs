@@ -6,6 +6,9 @@
 // .ov-lateral-alternar ganha o texto em .ov-lateral-texto. (3) O rodapé
 // começa por um .ov-lateral-grupo vazio, depois o botão; a conta no fim.
 // `test/fixtures/casca-v3.15.0.css` é o casca.css da tag v3.15.0, fixo.
+// Desde a v3.16.0, a casca, as telas e os tokens daqui são as fixtures da
+// v3.15.1 (fixture com fixture); as medidas olham só as duas cascas da
+// .pagina, e a versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -17,10 +20,9 @@ const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const antes = ler('test/fixtures/casca-v3.15.0.css');
-const casca = ler('css/casca.css');
+const casca = ler('test/fixtures/casca-v3.15.1.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 const n = await import('../js/lateral-nucleo.js');
 
 const ESTREITA = '@media (max-width: 1023px)';
@@ -110,7 +112,8 @@ test('os outros CSS com os bytes da v3.15.0', () => {
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
     tokens: '28569ab7f0be7c421d0db9bbd69eae4127d1c6f12d938fa503d88e6aa79805be',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  const FIXTURE = new Set(['telas', 'tokens']);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(FIXTURE.has(nome) ? `test/fixtures/${nome}-v3.15.1.css` : `css/${nome}.css`), sha, nome);
 });
 
 // ---------- O recolhido continua igual nos dois blocos ----------
@@ -153,9 +156,7 @@ test('exemplo: rodapé na ordem (filete, botão com texto, conta) nos dois temas
   assert.match(exemplo, /botao\.querySelector\('\.ov-lateral-texto'\)\.textContent = texto/);
 });
 
-test('package.json 3.15.1; README com a tag, o texto do botão e o rodapé', () => {
-  assert.equal(pacote.version, '3.15.1');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.15\.1"/);
+test('README com o texto do botão e o rodapé', () => {
   assert.match(leiame, /<svg …panel-left-close…\/><span class="ov-lateral-texto">Recolher barra lateral<\/span>/);
   assert.match(leiame, /\*\*O rodapé, nesta ordem\*\* \(v3\.15\.1\)/);
   assert.match(leiame, /\*\*Por que a v3\.15\.1 é patch:\*\*/);
@@ -177,7 +178,7 @@ try {
 }
 
 // O centro do SVG de cada item da lateral, em px a partir da borda dela.
-const centros = () => [...document.querySelectorAll('.ov-lateral')].map((lateral) => {
+const centros = () => [...document.querySelectorAll('.pagina .ov-lateral')].map((lateral) => {
   const esquerda = lateral.getBoundingClientRect().left;
   const itens = lateral.querySelectorAll('.ov-lateral-marca, .ov-seletor-embarcacao, .ov-busca-gatilho, .ov-nav, .ov-lateral-alternar, .ov-conta');
   return [...itens].filter((el) => el.getClientRects().length).map((el) => {
@@ -193,8 +194,8 @@ const medir = async (largura, recolhida) => {
     await pagina.goto(url('exemplo/index.html').href);
     await pagina.evaluate((r) => { for (const c of document.querySelectorAll('.ov-casca')) c.dataset.lateral = r ? 'recolhida' : 'aberta'; }, recolhida);
     const medidas = await pagina.evaluate(centros);
-    const texto = await pagina.evaluate(() => [...document.querySelectorAll('.ov-lateral-alternar .ov-lateral-texto')].map((t) => t.getBoundingClientRect().width));
-    const filete = await pagina.evaluate(() => [...document.querySelectorAll('.ov-lateral-rodape > .ov-lateral-grupo')].map((g) => g.getBoundingClientRect().height));
+    const texto = await pagina.evaluate(() => [...document.querySelectorAll('.pagina .ov-lateral-alternar .ov-lateral-texto')].map((t) => t.getBoundingClientRect().width));
+    const filete = await pagina.evaluate(() => [...document.querySelectorAll('.pagina .ov-lateral-rodape > .ov-lateral-grupo')].map((g) => g.getBoundingClientRect().height));
     return { medidas, texto, filete };
   } finally {
     await navegador.close();

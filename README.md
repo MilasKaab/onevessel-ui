@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.17.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.18.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -284,6 +284,15 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
   <a class="ov-visao" href="…">Superior</a>
 </nav>
 
+<!-- Visões grandes (v3.18.0): a divisão principal da tela, presa sob a barra superior -->
+<div class="ov-visoes" data-tamanho="grande" role="tablist" aria-label="…">
+  <button class="ov-visao" type="button" role="tab" aria-selected="true" aria-controls="…" tabindex="0">
+    <svg aria-hidden="true">…</svg>Atividades planejadas
+    <span class="ov-rotulo">30 atividades aguardando</span><span class="ov-tnum">30</span>
+  </button>
+  <button class="ov-visao" type="button" role="tab" aria-selected="false" aria-controls="…" tabindex="-1">…</button>
+</div>
+
 <!-- Cartão aberto (v3.11.0): o registro do painel -->
 <button class="ov-cartao" aria-current="true">…</button>
 
@@ -314,6 +323,8 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 - **Só na lista, fora da lista** (v3.11.0): dentro da `.ov-tabela`, o `.ov-so-no-celular` (um rótulo, `inline`) só aparece na lista do celular, onde o cabeçalho sai ("12 atividades"); o `.ov-fora-do-celular` (uma célula, ou o `th` dela) some na lista e fica de 768px para cima, no tablet também.
 - **Cartão** (v3.11.0): sem sombra em nenhum tema (o livro: cartão em repouso se separa por borda). **Cartão aberto**: `aria-current="true"` no `.ov-cartao` dá borda `ov-acao` e `ov-acao-suave` sobre a superfície, como a linha selecionada da tabela. A regra é fraca (`:where`): a borda de alerta que o app põe numa classe dele, depois do pacote, continua vencendo.
 - **Aba de rota** (v3.11.0): a `.ov-visao` também é link de navegação, com `aria-current="page"` na rota aberta, no desenho da selecionada e sem sublinhado. O `tablist` (`aria-selected`) fica para a visão que filtra a mesma tela.
+- **Visões grandes** (v3.18.0): `data-tamanho="grande"` no `.ov-visoes`, para a divisão principal de uma tela, que a pessoa troca o tempo todo (o filtro abaixo dela fica nas visões normais). As visões dividem a largura em partes iguais, num controle com cara de cartão: fundo opaco `--ov-superficie`, contorno de 1px `--ov-borda`, raio `--ov-raio-md` nos quatro cantos e divisória de 1px entre as visões; 64px no computador e 56 abaixo de 768px. No botão, ícone e rótulo centrados numa linha; a partir de 768px, o `.ov-rotulo` (a contagem por extenso) centrado numa linha própria abaixo, em `--ov-texto-secundario`; abaixo de 768px ele some e aparece o `.ov-tnum` (o número), na linha do rótulo; o app põe os dois no mesmo botão e o CSS troca. A selecionada (`aria-selected="true"`, ou `aria-current="page"` na aba de rota): fundo `--ov-acao-suave`, filete inferior de 2px `--ov-acao` por sombra interna, rótulo em `--ov-texto` e ícone em `--ov-acao-texto` (o rótulo em `--ov-acao-texto` dava 4,07:1 no tema claro); as outras com o rótulo em `--ov-texto-secundario`. O anel de foco vai para dentro (o cartão corta o que passa da borda). Fica presa sob a barra superior ao rolar (`sticky`, `top: var(--ov-barra-superior)`; abaixo de 768px somando `env(safe-area-inset-top)`, a altura do `.ov-cabecalho-movel`), em `--ov-z-flutuante`, abaixo da barra e dos menus. O teclado é o das visões, no app (setas, Home, End, só a selecionada no Tab); nenhum JS novo.
+- **Por que a v3.18.0 é minor:** só regras novas no `telas.css`, todas presas a `.ov-visoes[data-tamanho="grande"]`. Nenhuma regra de antes muda; o `.ov-visoes` sem o atributo fica igual.
 - **Cartão clicável** (v3.12.0): `a.ov-cartao` e `button.ov-cartao` têm cursor de mão e, sob o mouse, o realce do livro, `ov-linha-hover` por cima da superfície; a borda não muda e o cartão aberto fica como está. O `a.ov-indicador` ganhou o mesmo realce no lugar da borda `ov-borda-forte` (o livro cita cartão e indicador na mesma regra); a borda de alerta fica visível sob o mouse. Regras fracas (`:where`), como a do aberto.
 - **Barra de ações em massa no toque** (v3.13.0): a `.ov-acoes-massa` tem 50px em `pointer: coarse` (48 de miolo e a borda de 1px dentro), para conter os botões de 48; com 48 eles passavam 1px em cima e embaixo, por cima da borda. No computador continua com 48.
 - **Alvos de toque** (v3.12.0): em `pointer: coarse`, a `.ov-visao` e os botões do `.ov-segmentado` têm 48px de altura mínima (eram 32 e 30; o segmentado fica com 56). Uma linha de `.ov-visoes` que quebra ganha outra fileira de 48px, 4px abaixo: 52px a mais por fileira.

@@ -8,7 +8,9 @@
 // sticky, Detalhes em colunas de 280px). E, fora do modo, o par dt/dd
 // embrulhado num div na .ov-dados (display: contents). Minor: a fixture da
 // v3.16.0 (`test/fixtures/janelas-v3.16.0.css`, da tag, fixa) fica igual
-// regra a regra; só nasce o que está aqui.
+// regra a regra; só nasce o que está aqui. Desde a v3.18.0, as telas daqui
+// são a fixture da v3.17.0 (fixture com fixture), e a versão e a tag ficam
+// com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -23,7 +25,6 @@ const janelas = ler('css/janelas.css');
 const antes = ler('test/fixtures/janelas-v3.16.0.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 
 const COMPUTADOR = '@media (min-width: 1024px)';
 const FOCO = '[data-painel="foco"]:has(> .ov-painel)';
@@ -75,7 +76,7 @@ test('os outros CSS com os bytes da v3.16.0', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.16.0.css'), '015a5e82157558910b90cf1237f0404fbca2de89a036def4a87370b7e156d763');
 });
 
@@ -97,7 +98,7 @@ test('modo foco: só no bloco de 1024px para cima, sempre preso ao atributo com 
   }
   // Nenhum outro CSS fala do atributo nem da marca.
   for (const nome of ['casca', 'telas', 'controles', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    assert.doesNotMatch(ler(`css/${nome}.css`), /data-painel|data-principal/, nome);
+    assert.doesNotMatch(ler(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`), /data-painel|data-principal/, nome);
   }
 });
 
@@ -152,9 +153,7 @@ test('exemplo: seção do modo foco fora da .pagina, painel aberto nos dois tema
   }
 });
 
-test('package.json 3.17.0; README com a tag, o modo foco no Painel e por que é minor', () => {
-  assert.equal(pacote.version, '3.17.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.17\.0"/);
+test('README com o modo foco no Painel e por que é minor', () => {
   assert.match(leiame, /\*\*Modo foco\*\* \(v3\.17\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.17\.0 é minor:\*\*/);
 });

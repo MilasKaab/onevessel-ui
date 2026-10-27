@@ -7,7 +7,9 @@
 // (`test/fixtures/{casca,telas,tokens}-v3.15.1.css`, da tag, fixas) ficam
 // iguais regra a regra; só nasce o que está aqui. Desde a v3.17.0, as
 // janelas daqui são a fixture da v3.16.0 (fixture com fixture), e a versão e
-// a tag ficam com o teste da versão mais nova.
+// a tag ficam com o teste da versão mais nova. Desde a v3.18.0, as telas
+// daqui são a fixture da v3.17.0 (os bytes da v3.16.0, que a v3.17.0 não
+// mudou).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -41,7 +43,7 @@ const NOVAS = { casca: [`|${LARGA}`], telas: [`${COMPUTADOR}|${NOME}`] };
 for (const nome of ['casca', 'telas']) {
   test(`minor: toda regra do ${nome}.css da v3.15.1 igual, e só nasce ${NOVAS[nome][0]}`, () => {
     const antes = ler(`test/fixtures/${nome}-v3.15.1.css`);
-    const agora = ler(`css/${nome}.css`);
+    const agora = ler(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`);
     for (const r of regras(antes)) {
       for (const s of r.seletores) assert.deepEqual(declaracoesEm(agora, r.media, s), declaracoesEm(antes, r.media, s), `${r.media}|${s}`);
     }
@@ -87,14 +89,14 @@ test('a tela larga: só o teto, no token novo, fora de @media', () => {
   assert.match(declaracoesEm(ler('css/casca.css'), '', '.ov-tela').join('; '), /max-width: var\(--ov-conteudo-max\)/);
   // Nenhuma outra regra fala do atributo.
   for (const nome of ['casca', 'janelas', 'telas', 'controles', 'onevessel']) {
-    for (const r of regras(ler(nome === 'janelas' ? 'test/fixtures/janelas-v3.16.0.css' : `css/${nome}.css`))) {
+    for (const r of regras(ler({ janelas: 'test/fixtures/janelas-v3.16.0.css', telas: 'test/fixtures/telas-v3.17.0.css' }[nome] ?? `css/${nome}.css`))) {
       for (const s of r.seletores) if (/data-largura/.test(s)) assert.ok([`|${LARGA}`, `${COMPUTADOR}|${NOME}`].includes(`${r.media}|${s}`), `${nome}: ${r.media}|${s}`);
     }
   }
 });
 
 test('a tabela na tela larga: o nome sem teto só a partir de 1024px, sem table-layout fixo; nowrap das células como estava', () => {
-  const telas = ler('css/telas.css');
+  const telas = ler('test/fixtures/telas-v3.17.0.css');
   assert.deepEqual(declaracoesEm(telas, COMPUTADOR, NOME), ['max-width: none']);
   assert.equal(declaracoesEm(telas, '', NOME), null);
   assert.ok(declaracoesEm(telas, '', '.ov-tabela .nome').includes('max-width: 320px'));

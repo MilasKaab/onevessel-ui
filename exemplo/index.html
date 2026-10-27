@@ -61,7 +61,7 @@
 
   <section class="secao">
     <h2 class="ov-titulo-1">Casca</h2>
-    <p class="ov-legenda">Mude a largura da janela: lateral de 240px a partir de 1024px, recolhida em 56px de 768 a 1023px, e cabeçalho com barra inferior abaixo de 768px. A partir de 1024px, o botão no rodapé da lateral, acima da conta, recolhe e expande (v3.15.0): a escolha fica no aparelho, em <code class="ov-codigo">ov-lateral</code>, e vale para as duas cascas.</p>
+    <p class="ov-legenda">Mude a largura da janela: lateral de 240px a partir de 1024px, recolhida em 56px de 768 a 1023px, e cabeçalho com barra inferior abaixo de 768px. A partir de 1024px, o botão no rodapé da lateral, primeiro item depois do filete e acima da conta, recolhe e expande (v3.15.0; com texto desde a v3.15.1): a escolha fica no aparelho, em <code class="ov-codigo">ov-lateral</code>, e vale para as duas cascas.</p>
 
     <p class="ov-rotulo moldura-rotulo">Bordo · tema escuro · vários navios (seletor com seta)</p>
     <div class="moldura" data-theme="escuro">
@@ -88,7 +88,8 @@
           <a class="ov-nav" href="#" title="Paradas"><i data-icone="semaforo"></i><span class="ov-lateral-texto">Paradas</span></a>
           <a class="ov-nav" href="#" title="Materiais"><i data-icone="box"></i><span class="ov-lateral-texto">Materiais</span></a>
           <div class="ov-lateral-rodape">
-            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i></button>
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
             <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
@@ -150,7 +151,8 @@
           <a class="ov-nav" href="#" title="OneVessel · Início"><i data-icone="home"></i><span class="ov-lateral-texto">OneVessel · Início</span></a>
           <a class="ov-nav" href="#" title="Bordo"><i data-icone="ship"></i><span class="ov-lateral-texto">Bordo</span></a>
           <div class="ov-lateral-rodape">
-            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i></button>
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
             <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
@@ -678,20 +680,21 @@
   }
 
   // Lateral recolhida por escolha (v3.15.0): o núcleo guarda a escolha no
-  // aparelho e põe data-lateral na casca; o botão troca ícone, aria-label,
-  // title e aria-expanded. As duas cascas da página andam juntas, como os
-  // módulos na mesma origem. Import dinâmico: aberto sem servidor (file://),
-  // o resto da página não cai junto.
+  // aparelho e põe data-lateral na casca; o botão troca ícone, texto,
+  // aria-label, title e aria-expanded. As duas cascas da página andam
+  // juntas, como os módulos na mesma origem. Import dinâmico: aberto sem
+  // servidor (file://), o resto da página não cai junto.
   import('../js/lateral-nucleo.js').then(({ lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral }) => {
     const armazenamento = (() => { try { return window.localStorage } catch { return null } })()
     const mostrar = (estado) => {
       for (const casca of document.querySelectorAll('.ov-casca')) aplicarLateral(casca, estado)
-      const { icone, rotulo, expandido } = botaoDaLateral(estado)
+      const { icone, texto, rotulo, expandido } = botaoDaLateral(estado)
       for (const botao of document.querySelectorAll('.ov-lateral-alternar')) {
         botao.setAttribute('aria-expanded', String(expandido))
         botao.setAttribute('aria-label', rotulo)
         botao.title = rotulo
         botao.querySelector('svg').innerHTML = ICONES[icone]
+        botao.querySelector('.ov-lateral-texto').textContent = texto
       }
     }
     mostrar(lerLateral(armazenamento))

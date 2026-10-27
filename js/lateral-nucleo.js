@@ -93,9 +93,11 @@ export function aplicarLateral(raiz, estado) {
 
 /**
  * O que o botão `.ov-lateral-alternar` mostra em cada estado: o ícone do
- * Lucide, o `aria-label` e o `aria-expanded`.
+ * Lucide, o texto do `.ov-lateral-texto` (v3.15.1), o `aria-label` e o
+ * `title`, e o `aria-expanded`.
  * @typedef {object} BotaoDaLateral
  * @property {"panel-left-close" | "panel-left-open"} icone
+ * @property {string} texto o mesmo do rótulo.
  * @property {string} rotulo
  * @property {boolean} expandido
  */
@@ -106,8 +108,8 @@ export function aplicarLateral(raiz, estado) {
  */
 export function botaoDaLateral(estado) {
   return estadoDe(estado) === "recolhida"
-    ? { icone: "panel-left-open", rotulo: "Expandir barra lateral", expandido: false }
-    : { icone: "panel-left-close", rotulo: "Recolher barra lateral", expandido: true };
+    ? { icone: "panel-left-open", texto: "Expandir barra lateral", rotulo: "Expandir barra lateral", expandido: false }
+    : { icone: "panel-left-close", texto: "Recolher barra lateral", rotulo: "Recolher barra lateral", expandido: true };
 }
 
 /**

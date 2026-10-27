@@ -1,0 +1,269 @@
+/* OneVessel — casca dos apps (v3.3).
+   Importável sozinha: depende só de tokens.css. Sem regra de html, body,
+   tamanho de fonte base ou impressão — o app mantém a própria base.
+   Cada barra declara a própria fonte e cor, para não depender do app.
+
+   Larguras: 1024px ou mais, lateral de 240px; 768–1023px, lateral recolhida
+   de 56px (só ícones); abaixo de 768px, cabeçalho móvel + barra inferior.
+   Texto que some na lateral recolhida vai em .ov-lateral-texto.
+
+   Recolhida por escolha (v3.15.0): a partir de 1024px, com
+   .ov-casca[data-lateral="recolhida"], a lateral fica no mesmo estado de
+   56px de abaixo de 1024px — só a lateral: a margem da tela segue a
+   largura da janela. O botão .ov-lateral-alternar, no rodapé, acima da
+   conta, só aparece a partir de 1024px. Troca seca, sem transição.
+
+   Área segura nas laterais (v3.9.0, o iPhone deitado): a lateral cresce
+   por dentro o recuo da esquerda (e o de baixo, para o rodapé), sem
+   encolher o alvo; a barra superior, a tela e a faixa recebem o recuo da
+   direita; no celular, cabeçalho, barra inferior e tela recebem os dois; a
+   folha, na própria caixa. Sem recorte, todo recuo vale 0. */
+
+:where(.ov-casca, .ov-conteudo, .ov-lateral, .ov-lateral-marca, .ov-lateral-grupo, .ov-lateral-rodape,
+  .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-superior, .ov-superior-direita,
+  .ov-sincronizacao, .ov-tela, .ov-cabecalho-movel, .ov-barra-inferior, .ov-barra-inferior-item,
+  .ov-paleta, .ov-paleta-item, .ov-menu, .ov-menu-item, .ov-faixa, .ov-vazio, .ov-somente-leitura,
+  .ov-menu-grupo, .ov-folha-topo, .ov-folha-menu, .ov-folha-conta, .ov-paleta-lista, .ov-paleta-aviso) {
+  box-sizing: border-box;
+}
+:where(.ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-barra-inferior-item, .ov-menu-item):focus-visible {
+  outline: 2px solid var(--ov-foco); outline-offset: 2px;
+}
+
+/* ---------- Estrutura ---------- */
+.ov-casca { display: flex; min-height: 100vh; min-height: 100dvh; }
+.ov-conteudo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ov-tela { width: 100%; max-width: var(--ov-conteudo-max); padding: 32px calc(32px + env(safe-area-inset-right, 0px)) 32px 32px; display: flex; flex-direction: column; gap: 24px; }
+
+/* ---------- Barra lateral ---------- */
+.ov-lateral { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; width: calc(var(--ov-barra-lateral) + env(safe-area-inset-left, 0px)); flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)); background: var(--ov-fundo); border-right: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+/* Topo: na plataforma, .ov-monograma + "OneVessel"; num app, o glifo solto
+   de 20px (currentColor) + nome + subtítulo. */
+.ov-lateral-marca { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 4px 6px 12px; color: var(--ov-texto); }
+.ov-lateral-marca > svg { width: 20px; height: 20px; flex: 0 0 auto; }
+.ov-lateral-marca-texto { display: flex; flex-direction: column; min-width: 0; }
+.ov-lateral-marca-nome { font: var(--ov-fonte-titulo-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-lateral-marca-sub { font: var(--ov-fonte-legenda); color: var(--ov-texto-terciario); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-lateral-grupo { margin: 18px 0 4px; padding: 0 10px; font: var(--ov-fonte-rotulo); color: var(--ov-texto-terciario); }
+.ov-lateral-rodape { margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; gap: 2px; }
+.ov-lateral-texto { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* Itens nunca encolhem: lateral mais baixa que a lista rola. */
+.ov-lateral > * { flex-shrink: 0; }
+
+.ov-nav { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo-forte); text-align: left; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.ov-nav svg { flex: 0 0 auto; }
+.ov-nav:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
+.ov-nav[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
+.ov-nav[aria-current="page"] svg { color: var(--ov-acao-texto); }
+.ov-nav-cont { margin-left: auto; font-size: 12px; color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
+
+.ov-busca-gatilho { display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 8px 0 10px; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-sm); background: var(--ov-superficie); color: var(--ov-texto-terciario); font: var(--ov-fonte-corpo); text-align: left; cursor: pointer; white-space: nowrap; }
+.ov-busca-gatilho svg { flex: 0 0 auto; }
+.ov-busca-gatilho .ov-tecla { margin-left: auto; }
+.ov-tecla { display: inline-flex; align-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font: 500 12px/1 var(--font-mono); color: var(--ov-texto-secundario); }
+
+/* Seletor de embarcação: botão que abre um .ov-menu. Com um navio só,
+   data-fixo: sem seta, sem cursor, sem realce. */
+.ov-seletor-embarcacao { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 30px 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo-forte); text-align: left; cursor: pointer; white-space: nowrap; }
+.ov-seletor-embarcacao svg { flex: 0 0 auto; color: var(--ov-texto-terciario); }
+.ov-seletor-embarcacao::after { content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; border: solid var(--ov-texto-terciario); border-width: 0 2px 2px 0; transform: translateY(-70%) rotate(45deg); }
+.ov-seletor-embarcacao:hover { background: var(--ov-linha-hover); }
+.ov-seletor-embarcacao[aria-expanded="true"] { background: var(--ov-item-ativo); }
+.ov-seletor-embarcacao[data-fixo] { padding-right: 10px; cursor: default; }
+.ov-seletor-embarcacao[data-fixo]::after { content: none; }
+.ov-seletor-embarcacao[data-fixo]:hover { background: transparent; }
+
+/* Conta: gatilho do menu da conta (tema, Sair), com o nome da pessoa.
+   No rodapé da lateral e na barra superior. */
+.ov-conta { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo-forte); text-align: left; cursor: pointer; white-space: nowrap; }
+.ov-conta svg { flex: 0 0 auto; }
+.ov-conta:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
+.ov-conta[aria-expanded="true"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
+
+/* Recolher e expandir a lateral (v3.15.0): botão de ícone na régua da
+   própria lateral (100% e 32px; 48 no toque), no rodapé, acima da conta.
+   O app põe o SVG do Lucide (panel-left-close aberta, panel-left-open
+   recolhida), o aria-label e o aria-expanded. Abaixo de 1024px some. */
+.ov-lateral-alternar { box-sizing: border-box; display: flex; align-items: center; width: 100%; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo); cursor: pointer; }
+.ov-lateral-alternar svg { flex: 0 0 auto; }
+.ov-lateral-alternar:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
+.ov-lateral-alternar:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+
+/* ---------- Barra superior ---------- */
+.ov-superior { position: sticky; top: 0; z-index: var(--ov-z-barra); height: var(--ov-barra-superior); display: flex; align-items: center; gap: 12px; padding: 0 calc(32px + env(safe-area-inset-right, 0px)) 0 32px; background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-trilha { min-width: 0; font-size: 14px; color: var(--ov-texto-terciario); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-trilha b { font-weight: 500; color: var(--ov-texto); }
+/* À direita, nesta ordem no HTML: .ov-conta → .ov-sincronizacao → até 2 ações. */
+.ov-superior-direita { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.ov-superior .ov-conta { width: auto; max-width: 240px; height: var(--ov-altura-controle); padding: 0 12px; border-radius: var(--ov-raio-md); }
+
+/* Estado de sincronização: chip com ponto + texto + " · N na fila". */
+.ov-sincronizacao { display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-sm); font: var(--ov-fonte-legenda); color: var(--ov-texto-secundario); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ov-sincronizacao::before { content: ""; width: 8px; height: 8px; margin-right: 8px; border-radius: var(--ov-raio-pill); background: var(--estado-cor, var(--ov-neutro)); flex: 0 0 auto; }
+.ov-sincronizacao[data-tom="sucesso"] { --estado-cor: var(--ov-sucesso); }
+.ov-sincronizacao[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
+.ov-sincronizacao[data-tom="erro"] { --estado-cor: var(--ov-erro); }
+.ov-sincronizacao[data-tom="info"] { --estado-cor: var(--ov-info); }
+.ov-sincronizacao-fila { color: var(--ov-texto-terciario); }
+
+/* ---------- Celular: cabeçalho e barra inferior ---------- */
+.ov-cabecalho-movel { display: none; position: sticky; top: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); align-items: center; gap: 8px; padding: env(safe-area-inset-top, 0px) calc(4px + env(safe-area-inset-right, 0px)) 0 calc(16px + env(safe-area-inset-left, 0px)); background: var(--ov-fundo); border-bottom: 1px solid var(--ov-borda); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-cabecalho-movel-titulo { flex: 1; min-width: 0; margin: 0; font: var(--ov-fonte-titulo-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Até 4 destinos (a) + "Mais" (button): até 5 colunas iguais. */
+.ov-barra-inferior { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-barra); height: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); padding: 6px calc(8px + env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) calc(8px + env(safe-area-inset-left, 0px)); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); background: var(--ov-fundo); border-top: 1px solid var(--ov-borda); }
+.ov-barra-inferior-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; min-height: var(--ov-altura-toque); padding: 0; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-terciario); font: var(--ov-fonte-rotulo); text-decoration: none; cursor: pointer; }
+.ov-barra-inferior-item svg { width: 22px; height: 22px; flex: 0 0 auto; }
+.ov-barra-inferior-item[aria-current="page"], .ov-barra-inferior-item[aria-expanded="true"] { color: var(--ov-texto); }
+.ov-barra-inferior-item[aria-current="page"] svg, .ov-barra-inferior-item[aria-expanded="true"] svg { color: var(--ov-acao-texto); }
+
+/* ---------- Menu ---------- */
+.ov-menu { min-width: 220px; padding: 4px; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-1); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; height: 36px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo); text-align: left; text-decoration: none; cursor: pointer; }
+.ov-menu-item:hover, .ov-menu-item:focus-visible { background: var(--ov-linha-hover); outline-offset: -2px; }
+.ov-menu-item svg { color: var(--ov-texto-terciario); }
+.ov-menu-item .ov-tecla { margin-left: auto; }
+.ov-menu-item[data-tom="perigo"], .ov-menu-item[data-tom="perigo"] svg { color: var(--ov-erro); }
+/* Item da seção aberta (v3.11; no "Mais", a seção que mora nele): o mesmo
+   desenho do .ov-nav ativo. Vem depois do :hover e vence ele. */
+.ov-menu-item[aria-current="page"] { background: var(--ov-item-ativo); }
+.ov-menu-item[aria-current="page"] svg { color: var(--ov-acao-texto); }
+/* Rótulo de grupo no menu e na folha do "Mais" (v3.11). Não é item: num
+   menu, o app põe aria-hidden; na folha, é o h3 da seção. */
+.ov-menu-grupo { margin: 0; padding: 8px 10px 4px; font: var(--ov-fonte-rotulo); color: var(--ov-texto-terciario); }
+.ov-menu-sep { height: 1px; margin: 4px; background: var(--ov-borda); }
+
+/* ---------- Véu e paleta de comandos ---------- */
+.ov-veu { position: fixed; inset: 0; z-index: var(--ov-z-dialogo); background: var(--ov-veu); animation: ovFade .16s ease-out; }
+.ov-paleta { position: fixed; left: 50%; top: 120px; z-index: var(--ov-z-dialogo); width: min(640px, calc(100vw - 32px)); transform: translateX(-50%); overflow: hidden; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-xl); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-paleta-busca { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border-bottom: 1px solid var(--ov-borda); }
+.ov-paleta-busca input { flex: 1; height: 40px; border: 0; background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo-grande); }
+/* O campo tem o foco enquanto a paleta está aberta: o anel único do livro,
+   no próprio campo (v3.11). Cabe nos 8px de folga da faixa de 56px sem
+   tocar o filete, o ícone nem o Fechar; a .ov-paleta não recebe foco. */
+.ov-paleta-busca input:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+.ov-paleta-grupo { padding: 10px 12px 4px; font: var(--ov-fonte-rotulo); color: var(--ov-texto-terciario); }
+.ov-paleta-item { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--ov-raio-md); }
+.ov-paleta-item[aria-selected="true"] { background: var(--ov-acao-suave); }
+.ov-paleta-item .meta { font-size: 13px; color: var(--ov-texto-terciario); }
+/* Miolo (v3.11): a lista rolando por dentro (no celular a paleta é a tela
+   inteira e rola ela mesma), o aviso de um grupo ("Sem conexão…") ou do
+   vazio ("Nada encontrado."), e o item que é link (Ctrl/Cmd-clique abre
+   outra aba). */
+.ov-paleta-lista { max-height: min(60vh, 480px); overflow-y: auto; overscroll-behavior: contain; padding: 4px 8px 8px; }
+.ov-paleta-lista .ov-paleta-item { cursor: pointer; }
+a.ov-paleta-item { color: inherit; text-decoration: none; }
+.ov-paleta-aviso { margin: 0; padding: 8px 12px; font-size: 13px; color: var(--ov-texto-terciario); }
+@keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Folha móvel (o "Mais" do celular) ---------- */
+.ov-folha { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); max-height: 92vh; display: flex; flex-direction: column; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
+.ov-folha-alca { display: grid; place-items: center; height: 20px; touch-action: none; }
+.ov-folha-alca::before { content: ""; width: 36px; height: 5px; border-radius: 999px; background: var(--ov-borda-controle); }
+/* Miolo do "Mais" (v3.11): o topo (título e o Fechar do app) é puxador,
+   como a alça: o dedo arrasta a folha, não a página. A lista rola por
+   dentro, com a área segura de baixo (o "Mais" não tem .ov-folha-rodape),
+   e os itens têm alvo de toque. Cada caixa declara a própria fonte e cor.
+     <div class="ov-folha" role="dialog" aria-modal="true" aria-labelledby="t">
+       <div class="ov-folha-alca"></div>
+       <div class="ov-folha-topo"><h2 class="ov-folha-titulo" id="t">Mais</h2>…Fechar…</div>
+       <div class="ov-folha-menu">
+         <a class="ov-menu-item" aria-current="page">…</a>
+         <h3 class="ov-menu-grupo">Conta</h3>
+         <p class="ov-folha-conta"><svg>…</svg>Nome da pessoa</p>
+       </div>
+     </div> */
+.ov-folha-topo { display: flex; align-items: center; gap: 8px; padding: 0 4px 4px 16px; touch-action: none; color: var(--ov-texto); }
+.ov-folha-titulo { flex: 1; min-width: 0; margin: 0; font: var(--ov-fonte-titulo-2); }
+.ov-folha-menu { overflow-y: auto; overscroll-behavior: contain; padding: 0 8px calc(12px + env(safe-area-inset-bottom, 0px)); color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-folha-menu .ov-menu-item { height: var(--ov-altura-toque); }
+.ov-folha-conta { display: flex; align-items: center; gap: 10px; margin: 0; padding: 4px 10px 8px; color: var(--ov-texto-secundario); }
+.ov-folha-conta svg { color: var(--ov-texto-terciario); }
+/* ovSobe: a folha sobe; o .ov-toast, o painel e o diálogo de formulário do
+   janelas.css também usam esta animação (o janelas.css depende da casca).
+   O rodapé e as alturas da folha (data-altura) moram no janelas.css. */
+@keyframes ovSobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Marca, etiqueta, estado, faixa e estados de tela ---------- */
+.ov-monograma { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; flex: 0 0 auto; background: var(--ov-marca-azul); color: #ffffff; }
+.ov-etiqueta { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--ov-raio-sm); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 12px; font-weight: 500; white-space: nowrap; }
+/* Estado: ponto de 8px + texto; a cor vem de data-tom (sem atributo, neutro). */
+.ov-estado { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ov-texto-secundario); white-space: nowrap; }
+.ov-estado::before { content: ""; width: 8px; height: 8px; border-radius: var(--ov-raio-pill); background: var(--estado-cor, var(--ov-neutro)); flex: 0 0 auto; }
+.ov-estado[data-tom="sucesso"] { --estado-cor: var(--ov-sucesso); }
+.ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
+.ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
+.ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
+.ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px calc(32px + env(safe-area-inset-right, 0px)) 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
+.ov-faixa svg { color: var(--ov-atencao); flex: 0 0 auto; }
+.ov-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; }
+.ov-vazio-icone { width: 48px; height: 48px; border-radius: var(--ov-raio-lg); display: grid; place-items: center; background: var(--ov-item-ativo); color: var(--ov-texto-secundario); margin-bottom: 8px; }
+.ov-vazio p { margin: 0; max-width: 360px; color: var(--ov-texto-secundario); }
+.ov-somente-leitura { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--ov-raio-md); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 13px; }
+
+/* ---------- Toque: alvos de 48px na lateral ---------- */
+@media (pointer: coarse) {
+  .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-lateral-alternar { height: var(--ov-altura-toque); }
+}
+
+/* ---------- Abaixo de 1024px: lateral recolhida, margem de 24px ---------- */
+/* As regras da lateral daqui se repetem, iguais, no bloco seguinte, para a
+   lateral recolhida por escolha a partir de 1024px (o teste da v3.15.0
+   cobra a igualdade): CSS não junta @media e atributo numa regra só. */
+@media (max-width: 1023px) {
+  .ov-lateral { width: calc(var(--ov-barra-lateral-recolhida) + env(safe-area-inset-left, 0px)); padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)); }
+  .ov-lateral-texto, .ov-lateral-marca-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ov-lateral-marca { justify-content: center; padding: 4px 0 12px; }
+  /* O rótulo do grupo vira um filete; o texto continua para leitor de tela. */
+  .ov-lateral-grupo { height: 1px; margin: 12px 4px; padding: 0; overflow: hidden; color: transparent; background: var(--ov-borda); }
+  .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-lateral-alternar { justify-content: center; padding: 0; }
+  .ov-busca-gatilho { border-color: transparent; background: transparent; }
+  .ov-nav-cont, .ov-busca-gatilho .ov-tecla { display: none; }
+  .ov-seletor-embarcacao::after { content: none; }
+  /* Abaixo de 1024px a lateral recolhe sozinha: não há o que alternar. */
+  .ov-lateral-alternar { display: none; }
+  .ov-superior { padding: 0 calc(24px + env(safe-area-inset-right, 0px)) 0 24px; }
+  .ov-tela { padding: 24px calc(24px + env(safe-area-inset-right, 0px)) 24px 24px; }
+  .ov-faixa { padding: 8px calc(24px + env(safe-area-inset-right, 0px)) 8px 24px; }
+}
+@media (max-width: 1023px) and (pointer: coarse) {
+  /* 56 − 1 de borda − 4 − 3 = 48px de alvo (o recuo soma na largura e no
+     padding da esquerda, e o alvo continua 48px). */
+  .ov-lateral { padding: 12px 3px calc(12px + env(safe-area-inset-bottom, 0px)) calc(4px + env(safe-area-inset-left, 0px)); }
+}
+
+/* ---------- A partir de 1024px: recolhida por escolha (v3.15.0) ---------- */
+/* As mesmas declarações da lateral do bloco de cima. O :where() deixa a
+   força de cada regra igual à do bloco de cima (a .ov-superior .ov-conta
+   continua vencendo, como a 900px). A margem da tela não muda: 32px. */
+@media (min-width: 1024px) {
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral { width: calc(var(--ov-barra-lateral-recolhida) + env(safe-area-inset-left, 0px)); padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)); }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral-texto, :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral-marca-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral-marca { justify-content: center; padding: 4px 0 12px; }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral-grupo { height: 1px; margin: 12px 4px; padding: 0; overflow: hidden; color: transparent; background: var(--ov-borda); }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-nav, :where(.ov-casca[data-lateral="recolhida"]) .ov-busca-gatilho, :where(.ov-casca[data-lateral="recolhida"]) .ov-seletor-embarcacao, :where(.ov-casca[data-lateral="recolhida"]) .ov-conta, :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral-alternar { justify-content: center; padding: 0; }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-busca-gatilho { border-color: transparent; background: transparent; }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-nav-cont, :where(.ov-casca[data-lateral="recolhida"]) .ov-busca-gatilho .ov-tecla { display: none; }
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-seletor-embarcacao::after { content: none; }
+}
+@media (min-width: 1024px) and (pointer: coarse) {
+  :where(.ov-casca[data-lateral="recolhida"]) .ov-lateral { padding: 12px 3px calc(12px + env(safe-area-inset-bottom, 0px)) calc(4px + env(safe-area-inset-left, 0px)); }
+}
+
+/* ---------- Abaixo de 768px: app no celular, margem de 16px ---------- */
+@media (max-width: 767px) {
+  .ov-lateral, .ov-superior { display: none; }
+  .ov-cabecalho-movel { display: flex; }
+  .ov-barra-inferior { display: grid; }
+  .ov-tela { padding: 16px calc(16px + env(safe-area-inset-right, 0px)) 16px calc(16px + env(safe-area-inset-left, 0px)); }
+  .ov-casca:has(.ov-barra-inferior) .ov-tela { padding-bottom: calc(16px + var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px)); }
+  .ov-faixa { padding: 8px 16px; }
+  /* A paleta vira a tela "Buscar", inteira. */
+  .ov-paleta { inset: 0; width: auto; transform: none; overflow-y: auto; padding-top: env(safe-area-inset-top, 0px); border: 0; border-radius: 0; box-shadow: none; }
+  .ov-paleta-lista { max-height: none; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ---------- Movimento reduzido ---------- */
+/* A folha não sobe: só aparece. O véu já é só opacidade (ovFade). */
+@media (prefers-reduced-motion: reduce) {
+  .ov-folha { animation-name: ovFade; }
+}

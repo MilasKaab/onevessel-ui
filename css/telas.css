@@ -144,6 +144,10 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
 .ov-tabela tbody tr[aria-selected="true"] { background: var(--ov-acao-suave); box-shadow: inset 2px 0 0 var(--ov-acao); }
 .ov-tabela .num { text-align: right; font-variant-numeric: tabular-nums; }
 .ov-tabela .nome { font-weight: 500; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+/* Numa tela larga (v3.16.0), a partir de 1024px, o nome perde o teto de
+   320px e fica com o espaço que sobra; números e datas, no tamanho natural
+   (nowrap). Abaixo de 1024px o atributo não muda nada. */
+@media (min-width: 1024px) { .ov-tela[data-largura="larga"] .ov-tabela .nome { max-width: none; } }
 .ov-tabela .meta { color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
 .ov-tabela[data-densidade="compacta"] td { height: 36px; }
 .ov-tabela[data-densidade="conforto"] td { height: 56px; }

@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.15.1"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.16.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -103,7 +103,7 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
         …até 2 ações (um Menu ⋮ conta como uma)…
       </div>
     </header>
-    <main class="ov-tela">…</main>
+    <main class="ov-tela" data-largura="larga">…</main>   <!-- lista ou grade; sem o atributo, 1280px -->
     <nav class="ov-barra-inferior">                      <!-- só abaixo de 768px -->
       <a class="ov-barra-inferior-item" aria-current="page">…</a>   <!-- até 4 destinos -->
       <button class="ov-barra-inferior-item" aria-expanded="false">…Mais</button>
@@ -144,6 +144,8 @@ const parar = ouvirLateral(window, (estado) => aplicarLateral(casca, estado))
 - `.ov-seletor-embarcacao` desenha a própria seta. Com um navio só, use `data-fixo` num elemento que não é botão: sem seta, sem cursor.
 - Em tela de toque (`pointer: coarse`), os itens da lateral passam a 48px.
 - Margem da tela: 32px no computador, 24px de 768 a 1023px, 16px abaixo de 768px.
+- **Largura da tela** (v3.16.0). Cada tela declara a largura: `data-largura="larga"` nas telas de lista ou grade (tabelas, conveses, históricos); sem o atributo, o teto de leitura de 1280px (formulários, painéis, texto, cartões de resumo). Recolher a lateral dá à tela larga o espaço da lateral; a de 1280 só cresce se a janela for estreita. A larga vai até `--ov-conteudo-largo` (1864px = 1920 − 56, com a margem de 32 de cada lado dentro): num 1920 a tela tem 1680 com a lateral aberta e 1864 recolhida, e o teto só age acima de 1920. Abaixo de 1024px o atributo não muda nada (a tela já cabe na janela).
+- **Por que a v3.16.0 é minor:** um token novo (`--ov-conteudo-largo`) e duas regras novas, `.ov-tela[data-largura="larga"]` na casca e, num bloco `@media (min-width: 1024px)` novo, `.ov-tela[data-largura="larga"] .ov-tabela .nome` nas telas. Nada muda para a tela sem o atributo; `--ov-conteudo-max` continua 1280px. Na adoção, o app põe o atributo nas telas de lista ou grade.
 - Abaixo de 768px, `.ov-paleta` vira a tela "Buscar", inteira.
 - **Miolo da paleta** (v3.11.0): `.ov-paleta-lista` rola por dentro até `min(60vh, 480px)` (4px em cima; no celular, sem limite e com a área segura de baixo), os `.ov-paleta-item` dela com cursor de mão, `a.ov-paleta-item` sem cor de link (Ctrl/Cmd-clique abre outra aba) e `.ov-paleta-aviso` para o aviso de um grupo ou o vazio, em 13px e `ov-texto-terciario`. O campo da `.ov-paleta-busca` tem o anel único do livro no próprio campo (o `outline: none` saiu).
 - **Folha do "Mais"** (v3.11.0): dentro da `.ov-folha`, depois da `.ov-folha-alca`, o `.ov-folha-topo` (com o `h2.ov-folha-titulo` e o Fechar do app) e a `.ov-folha-menu`, que rola por dentro com a área segura de baixo e dá 48px aos `.ov-menu-item`. A alça e o topo são puxador (`touch-action: none`). A conta vai em `p.ov-folha-conta`. Os grupos ("Outros apps", "Conta") em `.ov-menu-grupo`, que serve também ao `.ov-menu` (lá com `aria-hidden`). O item da seção aberta leva `aria-current="page"` e ganha o desenho do `.ov-nav` ativo, no menu e na folha.
@@ -305,6 +307,7 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 </div></div>
 ```
 
+- **Tabela numa tela larga** (v3.16.0): dentro da `.ov-tela[data-largura="larga"]`, a partir de 1024px, o `.nome` perde o teto de 320px e as colunas de texto ficam com o espaço; números e datas continuam no tamanho natural (`nowrap`). Abaixo de 1024px o atributo não muda nada (no tablet o nome segue com o teto). Sem `table-layout: fixed`. O pacote não põe rolagem lateral na `.ov-tabela`: tabela mais larga que a tela continua como antes, e a rolagem, quando houver, é de um contêiner do app.
 - **Lista do celular**: abaixo de 768px, **a `.ov-tabela` que tem uma `td.nome`** vira lista de linhas de 64px ou mais, com o nome em cima em 16px e as outras células numa linha de `legenda`, separadas por "·", e divisor `ov-borda`. O cabeçalho sai da tela e continua para o leitor de tela; a célula com `.ov-check` fica à esquerda. O app não troca de classe. Tabela sem `td.nome` (as da plataforma até a v3.6) continua como estava, rolando de lado, e navegador sem `:has()` também.
 - **Só na lista, fora da lista** (v3.11.0): dentro da `.ov-tabela`, o `.ov-so-no-celular` (um rótulo, `inline`) só aparece na lista do celular, onde o cabeçalho sai ("12 atividades"); o `.ov-fora-do-celular` (uma célula, ou o `th` dela) some na lista e fica de 768px para cima, no tablet também.
 - **Cartão** (v3.11.0): sem sombra em nenhum tema (o livro: cartão em repouso se separa por borda). **Cartão aberto**: `aria-current="true"` no `.ov-cartao` dá borda `ov-acao` e `ov-acao-suave` sobre a superfície, como a linha selecionada da tabela. A regra é fraca (`:where`): a borda de alerta que o app põe numa classe dele, depois do pacote, continua vencendo.

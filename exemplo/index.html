@@ -53,6 +53,13 @@
      não encolhe. */
   .foco .ov-conteudo > * { flex-shrink: 0; }
   .foco .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  /* Visões grandes: a moldura rola o .ov-conteudo, e a faixa fica presa sob
+     a barra superior dela. */
+  .visoes-grandes { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .visoes-grandes > h2 { margin: 0 0 var(--ov-esp-4); }
+  .visoes-grandes .ov-conteudo > * { flex-shrink: 0; }
+  .visoes-grandes .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .visoes-painel { display: flex; flex-direction: column; gap: var(--ov-esp-4); }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1002,6 +1009,115 @@
     </div>
 </section>
 
+<section class="visoes-grandes">
+  <h2 class="ov-titulo-1">Visões grandes</h2>
+  <p class="ov-legenda">A divisão principal da tela, com <code class="ov-codigo">data-tamanho="grande"</code> no <code class="ov-codigo">.ov-visoes</code>: partes iguais num controle com cara de cartão, 64px no computador e 56 abaixo de 768px, presa sob a barra superior ao rolar (role a moldura). A partir de 768px o <code class="ov-codigo">.ov-rotulo</code> por extenso, numa linha abaixo; abaixo de 768px, só o número (<code class="ov-codigo">.ov-tnum</code>). O filtro abaixo (Todas / Com alerta) fica nas visões normais. Mesmo teclado das visões (setas, no app). Dados fictícios (v3.18.0).</p>
+
+    <p class="ov-rotulo moldura-rotulo">Visões grandes · tema escuro · Atividades planejadas selecionada</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="ov-casca">
+        <nav class="ov-lateral" aria-label="Paradas">
+          <div class="ov-lateral-marca">
+            <i data-icone="semaforo"></i>
+            <div class="ov-lateral-marca-texto">
+              <span class="ov-lateral-marca-nome">Paradas</span>
+              <span class="ov-lateral-marca-sub">Paradas de manutenção</span>
+            </div>
+          </div>
+          <div class="ov-lateral-grupo">Paradas</div>
+          <a class="ov-nav" href="#" aria-current="page" title="Parada"><i data-icone="semaforo"></i><span class="ov-lateral-texto">Parada</span></a>
+          <a class="ov-nav" href="#" title="Indicadores"><i data-icone="bar-chart-3"></i><span class="ov-lateral-texto">Indicadores</span></a>
+          <div class="ov-lateral-rodape">
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
+            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
+          </div>
+        </nav>
+        <div class="ov-conteudo">
+          <header class="ov-cabecalho-movel">
+            <h1 class="ov-cabecalho-movel-titulo">Parada 12/10</h1>
+          </header>
+          <header class="ov-superior">
+            <div class="ov-trilha">Paradas / <b>Parada 12/10</b></div>
+          </header>
+          <main class="ov-tela">
+            <h1 class="ov-titulo-1">Parada 12/10</h1>
+            <div class="ov-visoes" data-tamanho="grande" role="tablist" aria-label="Parada">
+              <button class="ov-visao" type="button" role="tab" id="aba-planejadas-escuro" aria-selected="true" aria-controls="painel-planejadas-escuro" tabindex="0"><i data-icone="clipboard-list"></i>Atividades planejadas <span class="ov-rotulo">30 atividades aguardando</span><span class="ov-tnum">30</span></button>
+              <button class="ov-visao" type="button" role="tab" id="aba-bordo-escuro" aria-selected="false" aria-controls="painel-bordo-escuro" tabindex="-1"><i data-icone="users"></i>A bordo <span class="ov-rotulo">12 atividades em execução</span><span class="ov-tnum">12</span></button>
+            </div>
+            <section role="tabpanel" id="painel-planejadas-escuro" aria-labelledby="aba-planejadas-escuro" class="visoes-painel">
+              <div class="ov-visoes" role="tablist" aria-label="Filtro"><button class="ov-visao" type="button" role="tab" aria-selected="true">Todas <span class="ov-tnum">30</span></button><button class="ov-visao" type="button" role="tab" aria-selected="false" tabindex="-1">Com alerta <span class="ov-tnum">4</span></button></div>
+              <ul class="cartoes">
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0412</span><p style="margin:4px 0 0">Troca do selo da bomba de lastro BB</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0413</span><p style="margin:4px 0 0">Inspeção das sapatas do guindaste de popa</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0415</span><p style="margin:4px 0 0">Calibração dos sensores de nível do tanque 3</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0418</span><p style="margin:4px 0 0">Revisão do quadro elétrico auxiliar</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0421</span><p style="margin:4px 0 0">Limpeza do resfriador de óleo do MCP BE</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0422</span><p style="margin:4px 0 0">Teste do gerador de emergência</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0425</span><p style="margin:4px 0 0">Substituição das mangueiras do guincho</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0427</span><p style="margin:4px 0 0">Pintura da praça de máquinas, antepara de vante</p></article></li>
+              </ul>
+            </section>
+            <section role="tabpanel" id="painel-bordo-escuro" aria-labelledby="aba-bordo-escuro" hidden></section>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Visões grandes · tema claro · Atividades planejadas selecionada</p>
+    <div class="moldura" data-theme="claro">
+      <div class="ov-casca">
+        <nav class="ov-lateral" aria-label="Paradas">
+          <div class="ov-lateral-marca">
+            <i data-icone="semaforo"></i>
+            <div class="ov-lateral-marca-texto">
+              <span class="ov-lateral-marca-nome">Paradas</span>
+              <span class="ov-lateral-marca-sub">Paradas de manutenção</span>
+            </div>
+          </div>
+          <div class="ov-lateral-grupo">Paradas</div>
+          <a class="ov-nav" href="#" aria-current="page" title="Parada"><i data-icone="semaforo"></i><span class="ov-lateral-texto">Parada</span></a>
+          <a class="ov-nav" href="#" title="Indicadores"><i data-icone="bar-chart-3"></i><span class="ov-lateral-texto">Indicadores</span></a>
+          <div class="ov-lateral-rodape">
+            <div class="ov-lateral-grupo"></div>
+            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
+            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
+          </div>
+        </nav>
+        <div class="ov-conteudo">
+          <header class="ov-cabecalho-movel">
+            <h1 class="ov-cabecalho-movel-titulo">Parada 12/10</h1>
+          </header>
+          <header class="ov-superior">
+            <div class="ov-trilha">Paradas / <b>Parada 12/10</b></div>
+          </header>
+          <main class="ov-tela">
+            <h1 class="ov-titulo-1">Parada 12/10</h1>
+            <div class="ov-visoes" data-tamanho="grande" role="tablist" aria-label="Parada">
+              <button class="ov-visao" type="button" role="tab" id="aba-planejadas-claro" aria-selected="true" aria-controls="painel-planejadas-claro" tabindex="0"><i data-icone="clipboard-list"></i>Atividades planejadas <span class="ov-rotulo">30 atividades aguardando</span><span class="ov-tnum">30</span></button>
+              <button class="ov-visao" type="button" role="tab" id="aba-bordo-claro" aria-selected="false" aria-controls="painel-bordo-claro" tabindex="-1"><i data-icone="users"></i>A bordo <span class="ov-rotulo">12 atividades em execução</span><span class="ov-tnum">12</span></button>
+            </div>
+            <section role="tabpanel" id="painel-planejadas-claro" aria-labelledby="aba-planejadas-claro" class="visoes-painel">
+              <div class="ov-visoes" role="tablist" aria-label="Filtro"><button class="ov-visao" type="button" role="tab" aria-selected="true">Todas <span class="ov-tnum">30</span></button><button class="ov-visao" type="button" role="tab" aria-selected="false" tabindex="-1">Com alerta <span class="ov-tnum">4</span></button></div>
+              <ul class="cartoes">
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0412</span><p style="margin:4px 0 0">Troca do selo da bomba de lastro BB</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0413</span><p style="margin:4px 0 0">Inspeção das sapatas do guindaste de popa</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0415</span><p style="margin:4px 0 0">Calibração dos sensores de nível do tanque 3</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0418</span><p style="margin:4px 0 0">Revisão do quadro elétrico auxiliar</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0421</span><p style="margin:4px 0 0">Limpeza do resfriador de óleo do MCP BE</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0422</span><p style="margin:4px 0 0">Teste do gerador de emergência</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0425</span><p style="margin:4px 0 0">Substituição das mangueiras do guincho</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0427</span><p style="margin:4px 0 0">Pintura da praça de máquinas, antepara de vante</p></article></li>
+              </ul>
+            </section>
+            <section role="tabpanel" id="painel-bordo-claro" aria-labelledby="aba-bordo-claro" hidden></section>
+          </main>
+        </div>
+      </div>
+    </div>
+</section>
+
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo
   // é o do Paradas, com a geometria do livro da marca.
@@ -1015,6 +1131,7 @@
     'circle-user': '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>',
     'layout-grid': '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
     'log-in': '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/>',
+    'clipboard-list': '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>',
     users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     table: '<path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/>',
     'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',

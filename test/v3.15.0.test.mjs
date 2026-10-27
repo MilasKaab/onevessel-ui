@@ -5,6 +5,9 @@
 // `.ov-lateral-alternar` no rodapé (só a partir de 1024px) e o núcleo
 // `js/lateral-nucleo.js`, que guarda a escolha no aparelho em `ov-lateral`.
 // `test/fixtures/casca-v3.14.0.css` é o casca.css da tag v3.14.0, fixo.
+// Desde a v3.15.1, a casca daqui é a fixture da v3.15.0 (fixture com
+// fixture); o exemplo e o núcleo mudaram só por acréscimo, e o teste dela
+// cobra o que mudou.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -13,7 +16,7 @@ import { regras, semComentario } from '../scripts/css-regras.mjs';
 
 const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const antes = ler('test/fixtures/casca-v3.14.0.css');
-const casca = ler('css/casca.css');
+const casca = ler('test/fixtures/casca-v3.15.0.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
 const pacote = JSON.parse(ler('package.json'));
@@ -219,8 +222,10 @@ test('núcleo: aplicar põe data-lateral na casca; sem casca, nada', () => {
 });
 
 test('núcleo: o botão em cada estado (ícone do Lucide, aria-label, aria-expanded)', () => {
-  assert.deepEqual(n.botaoDaLateral('aberta'), { icone: 'panel-left-close', rotulo: 'Recolher barra lateral', expandido: true });
-  assert.deepEqual(n.botaoDaLateral('recolhida'), { icone: 'panel-left-open', rotulo: 'Expandir barra lateral', expandido: false });
+  // Os três da v3.15.0; o texto da v3.15.1 fica no teste dela.
+  const tres = (estado) => { const { icone, rotulo, expandido } = n.botaoDaLateral(estado); return { icone, rotulo, expandido }; };
+  assert.deepEqual(tres('aberta'), { icone: 'panel-left-close', rotulo: 'Recolher barra lateral', expandido: true });
+  assert.deepEqual(tres('recolhida'), { icone: 'panel-left-open', rotulo: 'Expandir barra lateral', expandido: false });
   assert.deepEqual(n.botaoDaLateral('lixo'), n.botaoDaLateral('aberta'));
 });
 
@@ -255,7 +260,8 @@ test('núcleo: sem DOM e sem pacote (só o que vem de quem chama)', () => {
 // ---------- Exemplo, pacote e README ----------
 
 test('exemplo: o botão nas duas cascas (escuro e claro), acima da conta, aberto, com o script do núcleo', () => {
-  const botao = '<button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i></button>';
+  // Sem o fim da tag: a v3.15.1 acrescenta o texto depois do ícone.
+  const botao = '<button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i>';
   for (const tema of ['escuro', 'claro']) {
     const i = exemplo.indexOf(`<div class="moldura" data-theme="${tema}">`);
     assert.ok(i > 0, tema);
@@ -271,11 +277,8 @@ test('exemplo: o botão nas duas cascas (escuro e claro), acima da conta, aberto
   assert.match(exemplo, /ouvirLateral\(window, mostrar\)/);
 });
 
-// A versão do pacote fica com o teste da versão mais nova.
-test('package.json: 3.15.0 e o núcleo em exports; README com a tag e a regra', () => {
-  assert.equal(pacote.version, '3.15.0');
+test('package.json: o núcleo em exports; README com a regra', () => {
   assert.deepEqual(pacote.exports['./js/lateral-nucleo.js'], { types: './js/lateral-nucleo.d.ts', default: './js/lateral-nucleo.js' });
-  assert.match(leiame, /onevessel-ui#v3\.15\.0"/);
   assert.match(leiame, /ov-lateral-alternar/);
   assert.match(leiame, /data-lateral="recolhida"/);
   assert.match(leiame, /js\/lateral-nucleo\.js/);

@@ -25,10 +25,13 @@ export declare function aplicarLateral(raiz: {
 } | null | undefined, estado: EstadoDaLateral): void;
 /**
  * O que o botão `.ov-lateral-alternar` mostra em cada estado: o ícone do
- * Lucide, o `aria-label` e o `aria-expanded`.
+ * Lucide, o texto do `.ov-lateral-texto` (v3.15.1), o `aria-label` e o
+ * `title`, e o `aria-expanded`.
  */
 export interface BotaoDaLateral {
     icone: "panel-left-close" | "panel-left-open";
+    /** O mesmo do rótulo. */
+    texto: string;
     rotulo: string;
     expandido: boolean;
 }

@@ -63,13 +63,16 @@
 .ov-tecla { display: inline-flex; align-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font: 500 12px/1 var(--font-mono); color: var(--ov-texto-secundario); }
 
 /* Seletor de embarcação: botão que abre um .ov-menu. Com um navio só,
-   data-fixo: sem seta, sem cursor, sem realce. */
+   data-fixo: sem seta, sem cursor, sem realce. O :where() deixa o
+   data-fixo com a força do seletor (0,1,0): na lateral recolhida o
+   padding: 0 dos dois blocos vence, e a âncora fica no eixo dos outros
+   ícones (v3.15.1; antes, o padding-right de 10px a tirava 5px). */
 .ov-seletor-embarcacao { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 30px 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto); font: var(--ov-fonte-corpo-forte); text-align: left; cursor: pointer; white-space: nowrap; }
 .ov-seletor-embarcacao svg { flex: 0 0 auto; color: var(--ov-texto-terciario); }
 .ov-seletor-embarcacao::after { content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; border: solid var(--ov-texto-terciario); border-width: 0 2px 2px 0; transform: translateY(-70%) rotate(45deg); }
 .ov-seletor-embarcacao:hover { background: var(--ov-linha-hover); }
 .ov-seletor-embarcacao[aria-expanded="true"] { background: var(--ov-item-ativo); }
-.ov-seletor-embarcacao[data-fixo] { padding-right: 10px; cursor: default; }
+.ov-seletor-embarcacao:where([data-fixo]) { padding-right: 10px; cursor: default; }
 .ov-seletor-embarcacao[data-fixo]::after { content: none; }
 .ov-seletor-embarcacao[data-fixo]:hover { background: transparent; }
 
@@ -80,11 +83,14 @@
 .ov-conta:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
 .ov-conta[aria-expanded="true"] { background: var(--ov-item-ativo); color: var(--ov-texto); }
 
-/* Recolher e expandir a lateral (v3.15.0): botão de ícone na régua da
-   própria lateral (100% e 32px; 48 no toque), no rodapé, acima da conta.
-   O app põe o SVG do Lucide (panel-left-close aberta, panel-left-open
-   recolhida), o aria-label e o aria-expanded. Abaixo de 1024px some. */
-.ov-lateral-alternar { box-sizing: border-box; display: flex; align-items: center; width: 100%; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo); cursor: pointer; }
+/* Recolher e expandir a lateral (v3.15.0): na régua da própria lateral
+   (100% e 32px; 48 no toque), primeiro item do rodapé, depois do filete
+   (.ov-lateral-grupo vazio) e acima da conta. Desde a v3.15.1, ícone e
+   texto em .ov-lateral-texto, como os outros itens: aberta mostra o texto,
+   recolhida só o ícone. O app põe o SVG do Lucide (panel-left-close
+   aberta, panel-left-open recolhida), o texto, o title, o aria-label e o
+   aria-expanded. Abaixo de 1024px some. */
+.ov-lateral-alternar { box-sizing: border-box; display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo); text-align: left; cursor: pointer; white-space: nowrap; }
 .ov-lateral-alternar svg { flex: 0 0 auto; }
 .ov-lateral-alternar:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
 .ov-lateral-alternar:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }

@@ -16,9 +16,12 @@ const fixo = (nome) => ler(`test/fixtures/${nome}-v3.12.0.css`);
 const fixoDe = (nome) => (['controles', 'onevessel', 'telas', 'janelas'].includes(nome) ? fixo(nome) : ler(`test/fixtures/${nome}-v3.11.0.css`));
 // A casca muda na v3.15.0: a da v3.13.0 é a fixture da v3.14.0 (a v3.14.0
 // não mexeu em CSS). Telas e tokens mudam na v3.16.0: os da v3.13.0 são as
-// fixtures da v3.15.1 (iguais desde a v3.13.0). Os outros não mudaram.
+// fixtures da v3.15.1 (iguais desde a v3.13.0). As janelas mudam na
+// v3.17.0: as da v3.13.0 são a fixture da v3.16.0 (iguais desde a v3.13.0).
+// Os outros não mudaram.
 const css = (nome) => (nome === 'casca' ? ler('test/fixtures/casca-v3.14.0.css')
-  : ['telas', 'tokens'].includes(nome) ? ler(`test/fixtures/${nome}-v3.15.1.css`) : ler(`css/${nome}.css`));
+  : ['telas', 'tokens'].includes(nome) ? ler(`test/fixtures/${nome}-v3.15.1.css`)
+  : nome === 'janelas' ? ler('test/fixtures/janelas-v3.16.0.css') : ler(`css/${nome}.css`));
 const controles = css('controles');
 const telas = css('telas');
 const tokens = css('tokens');

@@ -5,7 +5,9 @@
 // .ov-tela[data-largura="larga"] na casca e, nas telas, a partir de 1024px,
 // o .nome da tabela sem o teto de 320px dentro dela. Minor: as fixtures da v3.15.1
 // (`test/fixtures/{casca,telas,tokens}-v3.15.1.css`, da tag, fixas) ficam
-// iguais regra a regra; só nasce o que está aqui.
+// iguais regra a regra; só nasce o que está aqui. Desde a v3.17.0, as
+// janelas daqui são a fixture da v3.16.0 (fixture com fixture), e a versão e
+// a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -18,7 +20,6 @@ const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 const tokensJson = JSON.parse(ler('tokens/tokens.json'));
 
 const LARGA = '.ov-tela[data-largura="larga"]';
@@ -73,7 +74,7 @@ test('os outros CSS com os bytes da v3.15.1', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'janelas' ? 'test/fixtures/janelas-v3.16.0.css' : `css/${nome}.css`), sha, nome);
 });
 
 // ---------- O novo ----------
@@ -86,7 +87,7 @@ test('a tela larga: só o teto, no token novo, fora de @media', () => {
   assert.match(declaracoesEm(ler('css/casca.css'), '', '.ov-tela').join('; '), /max-width: var\(--ov-conteudo-max\)/);
   // Nenhuma outra regra fala do atributo.
   for (const nome of ['casca', 'janelas', 'telas', 'controles', 'onevessel']) {
-    for (const r of regras(ler(`css/${nome}.css`))) {
+    for (const r of regras(ler(nome === 'janelas' ? 'test/fixtures/janelas-v3.16.0.css' : `css/${nome}.css`))) {
       for (const s of r.seletores) if (/data-largura/.test(s)) assert.ok([`|${LARGA}`, `${COMPUTADOR}|${NOME}`].includes(`${r.media}|${s}`), `${nome}: ${r.media}|${s}`);
     }
   }
@@ -119,9 +120,7 @@ test('exemplo: telas larga (escuro e claro) com .ov-tabela e uma de 1280 sem o a
   assert.doesNotMatch(molduras[2], /data-largura/);
 });
 
-test('package.json 3.16.0; README com a tag, a regra na Casca e a linha na Tabela', () => {
-  assert.equal(pacote.version, '3.16.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.16\.0"/);
+test('README com a regra na Casca e a linha na Tabela', () => {
   assert.ok(leiame.includes('Cada tela declara a largura: `data-largura="larga"` nas telas de lista ou grade (tabelas, conveses, históricos); sem o atributo, o teto de leitura de 1280px (formulários, painéis, texto, cartões de resumo). Recolher a lateral dá à tela larga o espaço da lateral; a de 1280 só cresce se a janela for estreita.'));
   assert.match(leiame, /\*\*Tabela numa tela larga\*\* \(v3\.16\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.16\.0 é minor:\*\*/);

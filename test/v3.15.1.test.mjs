@@ -8,7 +8,8 @@
 // `test/fixtures/casca-v3.15.0.css` é o casca.css da tag v3.15.0, fixo.
 // Desde a v3.16.0, a casca, as telas e os tokens daqui são as fixtures da
 // v3.15.1 (fixture com fixture); as medidas olham só as duas cascas da
-// .pagina, e a versão e a tag ficam com o teste da versão mais nova.
+// .pagina, e a versão e a tag ficam com o teste da versão mais nova. Desde
+// a v3.17.0, as janelas daqui são a fixture da v3.16.0 (iguais às da v3.15.1).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -112,8 +113,8 @@ test('os outros CSS com os bytes da v3.15.0', () => {
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
     tokens: '28569ab7f0be7c421d0db9bbd69eae4127d1c6f12d938fa503d88e6aa79805be',
   };
-  const FIXTURE = new Set(['telas', 'tokens']);
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(FIXTURE.has(nome) ? `test/fixtures/${nome}-v3.15.1.css` : `css/${nome}.css`), sha, nome);
+  const FIXTURE = { telas: 'v3.15.1', tokens: 'v3.15.1', janelas: 'v3.16.0' };
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(FIXTURE[nome] ? `test/fixtures/${nome}-${FIXTURE[nome]}.css` : `css/${nome}.css`), sha, nome);
 });
 
 // ---------- O recolhido continua igual nos dois blocos ----------

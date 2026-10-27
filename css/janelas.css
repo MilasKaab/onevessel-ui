@@ -68,6 +68,9 @@
 .ov-dados { margin: 0; display: grid; grid-template-columns: 128px 1fr; gap: 10px 12px; }
 .ov-dados dt { color: var(--ov-texto-terciario); }
 .ov-dados dd { margin: 0; overflow-wrap: anywhere; }
+/* Par dt/dd embrulhado num div (v3.17.0, para a grade do modo foco): fora
+   dele o div some e o par cai na grade de 128px como o par solto. */
+.ov-dados > div { display: contents; }
 .ov-abas-internas { display: flex; gap: 16px; border-bottom: 1px solid var(--ov-borda); }
 .ov-abas-internas button { height: 36px; padding: 0; border: 0; background: none; color: var(--ov-texto-terciario); font-weight: 500; cursor: pointer; }
 .ov-abas-internas button[aria-selected="true"] { color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
@@ -93,6 +96,37 @@
 @media (max-width: 1023px) {
   .ov-painel, .ov-painel[data-abas] { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: auto; height: 90vh; height: 90dvh; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-left: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
   .ov-painel[data-altura="cheia"] { height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
+}
+
+/* ---------- Modo foco (v3.17.0), só a partir de 1024px ---------- */
+/* A tela põe data-painel="foco" no contêiner que tem, como filhos, a coluna
+   da lista (a que contém a .ov-tabela) e o .ov-painel; o modo age só
+   enquanto o painel está lá (:has), e sem ele tudo volta. As células
+   principais (th e td) levam data-principal; as outras somem. Sem véu: a
+   lista continua clicável e rolável. Abaixo de 1024px nada muda (Folha). */
+@media (min-width: 1024px) {
+  [data-painel="foco"]:has(> .ov-painel) { display: flex; align-items: flex-start; }
+  /* A lista numa coluna de 360px; sem espaço para os 520 do painel, é ela
+     que cede. */
+  [data-painel="foco"]:has(> .ov-painel) > :not(.ov-painel):has(.ov-tabela) { flex: 0 1 360px; width: 360px; min-width: 0; }
+  [data-painel="foco"]:has(> .ov-painel) .ov-tabela :is(th, td):not([data-principal]) { display: none; }
+  /* O nome fica com o resto da coluna e corta em reticências. O td vence a
+     tela larga do telas.css (v3.16.0), que vem depois e teria a mesma força. */
+  [data-painel="foco"]:has(> .ov-painel) .ov-tabela td.nome { width: 100%; max-width: 0; }
+  /* Segundo plano por cor, nunca por opacity; a linha aberta mantém o
+     destaque de seleção, e o :hover e o foco devolvem o texto. O .meta e o
+     .ov-estado têm cor própria e ficam como estão. */
+  [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) { color: var(--ov-texto-secundario); }
+  /* O painel em primeiro plano: o que sobra (mínimo 520px), a altura toda
+     abaixo da barra superior, o corpo rolando por dentro. */
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel { position: sticky; top: var(--ov-barra-superior); flex: 1 1 0; width: auto; min-width: 520px; height: calc(100vh - var(--ov-barra-superior)); height: calc(100dvh - var(--ov-barra-superior)); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); }
+  /* Detalhes em colunas de no mínimo 280px: os pares da .ov-dados
+     embrulhados em div, e os .ov-campo-grupo do formulário; o resto do
+     formulário (botões, avisos) ocupa a linha inteira. */
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel .ov-dados:has(> div) { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px 24px; }
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel .ov-dados > div { display: grid; grid-template-columns: 128px 1fr; gap: 10px 12px; align-content: start; }
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel :has(> .ov-campo-grupo) { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px 24px; align-items: start; }
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel :has(> .ov-campo-grupo) > :not(.ov-campo-grupo) { grid-column: 1 / -1; }
 }
 
 /* ---------- Abaixo de 768px: diálogo de formulário em tela cheia, toasts no topo ---------- */

@@ -82,7 +82,6 @@ test('README: um PWA só, sem manifesto de módulo', () => {
   const readme = ler('README.md');
   assert.match(readme, /[Uu]m PWA só, o da OneVessel; módulos não instaláveis/);
   assert.doesNotMatch(readme, /manifestos\/(bordo|paradas|materiais)\.webmanifest/);
-  assert.match(readme, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.14\.0"/);
 });
 
 test('pacote: manifestos/ e icons/ continuam publicados; exports sem mudança', () => {
@@ -90,9 +89,4 @@ test('pacote: manifestos/ e icons/ continuam publicados; exports sem mudança', 
   assert.ok(pacote.files.includes('icons'));
   assert.equal(pacote.exports['./icons/*'], './icons/*');
   assert.equal(pacote.exports['./manifestos/*'], undefined);
-});
-
-// A versão do pacote fica com o teste da versão mais nova.
-test('pacote: versão 3.14.0', () => {
-  assert.equal(pacote.version, '3.14.0');
 });

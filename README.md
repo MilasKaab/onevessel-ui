@@ -10,7 +10,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | --- | --- |
 | `tokens/tokens.json` | Fonte de tudo: cores nos dois temas, tipografia, espaçamentos, raios, sombras, tamanhos e camadas |
 | `css/tokens.css` | Gerado do arquivo acima. Variáveis CSS (`--ov-*`), tema escuro na raiz e claro em `[data-theme="claro"]` |
-| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu (com o rótulo de grupo e o item da seção aberta), paleta (com a lista, o aviso e o anel do campo), folha móvel do "Mais" (com o topo, a lista e a conta, desde a v3.11.0), etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
+| `css/casca.css` | Só a estrutura das telas: barra lateral (240px; 56px recolhida abaixo de 1024px e, desde a v3.15.0, por escolha da pessoa, com o botão `.ov-lateral-alternar`), barra superior, cabeçalho e barra inferior do celular (abaixo de 768px), seletor de embarcação, conta, sincronização, menu (com o rótulo de grupo e o item da seção aberta), paleta (com a lista, o aviso e o anel do campo), folha móvel do "Mais" (com o topo, a lista e a conta, desde a v3.11.0), etiqueta, estado (`.ov-estado`), faixa e estados de tela. Importável sozinha: sem `body`, sem base de 14px, sem impressão |
 | `css/janelas.css` | As camadas sobre a tela: Diálogo, Toast, Painel lateral, rodapé e alturas da folha móvel, e o `ov-btn-perigo`. Importável sozinho, como a casca (depende de `tokens.css` e `casca.css`; o `ov-btn-perigo`, da base do `controles.css`) |
 | `css/telas.css` | O que vai dentro da tela (v3.7.0; o miolo do item do Precisa de você e o cartão que estica na grade desde a v3.8.0): tipografia, cartão e indicadores (grade 4/2/1), Precisa de você, visões e filtros, contador, progresso, segmentado, checkbox, tabela (lista de linhas abaixo de 768px), barra de ações em massa e esqueleto. Importável sozinho, como a casca (depende de `tokens.css` e, para o movimento reduzido, de `casca.css`) |
 | `css/controles.css` | Botões e campo (v3.12.0; antes, só no `onevessel.css`): `.ov-btn` e as variantes, `.ov-campo-grupo`, `.ov-label`, `.ov-campo`, `.ov-ajuda` e `.ov-erro-campo`; desde a v3.13.0, o `textarea.ov-campo`, o campo de linha (`.ov-campo[data-densidade="linha"]`) e o ícone do erro. Importável sozinho, como a casca (depende só de `tokens.css`) |
@@ -24,10 +24,10 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `icons/` | `plataforma/`: os ícones do PWA da OneVessel (192, 512, maskable, apple-touch-icon e o SVG de origem); `bordo/`, `paradas/` e `materiais/`: só o `icone.svg` de cada módulo, que não é instalável (v3.14.0) |
 | `marca/` | O logo horizontal da BRAM Offshore (`bram-offshore-horizontal.png`, 2425×1073, fundo transparente), para o timbre dos relatórios (v3.10.0) |
 | `manifestos/` | O `plataforma.webmanifest`, modelo do manifesto do PWA da OneVessel, o único instalável (desde a v3.14.0; os dos módulos saíram) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela. ESM puro, sem dependência (nem de React), com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `controles.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (sem exceção desde a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
-| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo. Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
+| `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo; e `v3.15.0.test.mjs`: toda regra do `casca.css` da v3.14.0 igual, o que nasceu exatamente pela lista, a lateral recolhida por escolha com as mesmas declarações da de abaixo de 1024px (sem a margem), nenhuma `transition`, o botão escondido abaixo de 1024px, o núcleo (ler, gravar, alternar, aplicar, armazenamento quebrado, evento de outra aba) e o exemplo. Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
 
 ## Cor e tipografia, em uma linha
 
@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.14.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.15.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -85,6 +85,7 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
     <div class="ov-lateral-grupo">Outros apps</div>
     …
     <div class="ov-lateral-rodape">
+      <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><svg …panel-left-close…/></button>
       <button class="ov-conta" title="Ana Souza"><svg …circle-user…/><span class="ov-lateral-texto">Ana Souza</span></button>
     </div>
   </nav>
@@ -108,6 +109,30 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 ```
 
 - Tudo que é texto na lateral vai em `.ov-lateral-texto` (ou `.ov-lateral-marca-texto`): abaixo de 1024px a lateral recolhe para 56px, esse texto sai da tela (continua para o leitor de tela) e o `title` de cada item fica.
+- **Lateral recolhida por escolha** (v3.15.0): abaixo de 1024px a lateral recolhe sozinha; a partir de 1024px, recolhe por escolha da pessoa, com `data-lateral="recolhida"` na `.ov-casca` — o mesmo estado de 56px de abaixo de 1024px, **só a lateral**: a margem da tela continua 32px. Com o atributo ausente ou `"aberta"`, 240px como sempre; abaixo de 1024px o atributo não muda nada. Sem atalho de teclado, sem expandir ao passar o mouse, sem animação (troca seca).
+- **O botão** `.ov-lateral-alternar` vai no `.ov-lateral-rodape`, acima da conta, e só aparece a partir de 1024px. Segue a régua da lateral (100% de largura, 32px, 48 no toque; o ícone centrado na recolhida) e tem o anel único do livro. O pacote não traz ícone: o app põe o SVG do Lucide e troca os atributos pelo estado (`botaoDaLateral` do núcleo dá os três):
+
+  | Estado | Ícone | `aria-label` e `title` | `aria-expanded` |
+  | --- | --- | --- | --- |
+  | aberta | `panel-left-close` | Recolher barra lateral | `true` |
+  | recolhida | `panel-left-open` | Expandir barra lateral | `false` |
+
+- A escolha mora no aparelho, em `localStorage` na chave `ov-lateral` (`js/lateral-nucleo.js`), e vale para todos os módulos na mesma origem; é **por aparelho** (estação compartilhada), não por pessoa. Com o armazenamento bloqueado, vale só na página, como o `ov-tema`. Aplique o `data-lateral` antes da primeira pintura, como o tema, e ouça outra aba com `ouvirLateral`:
+
+```js
+import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral } from 'onevessel-ui/js/lateral-nucleo.js'
+
+const casca = document.querySelector('.ov-casca')
+aplicarLateral(casca, lerLateral(localStorage))
+// No clique do botão: o estado da página vence o guardado (armazenamento bloqueado).
+const novo = alternarLateral(localStorage, casca.dataset.lateral)
+aplicarLateral(casca, novo)
+const { icone, rotulo, expandido } = botaoDaLateral(novo)
+const parar = ouvirLateral(window, (estado) => aplicarLateral(casca, estado))
+```
+
+  O `localStorage` pode lançar só de ser lido (aba anônima, política): pegue-o num `try/catch` e passe `null` se lançar; o núcleo aceita `null`.
+- **Por que a v3.15.0 é minor:** nada muda para quem não põe o atributo nem o botão. As regras de antes ficam iguais; o botão entra como seletor novo nas listas do toque e do centrado, e o recolhido por escolha é um bloco novo, `@media (min-width: 1024px)`, com as mesmas declarações da lateral de abaixo de 1024px sob `:where(.ov-casca[data-lateral="recolhida"])` (o `:where()` não soma força: a conta da barra superior fica como a 900px). CSS não junta `@media` e atributo numa regra só; o teste da v3.15.0 cobra que os dois blocos são iguais.
 - O topo da lateral num app é o glifo solto de 20px em `currentColor`; `.ov-monograma` é só da plataforma.
 - `.ov-seletor-embarcacao` desenha a própria seta. Com um navio só, use `data-fixo` num elemento que não é botão: sem seta, sem cursor.
 - Em tela de toque (`pointer: coarse`), os itens da lateral passam a 48px.
@@ -443,6 +468,7 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/camada.js` | A pilha de camadas modais (v3.6.0): quem está no topo e a trava de rolagem do `<html>` |
 | `js/alteracoes-nucleo.js` | "Há alterações nesta tela" (v3.6.0): o registro em árvore e o texto único do "Descartar alterações?" |
 | `js/teclas-da-tabela.js` | O teclado da linha da `.ov-tabela` (v3.8.0): ↑↓ só movem o foco entre linhas, Enter abre, X marca onde há seleção; o destino sem dar a volta e a linha que recebe o Tab |
+| `js/lateral-nucleo.js` | A lateral recolhida por escolha (v3.15.0): `CHAVE_LATERAL` (`ov-lateral`), `lerLateral`, `gravarLateral`, `alternarLateral`, `aplicarLateral` (o `data-lateral` da casca), `botaoDaLateral` (ícone, rótulo e `aria-expanded`) e `ouvirLateral` (o evento `storage` de outra aba); armazenamento bloqueado não derruba nada (ver Casca) |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
@@ -452,6 +478,7 @@ import { acaoDaTecla, ondeEstaOFoco, vizinho } from 'onevessel-ui/js/teclas-do-p
 import { abrirCamada, camadasAbertas } from 'onevessel-ui/js/camada.js'
 import { criarRegistroDeAlteracoes, DESCARTAR } from 'onevessel-ui/js/alteracoes-nucleo.js'
 import { acaoDaTeclaNaLinha, linhaDeDestino, linhaDoTab } from 'onevessel-ui/js/teclas-da-tabela.js'
+import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral } from 'onevessel-ui/js/lateral-nucleo.js'
 ```
 
 `js/package.json` só tem `{"type": "module"}`: o pacote é CommonJS (o preset do Tailwind usa `module.exports`), e assim o Node carrega `js/` como ESM sem aviso.

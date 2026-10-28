@@ -10,7 +10,10 @@
 // v3.16.0 (`test/fixtures/janelas-v3.16.0.css`, da tag, fixa) fica igual
 // regra a regra; só nasce o que está aqui. Desde a v3.18.0, as telas daqui
 // são a fixture da v3.17.0 (fixture com fixture), e a versão e a tag ficam
-// com o teste da versão mais nova.
+// com o teste da versão mais nova. Desde a v3.18.1, as janelas daqui são a
+// fixture da v3.18.0 (os bytes da v3.17.0, que a v3.18.0 não mudou), e a cor
+// do segundo plano nas medidas fica com o teste da v3.18.1 (aqui, só que
+// difere do texto normal).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -21,7 +24,7 @@ import { regras } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
-const janelas = ler('css/janelas.css');
+const janelas = ler('test/fixtures/janelas-v3.18.0.css');
 const antes = ler('test/fixtures/janelas-v3.16.0.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
@@ -77,6 +80,7 @@ test('os outros CSS com os bytes da v3.16.0', () => {
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
   for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`), sha, nome);
+  assert.equal(sha256('test/fixtures/janelas-v3.18.0.css'), '8ab843278eafba3adb4923e70c818e56adf5abc0509467f6cc6c5b7d1f0da038');
   assert.equal(sha256('test/fixtures/janelas-v3.16.0.css'), '015a5e82157558910b90cf1237f0404fbca2de89a036def4a87370b7e156d763');
 });
 
@@ -230,8 +234,9 @@ test('medida: a 1440, lista de 360 com Nome e Estado, painel com o resto, Detalh
     assert.ok(m.painel.sombra !== 'none');
     assert.equal(m.painel.colunasDados, 2);
     assert.equal(m.painel.colunasForm, 2);
-    // A linha aberta (a segunda) com o texto normal; as outras em secundário.
-    m.cores.forEach((c, i) => assert.equal(hex(c), i === 1 ? m.texto : m.secundario, `linha ${i}`));
+    // A linha aberta (a segunda) com o texto normal; as outras em segundo
+    // plano (a cor, desde a v3.18.1, no teste dela).
+    m.cores.forEach((c, i) => (i === 1 ? assert.equal : assert.notEqual)(hex(c), m.texto, `linha ${i}`));
     assert.ok(m.opacidades.every((o) => o === '1'));
   }
   // Painel fechado: a lista volta inteira, sem segundo plano.
@@ -273,11 +278,10 @@ test('medida: :hover e :focus-visible devolvem o texto normal à linha', { skip:
     await p.waitForTimeout(50);
     const foco = await linha.evaluate((l) => ({ cor: getComputedStyle(l).color, visivel: l.matches(':focus-visible') }));
     const texto = await p.locator('.foco .moldura').first().evaluate((m) => getComputedStyle(m).getPropertyValue('--ov-texto').trim());
-    const secundario = await p.locator('.foco .moldura').first().evaluate((m) => getComputedStyle(m).getPropertyValue('--ov-texto-secundario').trim());
-    return { hover, solto, foco, texto, secundario };
+    return { hover, solto, foco, texto };
   });
   assert.equal(hex(r.hover), r.texto);
-  assert.equal(hex(r.solto), r.secundario);
+  assert.notEqual(hex(r.solto), r.texto);
   assert.ok(r.foco.visivel);
   assert.equal(hex(r.foco.cor), r.texto);
 });

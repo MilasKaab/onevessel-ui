@@ -113,10 +113,13 @@
   /* O nome fica com o resto da coluna e corta em reticências. O td vence a
      tela larga do telas.css (v3.16.0), que vem depois e teria a mesma força. */
   [data-painel="foco"]:has(> .ov-painel) .ov-tabela td.nome { width: 100%; max-width: 0; }
-  /* Segundo plano por cor, nunca por opacity; a linha aberta mantém o
-     destaque de seleção, e o :hover e o foco devolvem o texto. O .meta e o
-     .ov-estado têm cor própria e ficam como estão. */
-  [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) { color: var(--ov-texto-secundario); }
+  /* Segundo plano por cor e peso, nunca por opacity: ov-texto-terciario e
+     400, também no .nome, que tem 500 (v3.18.1; o secundário quase não se via
+     no tema claro). A linha aberta mantém o destaque de seleção, e o :hover
+     e o foco devolvem cor e peso. O .meta e o .ov-estado têm cor própria e
+     ficam como estão. */
+  [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) { color: var(--ov-texto-terciario); font-weight: 400; }
+  [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) .nome { font-weight: 400; }
   /* O painel em primeiro plano: o que sobra (mínimo 520px), a altura toda
      abaixo da barra superior, o corpo rolando por dentro. */
   [data-painel="foco"]:has(> .ov-painel) > .ov-painel { position: sticky; top: var(--ov-barra-superior); flex: 1 1 0; width: auto; min-width: 520px; height: calc(100vh - var(--ov-barra-superior)); height: calc(100dvh - var(--ov-barra-superior)); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); }

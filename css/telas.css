@@ -53,13 +53,13 @@ a.ov-visao { text-decoration: none; }
    de cartão, preso sob a barra superior (opaco: os cards não aparecem por
    baixo; abaixo da barra e dos menus). Partes iguais, divisória de 1px.
    No botão: ícone e rótulo numa linha, o .ov-rotulo (contagem por extenso)
-   numa linha própria abaixo; o .ov-tnum (o número) só abaixo de 768px.
+   numa linha própria abaixo; o .ov-tnum (o número) só no controle estreito.
    A selecionada: ov-acao-suave e filete de 2px por sombra interna; rótulo em
    ov-texto (o ov-acao-texto dá 4,07:1 no tema claro), ícone em
    ov-acao-texto. O anel de foco fica para dentro: o cartão corta o que passa
    da borda. */
-.ov-visoes[data-tamanho="grande"] { position: sticky; top: var(--ov-barra-superior); z-index: var(--ov-z-flutuante); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; box-sizing: border-box; height: 64px; overflow: hidden; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-md); background: var(--ov-superficie); }
-.ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: wrap; justify-content: center; align-content: center; gap: 2px 6px; min-width: 0; height: auto; padding: 0 12px; border-radius: 0; text-align: center; }
+.ov-visoes[data-tamanho="grande"] { position: sticky; top: var(--ov-barra-superior); z-index: var(--ov-z-flutuante); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; box-sizing: border-box; overflow: hidden; container-type: inline-size; container-name: ov-visoes; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-md); background: var(--ov-superficie); }
+.ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: wrap; justify-content: center; align-content: center; gap: 2px 6px; min-width: 0; height: 62px; padding: 0 12px; border-radius: 0; text-align: center; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao svg { flex: 0 0 auto; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao + .ov-visao { border-left: 1px solid var(--ov-borda); }
 .ov-visoes[data-tamanho="grande"] > .ov-visao:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
@@ -67,9 +67,18 @@ a.ov-visao { text-decoration: none; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) svg { color: var(--ov-acao-texto); }
 .ov-visoes[data-tamanho="grande"] .ov-rotulo { flex: 0 0 100%; color: var(--ov-texto-secundario); }
 .ov-visoes[data-tamanho="grande"] .ov-tnum { display: none; color: var(--ov-texto-secundario); }
+/* A troca olha a largura do próprio controle, não a da janela (v3.18.1): numa
+   coluna estreita no computador (1024 com o painel aberto, ~115px por
+   visão) o subtítulo não cabia nos 64px. O subtítulo pede ~155px de texto e
+   24 de padding; abaixo de 400px de controle (duas visões de 200; a
+   consulta mede sem o contorno, 398) vira o número, e o controle, 56px (54
+   nas visões e 2 do contorno). A altura mora nas visões, porque o
+   contêiner não se consulta a si mesmo. */
 @media (max-width: 767px) {
-  .ov-visoes[data-tamanho="grande"] { top: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); height: 56px; }
-  .ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: nowrap; padding: 0 8px; }
+  .ov-visoes[data-tamanho="grande"] { top: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); }
+}
+@container ov-visoes (width < 398px) {
+  .ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: nowrap; height: 54px; padding: 0 8px; }
   .ov-visoes[data-tamanho="grande"] .ov-rotulo { display: none; }
   .ov-visoes[data-tamanho="grande"] .ov-tnum { display: inline; }
 }

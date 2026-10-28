@@ -8,7 +8,11 @@
 // e ícone em ov-acao-texto. O .ov-rotulo por extenso a partir de 768px, o
 // .ov-tnum abaixo. Minor: a fixture da v3.17.0
 // (`test/fixtures/telas-v3.17.0.css`, da tag, fixa) fica igual regra a
-// regra; só nasce o que está aqui.
+// regra; só nasce o que está aqui. Desde a v3.18.1, as telas daqui são a
+// fixture da v3.18.0 e as janelas a mesma da v3.17.0 (fixture com fixture);
+// a versão e a tag ficam com o teste da versão mais nova, e as medidas no
+// navegador continuam valendo (a 1440, 768 e 375 o controle fica do mesmo
+// lado do limite da v3.18.1).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -19,12 +23,11 @@ import { regras } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
-const telas = ler('css/telas.css');
+const telas = ler('test/fixtures/telas-v3.18.0.css');
 const antes = ler('test/fixtures/telas-v3.17.0.css');
 const tokens = ler('css/tokens.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 
 const CELULAR = '@media (max-width: 767px)';
 const GRANDE = '.ov-visoes[data-tamanho="grande"]';
@@ -77,7 +80,9 @@ test('os outros CSS com os bytes da v3.17.0', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  const DE = { janelas: 'test/fixtures/janelas-v3.18.0.css' };
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(DE[nome] ?? `css/${nome}.css`), sha, nome);
+  assert.equal(sha256('test/fixtures/telas-v3.18.0.css'), '8dd002efe39253a1c601a458dce50bae472d8d92bee6d82bbacadff5f8ad56f4');
   assert.equal(sha256('test/fixtures/telas-v3.17.0.css'), '3eed809d323ba240d4e8065fe31447bd0ddf3f5c6f52a43825e8a97575390fe0');
 });
 
@@ -88,7 +93,7 @@ test('visões grandes: toda regra presa ao atributo, e nenhum outro CSS fala del
   assert.equal(doAtributo.length, NOVAS.length);
   for (const r of doAtributo) for (const s of r.seletores) assert.ok(s.startsWith(GRANDE), s);
   for (const nome of ['casca', 'janelas', 'controles', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    assert.doesNotMatch(ler(`css/${nome}.css`), /ov-visoes?\[data-tamanho|ov-visoes?\b[^{]*data-tamanho/, nome);
+    assert.doesNotMatch(ler(nome === 'janelas' ? 'test/fixtures/janelas-v3.18.0.css' : `css/${nome}.css`), /ov-visoes?\[data-tamanho|ov-visoes?\b[^{]*data-tamanho/, nome);
   }
 });
 
@@ -193,9 +198,7 @@ test('exemplo: seção das visões grandes depois do modo foco, nos dois temas, 
   }
 });
 
-test('package.json 3.18.0; README com a tag, as visões grandes e por que é minor', () => {
-  assert.equal(pacote.version, '3.18.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.18\.0"/);
+test('README com as visões grandes e por que a v3.18.0 é minor', () => {
   assert.match(leiame, /\*\*Visões grandes\*\* \(v3\.18\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.18\.0 é minor:\*\*/);
   assert.match(leiame, /<div class="ov-visoes" data-tamanho="grande" role="tablist"/);
@@ -219,6 +222,10 @@ const abrir = async (largura, fn) => {
   try {
     const pagina = await navegador.newPage({ viewport: { width: largura, height: 900 }, reducedMotion: 'reduce' });
     await pagina.goto(url('exemplo/index.html').href);
+    // Desde a v3.18.1 o controle é contêiner (@container): o Chrome refaz o
+    // estilo das visões depois do layout dele, e com movimento reduzido o
+    // onevessel.css dá a tudo uma transição de .01ms; um quadro de espera.
+    await pagina.waitForTimeout(50);
     return await fn(pagina);
   } finally {
     await navegador.close();

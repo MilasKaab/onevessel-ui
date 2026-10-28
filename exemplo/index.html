@@ -60,6 +60,15 @@
   .visoes-grandes .ov-conteudo > * { flex-shrink: 0; }
   .visoes-grandes .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .visoes-painel { display: flex; flex-direction: column; gap: var(--ov-esp-4); }
+  /* Visões grandes numa coluna estreita (v3.18.1): a lista ao lado de um
+     painel simulado, na largura que a lista tem a 1024 com o painel aberto. */
+  .visoes-coluna { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .visoes-coluna > h2 { margin: 0 0 var(--ov-esp-4); }
+  .visoes-coluna .ov-conteudo > * { flex-shrink: 0; }
+  .visoes-coluna .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .coluna-e-painel { display: flex; align-items: flex-start; gap: var(--ov-esp-4); padding: var(--ov-esp-4); }
+  .coluna-e-painel > .coluna { flex: 0 0 var(--coluna, 232px); min-width: 0; display: flex; flex-direction: column; gap: var(--ov-esp-4); }
+  .coluna-e-painel > .painel-simulado { flex: 1 1 0; min-width: 0; position: sticky; top: var(--ov-barra-superior); height: 320px; padding: var(--ov-esp-4); border-left: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); color: var(--ov-texto-secundario); font: var(--ov-fonte-legenda); }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1011,7 +1020,7 @@
 
 <section class="visoes-grandes">
   <h2 class="ov-titulo-1">Visões grandes</h2>
-  <p class="ov-legenda">A divisão principal da tela, com <code class="ov-codigo">data-tamanho="grande"</code> no <code class="ov-codigo">.ov-visoes</code>: partes iguais num controle com cara de cartão, 64px no computador e 56 abaixo de 768px, presa sob a barra superior ao rolar (role a moldura). A partir de 768px o <code class="ov-codigo">.ov-rotulo</code> por extenso, numa linha abaixo; abaixo de 768px, só o número (<code class="ov-codigo">.ov-tnum</code>). O filtro abaixo (Todas / Com alerta) fica nas visões normais. Mesmo teclado das visões (setas, no app). Dados fictícios (v3.18.0).</p>
+  <p class="ov-legenda">A divisão principal da tela, com <code class="ov-codigo">data-tamanho="grande"</code> no <code class="ov-codigo">.ov-visoes</code>: partes iguais num controle com cara de cartão, 64px e 56 no controle estreito, presa sob a barra superior ao rolar (role a moldura). Com 400px de controle ou mais, o <code class="ov-codigo">.ov-rotulo</code> por extenso, numa linha abaixo; abaixo disso (no celular, ou numa coluna estreita: veja a seção seguinte), só o número (<code class="ov-codigo">.ov-tnum</code>), desde a v3.18.1 pela largura do controle. O filtro abaixo (Todas / Com alerta) fica nas visões normais. Mesmo teclado das visões (setas, no app). Dados fictícios (v3.18.0).</p>
 
     <p class="ov-rotulo moldura-rotulo">Visões grandes · tema escuro · Atividades planejadas selecionada</p>
     <div class="moldura" data-theme="escuro">
@@ -1113,6 +1122,75 @@
             </section>
             <section role="tabpanel" id="painel-bordo-claro" aria-labelledby="aba-bordo-claro" hidden></section>
           </main>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section class="visoes-coluna">
+  <h2 class="ov-titulo-1">Visões grandes numa coluna estreita</h2>
+  <p class="ov-legenda">Desde a v3.18.1 a troca do subtítulo pelo número (e a altura 64/56) olha a largura do próprio controle (<code class="ov-codigo">@container</code>), não a da janela: abaixo de 400px de controle (duas visões de 200), o número e 56px, mesmo numa janela larga. Aqui a lista tem 232px, como no Paradas a 1024 com o painel aberto (~115px por visão), ao lado de um painel simulado. Presa sob a barra ao rolar, como antes. Dados fictícios (v3.18.1).</p>
+
+    <p class="ov-rotulo moldura-rotulo">Visões grandes numa coluna de 232px · tema escuro · Planejadas selecionada</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="ov-casca">
+        <div class="ov-conteudo">
+          <header class="ov-cabecalho-movel">
+            <h1 class="ov-cabecalho-movel-titulo">Parada 12/10</h1>
+          </header>
+          <header class="ov-superior">
+            <div class="ov-trilha">Paradas / <b>Parada 12/10</b></div>
+          </header>
+          <div class="coluna-e-painel">
+            <div class="coluna">
+              <div class="ov-visoes" data-tamanho="grande" role="tablist" aria-label="Parada">
+                <button class="ov-visao" type="button" role="tab" id="aba-col-planejadas-escuro" aria-selected="true" aria-controls="painel-col-planejadas-escuro" tabindex="0"><i data-icone="clipboard-list"></i>Planejadas <span class="ov-rotulo">30 atividades aguardando</span><span class="ov-tnum">30</span></button>
+                <button class="ov-visao" type="button" role="tab" id="aba-col-bordo-escuro" aria-selected="false" aria-controls="painel-col-bordo-escuro" tabindex="-1"><i data-icone="users"></i>A bordo <span class="ov-rotulo">12 atividades em execução</span><span class="ov-tnum">12</span></button>
+              </div>
+              <ul class="cartoes" id="painel-col-planejadas-escuro" role="tabpanel" aria-labelledby="aba-col-planejadas-escuro">
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0412</span><p style="margin:4px 0 0">Troca do selo da bomba de lastro BB</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0413</span><p style="margin:4px 0 0">Inspeção das sapatas do guindaste de popa</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0414</span><p style="margin:4px 0 0">Calibração dos sensores de nível do tanque 3</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0415</span><p style="margin:4px 0 0">Revisão do quadro elétrico auxiliar</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0416</span><p style="margin:4px 0 0">Limpeza do resfriador de óleo do MCP BE</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0417</span><p style="margin:4px 0 0">Teste do gerador de emergência</p></article></li>
+              </ul>
+              <div role="tabpanel" id="painel-col-bordo-escuro" aria-labelledby="aba-col-bordo-escuro" hidden></div>
+            </div>
+            <aside class="painel-simulado" aria-label="Painel simulado">Painel lateral (simulado): ocupa o resto da largura.</aside>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Visões grandes numa coluna de 232px · tema claro · Planejadas selecionada</p>
+    <div class="moldura" data-theme="claro">
+      <div class="ov-casca">
+        <div class="ov-conteudo">
+          <header class="ov-cabecalho-movel">
+            <h1 class="ov-cabecalho-movel-titulo">Parada 12/10</h1>
+          </header>
+          <header class="ov-superior">
+            <div class="ov-trilha">Paradas / <b>Parada 12/10</b></div>
+          </header>
+          <div class="coluna-e-painel">
+            <div class="coluna">
+              <div class="ov-visoes" data-tamanho="grande" role="tablist" aria-label="Parada">
+                <button class="ov-visao" type="button" role="tab" id="aba-col-planejadas-claro" aria-selected="true" aria-controls="painel-col-planejadas-claro" tabindex="0"><i data-icone="clipboard-list"></i>Planejadas <span class="ov-rotulo">30 atividades aguardando</span><span class="ov-tnum">30</span></button>
+                <button class="ov-visao" type="button" role="tab" id="aba-col-bordo-claro" aria-selected="false" aria-controls="painel-col-bordo-claro" tabindex="-1"><i data-icone="users"></i>A bordo <span class="ov-rotulo">12 atividades em execução</span><span class="ov-tnum">12</span></button>
+              </div>
+              <ul class="cartoes" id="painel-col-planejadas-claro" role="tabpanel" aria-labelledby="aba-col-planejadas-claro">
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0412</span><p style="margin:4px 0 0">Troca do selo da bomba de lastro BB</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0413</span><p style="margin:4px 0 0">Inspeção das sapatas do guindaste de popa</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0414</span><p style="margin:4px 0 0">Calibração dos sensores de nível do tanque 3</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0415</span><p style="margin:4px 0 0">Revisão do quadro elétrico auxiliar</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0416</span><p style="margin:4px 0 0">Limpeza do resfriador de óleo do MCP BE</p></article></li>
+                <li><article class="ov-cartao"><span class="ov-rotulo">AT-0417</span><p style="margin:4px 0 0">Teste do gerador de emergência</p></article></li>
+              </ul>
+              <div role="tabpanel" id="painel-col-bordo-claro" aria-labelledby="aba-col-bordo-claro" hidden></div>
+            </div>
+            <aside class="painel-simulado" aria-label="Painel simulado">Painel lateral (simulado): ocupa o resto da largura.</aside>
+          </div>
         </div>
       </div>
     </div>

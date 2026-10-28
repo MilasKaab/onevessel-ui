@@ -4,7 +4,7 @@
 export const semComentario = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '')
 
 // Regras de um CSS: { seletores, corpo, media }, entrando em @media e afins.
-// `media` é a cabeça do @media em volta ('' fora de @media).
+// `media` é a cabeça do @media (ou @container) em volta ('' fora de um).
 export function regras(css) {
   const texto = semComentario(css)
   const saida = []
@@ -16,7 +16,7 @@ export function regras(css) {
       if (abre === -1 || (fecha !== -1 && fecha < abre)) { i = fecha === -1 ? fim : fecha + 1; return }
       const cabeca = texto.slice(i, abre).replace(/^[\s\S]*;/, '').trim()
       i = abre + 1
-      if (cabeca.startsWith('@media') || cabeca.startsWith('@supports')) {
+      if (cabeca.startsWith('@media') || cabeca.startsWith('@supports') || cabeca.startsWith('@container')) {
         percorrer(fim, cabeca)
       } else if (cabeca.startsWith('@')) {
         // @keyframes, @page: pula o bloco inteiro.

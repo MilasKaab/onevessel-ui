@@ -69,6 +69,14 @@
   .coluna-e-painel { display: flex; align-items: flex-start; gap: var(--ov-esp-4); padding: var(--ov-esp-4); }
   .coluna-e-painel > .coluna { flex: 0 0 var(--coluna, 232px); min-width: 0; display: flex; flex-direction: column; gap: var(--ov-esp-4); }
   .coluna-e-painel > .painel-simulado { flex: 1 1 0; min-width: 0; position: sticky; top: var(--ov-barra-superior); height: 320px; padding: var(--ov-esp-4); border-left: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); color: var(--ov-texto-secundario); font: var(--ov-fonte-legenda); }
+  .acao-linha { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .acao-linha > h2 { margin: 0 0 var(--ov-esp-4); }
+  .acao-linha .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  /* Ação da linha (v3.18.2): o hover:underline do app, compilado como o
+     Tailwind 3 do Paradas o põe (fora de camada, depois do pacote), e o
+     botão da célula sem a cara de botão, como nos apps. */
+  .hover\:underline:hover { text-decoration-line: underline; }
+  .acao-linha .ov-tabela button { padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1193,6 +1201,35 @@
           </div>
         </div>
       </div>
+    </div>
+</section>
+
+<section class="acao-linha">
+  <h2 class="ov-titulo-1">Ação da linha</h2>
+  <p class="ov-legenda">Desde a v3.18.2, o botão ou link da célula que faz o mesmo que clicar na linha leva <code class="ov-codigo">data-abre-linha</code> e não sublinha, nem no hover, mesmo com o <code class="ov-codigo">hover:underline</code> do app. O link que leva a outro lugar (o anexo) não leva o atributo e continua sublinhando. Dados fictícios (v3.18.2).</p>
+
+    <p class="ov-rotulo moldura-rotulo">Ação da linha · tema escuro · passe o mouse no nome e no link</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <table class="ov-tabela" aria-label="Dias">
+        <thead><tr><th>Dia</th><th>Estado</th><th class="num">Atividades</th><th>Anexo</th></tr></thead>
+        <tbody>
+          <tr><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 14/10</button></td><td><span class="ov-estado" data-tom="sucesso">Encerrada</span></td><td class="num">12</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+          <tr aria-selected="true"><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 15/10</button></td><td><span class="ov-estado" data-tom="sucesso">Encerrada</span></td><td class="num">13</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+          <tr><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 16/10</button></td><td><span class="ov-estado" data-tom="atencao">Em andamento</span></td><td class="num">14</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Ação da linha · tema claro · passe o mouse no nome e no link</p>
+    <div class="controles-moldura" data-theme="claro">
+      <table class="ov-tabela" aria-label="Dias">
+        <thead><tr><th>Dia</th><th>Estado</th><th class="num">Atividades</th><th>Anexo</th></tr></thead>
+        <tbody>
+          <tr><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 14/10</button></td><td><span class="ov-estado" data-tom="sucesso">Encerrada</span></td><td class="num">12</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+          <tr aria-selected="true"><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 15/10</button></td><td><span class="ov-estado" data-tom="sucesso">Encerrada</span></td><td class="num">13</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+          <tr><td class="nome"><button type="button" data-abre-linha class="hover:underline">TT 16/10</button></td><td><span class="ov-estado" data-tom="atencao">Em andamento</span></td><td class="num">14</td><td><a href="#" class="hover:underline">Relatório do dia</a></td></tr>
+        </tbody>
+      </table>
     </div>
 </section>
 

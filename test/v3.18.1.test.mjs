@@ -6,7 +6,9 @@
 // altura 64/56 olham a largura do próprio controle (@container), não a da
 // janela; a 1024 com o painel o subtítulo cortava. Patch: as fixtures da
 // v3.18.0 (`test/fixtures/{janelas,telas}-v3.18.0.css`, da tag, fixas) ficam
-// iguais regra a regra, fora as alteradas pelo nome.
+// iguais regra a regra, fora as alteradas pelo nome. Desde a v3.18.2, as
+// telas daqui são a fixture da v3.18.1 (fixture com fixture), e a versão e a
+// tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -17,12 +19,11 @@ import { regras } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
-const ATUAL = { janelas: ler('css/janelas.css'), telas: ler('css/telas.css') };
+const ATUAL = { janelas: ler('css/janelas.css'), telas: ler('test/fixtures/telas-v3.18.1.css') };
 const ANTES = { janelas: ler('test/fixtures/janelas-v3.18.0.css'), telas: ler('test/fixtures/telas-v3.18.0.css') };
 const tokens = ler('css/tokens.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 
 const COMPUTADOR = '@media (min-width: 1024px)';
 const CELULAR = '@media (max-width: 767px)';
@@ -91,6 +92,7 @@ test('os outros CSS com os bytes da v3.18.0; as fixtures da tag', () => {
   for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.18.0.css'), '8ab843278eafba3adb4923e70c818e56adf5abc0509467f6cc6c5b7d1f0da038');
   assert.equal(sha256('test/fixtures/telas-v3.18.0.css'), '8dd002efe39253a1c601a458dce50bae472d8d92bee6d82bbacadff5f8ad56f4');
+  assert.equal(sha256('test/fixtures/telas-v3.18.1.css'), '8eb57da191c50eb42d401a814611d3df660c8b463c3309bab4ab882dbee4939c');
 });
 
 // ---------- (1) Modo foco ----------
@@ -134,7 +136,7 @@ test('visões grandes: no @media do celular fica só o top com a área segura; a
   assert.deepEqual(declaracoesEm(t, ESTREITO, NUMERO), declaracoesEm(ANTES.telas, CELULAR, NUMERO));
   // Nenhum outro @container no pacote, e nenhum outro CSS fala do nome.
   for (const nome of ['casca', 'janelas', 'telas', 'controles', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    const cs = regras(ler(`css/${nome}.css`)).filter((r) => r.media.startsWith('@container'));
+    const cs = regras(nome === 'telas' ? ATUAL.telas : ler(`css/${nome}.css`)).filter((r) => r.media.startsWith('@container'));
     assert.equal(cs.length, nome === 'telas' ? 3 : 0, nome);
     for (const r of cs) for (const s of r.seletores) assert.ok(s.startsWith(GRANDE), s);
   }
@@ -186,9 +188,7 @@ test('exemplo: seção da coluna estreita depois das visões grandes, nos dois t
   assert.match(exemplo, /\.coluna-e-painel > \.coluna \{ flex: 0 0 var\(--coluna, 232px\)/);
 });
 
-test('package.json 3.18.1; README com a tag, as duas correções e por que é patch', () => {
-  assert.equal(pacote.version, '3.18.1');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.18\.1"/);
+test('README com as duas correções e por que é patch', () => {
   assert.match(leiame, /\*\*Modo foco, segundo plano revisto\*\* \(v3\.18\.1\)/);
   assert.match(leiame, /\*\*Visões grandes pela largura do controle\*\* \(v3\.18\.1\)/);
   assert.match(leiame, /\*\*Por que a v3\.18\.1 é patch:\*\*/);

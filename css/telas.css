@@ -188,6 +188,13 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    onde o cabeçalho sai ("12 atividades"). O par, .ov-fora-do-celular, some
    na lista e fica de 768px para cima, no tablet também (abaixo). */
 .ov-tabela .ov-so-no-celular { display: none; }
+/* A ação da linha (v3.18.2): data-abre-linha marca o botão ou link da célula
+   que faz o mesmo que clicar na linha (abrir o painel ou ir ao registro). Ele
+   não sublinha, nem no hover. Um link de célula que leva a outro lugar não
+   leva o atributo e continua sublinhando. O td dá a especificidade (0,2,1)
+   que vence o hover:underline (0,2,0) de um Tailwind sem camada que entra
+   depois do pacote (o 3 do Paradas); sem !important. */
+.ov-tabela td [data-abre-linha] { text-decoration: none; }
 
 /* ---------- Barra de ações em massa ---------- */
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }

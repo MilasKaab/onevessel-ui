@@ -259,7 +259,8 @@ test('núcleo: sem DOM e sem pacote (só o que vem de quem chama)', () => {
 
 // ---------- Exemplo, pacote e README ----------
 
-test('exemplo: o botão nas duas cascas (escuro e claro), acima da conta, aberto, com o script do núcleo', () => {
+// Desde a v3.19.0 (C26, L8) a conta saiu do rodapé: o botão é o último item.
+test('exemplo: o botão nas duas cascas (escuro e claro), no fim do rodapé, aberto, com o script do núcleo', () => {
   // Sem o fim da tag: a v3.15.1 acrescenta o texto depois do ícone.
   const botao = '<button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i>';
   for (const tema of ['escuro', 'claro']) {
@@ -268,7 +269,7 @@ test('exemplo: o botão nas duas cascas (escuro e claro), acima da conta, aberto
     const lateral = exemplo.slice(i, exemplo.indexOf('</nav>', i));
     const rodape = lateral.slice(lateral.indexOf('<div class="ov-lateral-rodape">'));
     assert.ok(rodape.includes(botao), tema);
-    assert.ok(rodape.indexOf(botao) < rodape.indexOf('class="ov-conta"'), tema);
+    assert.doesNotMatch(rodape, /class="ov-conta"/, tema);
   }
   assert.match(exemplo, /'panel-left-close': '<rect width="18" height="18" x="3" y="3" rx="2"\/><path d="M9 3v18"\/><path d="m16 15-3-3 3-3"\/>'/);
   assert.match(exemplo, /'panel-left-open': '<rect width="18" height="18" x="3" y="3" rx="2"\/><path d="M9 3v18"\/><path d="m14 9 3 3-3 3"\/>'/);

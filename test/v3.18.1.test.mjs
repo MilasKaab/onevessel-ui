@@ -8,7 +8,8 @@
 // v3.18.0 (`test/fixtures/{janelas,telas}-v3.18.0.css`, da tag, fixas) ficam
 // iguais regra a regra, fora as alteradas pelo nome. Desde a v3.18.2, as
 // telas daqui são a fixture da v3.18.1 (fixture com fixture), e a versão e a
-// tag ficam com o teste da versão mais nova.
+// tag ficam com o teste da versão mais nova. Desde a v3.19.0, as janelas
+// daqui e os outros CSS que ela muda são as fixtures da v3.18.2.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -19,7 +20,9 @@ import { regras } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
-const ATUAL = { janelas: ler('css/janelas.css'), telas: ler('test/fixtures/telas-v3.18.1.css') };
+const ATUAL = { janelas: ler('test/fixtures/janelas-v3.18.2.css'), telas: ler('test/fixtures/telas-v3.18.1.css') };
+const V3182 = ['casca', 'controles', 'janelas', 'tokens'];
+const atual = (nome) => (V3182.includes(nome) ? `test/fixtures/${nome}-v3.18.2.css` : `css/${nome}.css`);
 const ANTES = { janelas: ler('test/fixtures/janelas-v3.18.0.css'), telas: ler('test/fixtures/telas-v3.18.0.css') };
 const tokens = ler('css/tokens.css');
 const exemplo = ler('exemplo/index.html');
@@ -89,7 +92,7 @@ test('os outros CSS com os bytes da v3.18.0; as fixtures da tag', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(atual(nome)), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.18.0.css'), '8ab843278eafba3adb4923e70c818e56adf5abc0509467f6cc6c5b7d1f0da038');
   assert.equal(sha256('test/fixtures/telas-v3.18.0.css'), '8dd002efe39253a1c601a458dce50bae472d8d92bee6d82bbacadff5f8ad56f4');
   assert.equal(sha256('test/fixtures/telas-v3.18.1.css'), '8eb57da191c50eb42d401a814611d3df660c8b463c3309bab4ab882dbee4939c');
@@ -136,7 +139,7 @@ test('visões grandes: no @media do celular fica só o top com a área segura; a
   assert.deepEqual(declaracoesEm(t, ESTREITO, NUMERO), declaracoesEm(ANTES.telas, CELULAR, NUMERO));
   // Nenhum outro @container no pacote, e nenhum outro CSS fala do nome.
   for (const nome of ['casca', 'janelas', 'telas', 'controles', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    const cs = regras(nome === 'telas' ? ATUAL.telas : ler(`css/${nome}.css`)).filter((r) => r.media.startsWith('@container'));
+    const cs = regras(nome === 'telas' ? ATUAL.telas : ler(atual(nome))).filter((r) => r.media.startsWith('@container'));
     assert.equal(cs.length, nome === 'telas' ? 3 : 0, nome);
     for (const r of cs) for (const s of r.seletores) assert.ok(s.startsWith(GRANDE), s);
   }

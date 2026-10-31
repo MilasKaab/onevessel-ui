@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.18.2"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.19.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -64,13 +64,14 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
 ### Casca
 
 ```html
+<a class="ov-pular" href="#titulo-da-tela">Pular para o conteúdo</a>   <!-- primeiro elemento da página (v3.19.0) -->
 <div class="ov-casca">
   <nav class="ov-lateral">
     <div class="ov-lateral-marca">
       <svg …glifo do app…/>
       <div class="ov-lateral-marca-texto">
         <span class="ov-lateral-marca-nome">Bordo</span>
-        <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+        <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
       </div>
     </div>
     <button class="ov-seletor-embarcacao" aria-haspopup="menu" aria-expanded="false" title="Bram Power">
@@ -89,8 +90,7 @@ Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nov
       <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral">
         <svg …panel-left-close…/><span class="ov-lateral-texto">Recolher barra lateral</span>
       </button>
-      …linhas do app…
-      <button class="ov-conta" title="Ana Souza"><svg …circle-user…/><span class="ov-lateral-texto">Ana Souza</span></button>
+      …linhas do app…                                  <!-- sem a conta desde a v3.19.0 (C26, L8) -->
     </div>
   </nav>
   <div class="ov-conteudo">
@@ -228,7 +228,14 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 ```html
 <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
 <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
-<button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Imprimir" title="Imprimir">…</button>
+<button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Imprimir" title="Imprimir"><svg …printer…/></button>  <!-- ícone de 18px pelo pacote (v3.19.0) -->
+
+<!-- Desabilitado com o motivo (v3.19.0): no title e, no toque, escrito abaixo -->
+<button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha a embarcação" aria-describedby="motivo-aprovar">Aprovar</button>
+<span class="ov-motivo" id="motivo-aprovar">Preencha a embarcação</span>
+
+<!-- Salvando (v3.19.0): não fica desabilitado; rótulo e reticências num span só -->
+<button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
 
 <div class="ov-campo-grupo">
   <label class="ov-label" for="imo">IMO</label>
@@ -243,11 +250,11 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 ```
 
 - **Botão**: 36px no computador e **48px no toque** (`pointer: coarse`; até a v3.11.0, 44), peso 500, raio `ov-raio-md`. O `.ov-btn-sm` (28px) é só do computador: no toque vai a 48 como os outros. O `.ov-btn-icone` fica quadrado (36 ou 48). O `.ov-btn-primario` sob o mouse tem o texto em `ov-fundo` (desde a v3.11.0: 10,99:1 no escuro e 6,40:1 no claro, em vez de 1,72:1).
-- **Campo**: 44px em qualquer tela, texto de 16px, borda `ov-borda-controle`, fundo `ov-superficie-recuada` (o do livro para o campo dentro de cartão, e o mesmo fora dele: no cartão fica recuado, na página um tom acima). **Foco: o anel único do livro** (`outline: 2px solid var(--ov-foco)`, recuo 2px), sem halo e sem trocar a borda; o `outline: none` saiu. Erro: `aria-invalid="true"` põe a borda em `ov-erro`.
+- **Campo**: 44px no computador e **48px no toque** (v3.19.0, C30; até a v3.18.2, 44 em qualquer tela), texto de 16px, borda `ov-borda-controle`, fundo `ov-superficie-recuada` (o do livro para o campo dentro de cartão, e o mesmo fora dele: no cartão fica recuado, na página um tom acima). **Foco: o anel único do livro** (`outline: 2px solid var(--ov-foco)`, recuo 2px), sem halo e sem trocar a borda; o `outline: none` saiu. Erro: `aria-invalid="true"` põe a borda em `ov-erro`.
 - **Rótulo** (`.ov-label`): 14px/500 em `ov-texto`; `small` dentro dele para "(opcional)". Ajuda em `.ov-ajuda` e erro em `.ov-erro-campo`, os dois em 13px.
 - **Ícone do erro** (v3.13.0): o `CircleAlert` do Lucide, 16px, `aria-hidden`, como primeiro filho do `.ov-erro-campo`; o `svg` filho direto não encolhe quando o texto quebra e fica centrado na primeira linha de 18px.
 - **`textarea.ov-campo`** (v3.13.0): a altura vem do `rows` do app (`height: auto`), com o mínimo de 44px; padding de 9px em cima e embaixo, que põe a primeira linha de 16/24 na mesma altura do texto do input; `resize: vertical`.
-- **Campo de linha** (v3.13.0, a exceção do livro): `data-densidade="linha"` no `.ov-campo` (`input`, `select` ou `textarea`) para o campo que edita uma célula dentro da linha da tabela (ou da lista densa): **36px e texto de 14/20 no computador**, com o fundo, a borda, o raio e o anel do `.ov-campo`; no `textarea`, mínimo de 36 e padding de 7px. **No toque, é o `.ov-campo` de 44 e 16px**: o campo não vai a 48 em tela nenhuma, e texto abaixo de 16px faz o Safari do iPhone dar zoom no foco; a linha de 44 da tabela passa a 45 com ele. Fica no meio da célula (`vertical-align: middle`): na linha de base, o espaço do descendente fazia a linha crescer (50 no toque). Formulário é sempre o `.ov-campo` sem o atributo.
+- **Campo de linha** (v3.13.0, a exceção do livro): `data-densidade="linha"` no `.ov-campo` (`input`, `select` ou `textarea`) para o campo que edita uma célula dentro da linha da tabela (ou da lista densa): **36px e texto de 14/20 no computador**, com o fundo, a borda, o raio e o anel do `.ov-campo`; no `textarea`, mínimo de 36 e padding de 7px. **No toque, é o `.ov-campo` de 48 e 16px** (v3.19.0, C30: no toque, todo controle tem 48; até a v3.18.2 ficava em 44), e texto abaixo de 16px faz o Safari do iPhone dar zoom no foco; a linha da tabela cresce com ele no toque. Fica no meio da célula (`vertical-align: middle`): na linha de base, o espaço do descendente fazia a linha crescer (50 no toque). Formulário é sempre o `.ov-campo` sem o atributo.
 - **O que muda na tela de quem recebe o `onevessel.css` (a plataforma):** o botão no toque sobe de 44 para 48px; o campo perde o halo e a borda `ov-acao` do foco e ganha o anel; o fundo do campo passa de `ov-fundo` a `ov-superficie-recuada`. No computador com mouse, o botão continua com 36. Das telas, sob o mouse o indicador que é link troca a borda forte pelo realce, e a `.ov-visao` e o segmentado sobem a 48 no toque. A plataforma muda ao adotar a tag, num PR dela.
 - **O que muda na tela na v3.13.0:** só a barra de ações em massa, no toque, de 48 para 50px. O resto é classe nova: o `textarea.ov-campo` sem o atributo deixa de ter 44px fixos (vale o `rows`), e o campo de linha só aparece onde o app puser `data-densidade="linha"`.
 
@@ -260,12 +267,13 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 <section class="ov-cartao ov-pendencias" aria-labelledby="pv">
   <div class="ov-pendencias-cab">
     <h2 class="ov-titulo-3" id="pv">Precisa de você</h2>
-    <span class="ov-contador-destaque">3</span>
+    <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">1</span></span>
+    <span class="ov-tag" data-tom="atencao"><span class="ov-tag-ponto"></span>Atenção <span class="ov-tnum">2</span></span>
     <a class="ov-pendencias-ver-tudo" href="…">Ver tudo</a>
   </div>
   <ul class="ov-pendencias-lista">
     <li>
-      <a class="ov-pendencia" href="…">
+      <a class="ov-pendencia" href="…" data-tom="atencao">   <!-- filete reto de 2px na cor da tag (v3.19.0) -->
         <span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span>
         <span class="ov-pendencia-texto">
           <span class="ov-pendencia-titulo"><span class="ov-pendencia-id">1234</span>Título</span>
@@ -299,7 +307,7 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 
 <!-- Indicadores: 4 colunas, 2 de 768 a 1023px, 1 no celular -->
 <div class="ov-indicadores">
-  <a class="ov-cartao ov-indicador" href="…">…</a>
+  <a class="ov-cartao ov-indicador" href="…" data-filete="andamento">…</a>   <!-- filete de status (v3.19.0) -->
 </div>
 
 <!-- Tabela: a célula do nome leva .nome; abaixo de 768px vira lista de linhas -->
@@ -308,6 +316,14 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
   <tbody><tr><td><input class="ov-check" type="checkbox" aria-label="…"></td><td class="nome">João Pereira</td><td>Mecânico</td><td><span class="ov-estado" data-tom="sucesso">A bordo</span></td>
     <td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular">…Excluir…</td></tr></tbody>
 </table>
+
+<!-- Tabela larga (v3.19.0): a coluna que sai no tablet e a rolagem com sombra -->
+<div class="ov-cartao ov-rolagem">
+  <table class="ov-tabela">
+    <thead><tr><th>Nome</th>…<th data-some-no-tablet>Encerrada em</th><th data-some-no-tablet>Encerrada por</th></tr></thead>
+    <tbody><tr><td class="nome">…</td>…<td data-some-no-tablet>…</td><td data-some-no-tablet>…</td></tr></tbody>
+  </table>
+</div>
 
 <!-- Barra de ações em massa: data-flutuante dá a posição e a entrada -->
 <div class="ov-acoes-massa" data-flutuante role="toolbar" aria-label="3 selecionadas">…</div>
@@ -339,6 +355,40 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 - **Esqueleto**: `.ov-esqueleto` é o bloco (o app dá a altura; 48px sem ela), `.ov-esqueleto-texto` uma linha de texto (o app dá a largura) e `.ov-esqueleto-linha` uma linha de tabela (44px; 64px no celular). Também serve uma `<tr>` da `.ov-tabela` com um `.ov-esqueleto-texto` por célula. Pulsa só na opacidade.
 - **Movimento reduzido** (`telas.css`): a barra de massa só aparece, já no lugar (`ovFade`, da casca), e o esqueleto não pulsa.
 - **Teclado da tabela** (↑↓, Enter, X): o núcleo é o `js/teclas-da-tabela.js` desde a v3.8.0 (ver `js/`); quem diz onde está o foco dentro da linha é a tabela, no app.
+
+### Livro v4 (v3.19.0)
+
+CSS e tokens da direção visual e das regras C de 30 e 31/10 (livro v4) e o bloco A da antiga v3.18.3. Nenhum `js/` novo (plural, data e hora e os núcleos de teclado vão na v3.20.0). As regras de uso estão no `livro-da-marca.md` e no `componentes.md` (Estado, Precisa de você, Indicador, Botão, Campo, Tabela, Visões e filtros, Casca), no `onevessel-docs`.
+
+```html
+<!-- Estado de fluxo: ponto + palavra; Em andamento no amarelo, só no ponto -->
+<span class="ov-estado" data-tom="andamento">Em andamento há 3h10</span>
+
+<!-- Tag pastel: situação ou alerta do registro; sem data-tom, neutra -->
+<span class="ov-tag" data-tom="info">A bordo</span>
+<span class="ov-tag">Arquivada</span>
+<!-- Com ponto e contagem, só no cabeçalho do "Precisa de você" -->
+<span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">2</span></span>
+<!-- Tag forte: só o Crítico, com o ícone -->
+<span class="ov-tag" data-tom="critico"><svg …triangle-alert…/>Crítico</span>
+```
+
+- **Tokens novos** (`tokens.json`, o `tokens.css` gerado): `ov-status-andamento` (`#facc15` nos dois temas; ponto, filete e barra, nunca texto: 1,53:1 sobre o branco, a exceção do livro), `ov-critico` (`#f87171` / `#dc2626`, fundo da tag forte, texto `ov-sobre-erro`: 7,18:1 e 4,83:1), `ov-tag-<tom>-fundo` e `ov-tag-<tom>-texto` para neutro, info, atencao, erro e sucesso, e `ov-destaque-texto` (`#fb923c` / `#9a4508`). O texto de cada tag dá, sobre o próprio fundo composto em `ov-superficie`, `ov-superficie-elevada` e `ov-fundo`, no mínimo 7,74:1 no escuro e 6,15:1 no claro (o teste da versão calcula). O `ov-destaque-suave` não muda. O preset do Tailwind lê o `tokens.json` e já traz as cores novas.
+- **Estado e tags** (`casca.css`): `.ov-estado[data-tom="andamento"]`; `.ov-tag` (12/16, 500, padding 2px 8px, `ov-raio-sm`, sem ícone) com `data-tom` neutro, info, atencao, erro e sucesso; `.ov-tag-ponto` (6px, na cor do tom: `ov-neutro`, `ov-info`, `ov-atencao`, `ov-erro`, `ov-sucesso`); a contagem em `.ov-tnum` (algarismos tabulares dentro da tag também sem o `onevessel.css`); `.ov-tag[data-tom="critico"]` com o ícone de 14px em `currentColor`.
+- **Filetes** (`telas.css`): `.ov-indicador[data-filete="neutro|info|andamento|atencao|erro|sucesso"]`, 3px à esquerda por `box-shadow: inset`, não por borda. **Em alerta** (`.ov-indicador[data-alerta="true"]`), a borda e o filete vão a `ov-destaque`: o filete de alerta substitui o de status, com ou sem `data-filete` (a regra do alerta desceu para logo depois dos filetes, com a mesma força, e vence pela ordem). `.ov-pendencia[data-tom="erro|atencao"]`, filete reto de 2px na cor da tag. O `.ov-progresso` continua por `--estado-cor`: a barra em segmentos é um `span` por status, cada um com a cor dele (no exemplo).
+- **Contador** (`.ov-contador-destaque`): o texto passa a `ov-destaque-texto`: no claro, de 4,26 para 5,52:1 sobre o próprio fundo; no escuro, a mesma cor (5,99:1 sobre `ov-superficie`, 5,37:1 sobre `ov-superficie-elevada`). No "Precisa de você", os apps trocam o contador pelas tags Urgente e Atenção.
+- **Visão selecionada** (`.ov-visao[aria-selected="true"]`, `[aria-current="page"]`): fundo `ov-acao-suave`, contorno de 1px `ov-acao` por sombra interna e rótulo em `ov-texto` peso 600 (14,2:1 no claro, 12,0:1 no escuro). As visões grandes não mudam: a regra delas continua vencendo pela força, e ganha o `font-weight: 500` dela para não herdar o 600.
+- **Toque** (`pointer: coarse`): o `.ov-campo` com 48 (o `textarea` com 48 de mínimo e padding de 11px), o campo de linha também (48 e 16px); `.ov-abas-internas button` com 48 (`janelas.css`); `.ov-superior .ov-conta` com 48 (era 36: a força da regra da barra vencia o 48 da conta); `.ov-chip-filtro` com 48 de altura mínima e o ✕ com 48×48 (era 22; o ícone continua o de 14px do app).
+- **Paleta**: no item realçado, o `.meta` vai a `ov-texto-secundario` (5,33:1 no escuro; era 4,22:1).
+- **Botão** (`controles.css`): desabilitado a `opacity: .6` (era .45); `.ov-btn-icone svg` com 18px, sem encolher (o app deixa de passar `size`); `.ov-btn[aria-busy="true"]` com `cursor: progress`; `.ov-reticencias`, três pontos que acendem em sequência, só por opacidade, 1,2 s por ciclo, parados e visíveis com `prefers-reduced-motion`; `.ov-motivo`, 12/16 em `ov-texto-terciario`, 4px acima, escondido fora do toque e visível em `pointer: coarse`.
+- **Contrato do "Salvando…"**, que o CSS não garante e o app cumpre: com `aria-busy="true"`, o app **ignora todo clique e Enter no botão até a resposta** — o botão não fica `disabled`, então continua clicável, e é essa guarda que evita o duplo envio; troca o rótulo pelo gerúndio ("Salvando", "Enviando") seguido das `.ov-reticencias` (`aria-hidden`), com o rótulo e as reticências num `span` só (soltos no botão, o gap de 8px do `.ov-btn` os separaria); mantém a variante e a largura; e, quando o servidor responde, tira o `aria-busy` e volta ao rótulo normal ou ao erro.
+- **Contrato do `.ov-motivo`**: o motivo tem `id` próprio, o botão desabilitado aponta para ele por `aria-describedby` (escondido fora do toque, ele continua valendo como descrição), e o mesmo texto vai no `title` do botão (o computador mostra no mouse; no toque o `title` não existe, e o motivo aparece escrito abaixo).
+- **Tabela no tablet** (C5): entre 768 e 1023px, `th` e `td` com `data-some-no-tablet` na `.ov-tabela` saem (o `data-principal` é do modo foco; abaixo de 768 a lista do celular tem as células todas). **`.ov-rolagem`**, o contêiner da tabela que ainda transborda: `overflow-x: auto` e a sombra na borda do lado que tem conteúdo escondido, só com CSS (as capas com `background-attachment: local` cobrem as sombras, presas na caixa, quando se chega à ponta). A capa tem a cor `--rolagem-fundo` (sem ela, `ov-superficie`, a do cartão). A sombra é o `ov-texto-secundario` (`--rolagem-sombra` troca), claro no escuro e escuro no claro, a 40% na borda (a cor começa em −150% do raio; sem `color-mix`, que tablet antigo não tem): 2,2:1 sobre `ov-superficie` e `ov-superficie-elevada` no escuro e 1,9:1 no claro. Uma sombra escura não se vê no escuro (o `ov-veu` dava 1,1:1).
+- **Pular para o conteúdo** (C25, `casca.css`): `.ov-pular`, primeiro elemento da página, um link para o `h1` da tela; fora da tela até o `:focus-visible`, aí no topo à esquerda (somando a área segura), acima de tudo (`--ov-z-toast` + 1), com o anel do livro; 48 no toque. O `h1` leva `id` e `tabindex="-1"`.
+- **Conta** (C26, L8): mora só na barra superior a partir de 768px; o rodapé da lateral fica só com o Recolher. As regras `.ov-conta` da lateral ficam no `casca.css` até os apps adotarem (a base é a mesma da barra superior).
+- **Alteradas pelo nome** (o teste da versão cobra cada uma; o resto das fixtures da v3.18.2 fica igual regra a regra): no `controles.css`, `.ov-btn:disabled` e, no toque, `.ov-campo[data-densidade="linha"]` e `textarea.ov-campo[data-densidade="linha"]`; no `telas.css`, `.ov-visao[aria-selected="true"]`, `.ov-visao[aria-current="page"]`, `.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"])`, `.ov-contador-destaque` e `.ov-indicador[data-alerta="true"]` (ganha o filete e desce para depois dos filetes; a única velha que muda de lugar). No `casca.css`, no `janelas.css` e no `tokens.css` nenhuma regra muda: só nascem.
+- **Por que a v3.19.0 é minor:** classes, tokens e regras novas (`.ov-tag`, `.ov-tag-ponto`, `.ov-motivo`, `.ov-reticencias`, `.ov-rolagem`, `.ov-pular`, os filetes e o `data-some-no-tablet`), e as regras que mudam de valor estão na lista acima.
+- **O que muda na tela dos apps ao adotar:** todo `.ov-btn-icone` passa a desenhar o ícone com 18px (o app tira o `size`); a visão selecionada fica preenchida em `ov-acao-suave`, com contorno `ov-acao` e rótulo 600 (antes `ov-item-ativo` com contorno `ov-borda-forte` e 500); no toque, todo campo vai a 48px, o campo de linha também, e as abas internas, a conta da barra superior e o chip de filtro com o ✕ vão a 48; o texto do contador de pendências escurece no claro; o indicador em alerta ganha o filete laranja de 3px à esquerda; o desabilitado fica menos apagado (0,6); e o `.meta` do item realçado da paleta clareia no escuro. O resto só aparece onde o app puser a classe ou o atributo novo.
 
 ### Relatório (papel e impressão)
 

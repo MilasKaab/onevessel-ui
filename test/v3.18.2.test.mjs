@@ -8,7 +8,9 @@
 // do pacote; no Tailwind 4 da Bordo a utilidade está em @layer utilities e
 // perde para o pacote, que entra fora de camada. Patch: a fixture da v3.18.1
 // (`test/fixtures/telas-v3.18.1.css`, da tag, fixa) fica igual regra a
-// regra; só nasce a regra daqui.
+// regra; só nasce a regra daqui. Desde a v3.19.0, as telas daqui e os
+// outros CSS que ela muda são as fixtures da v3.18.2 (fixture com fixture),
+// e a versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -19,11 +21,12 @@ import { regras, semComentario } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
-const telas = ler('css/telas.css');
+const telas = ler('test/fixtures/telas-v3.18.2.css');
+const V3182 = ['casca', 'controles', 'janelas', 'telas', 'tokens'];
+const atual = (nome) => (V3182.includes(nome) ? `test/fixtures/${nome}-v3.18.2.css` : `css/${nome}.css`);
 const antes = ler('test/fixtures/telas-v3.18.1.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 
 const ACAO = '.ov-tabela td [data-abre-linha]';
 
@@ -58,7 +61,7 @@ test('os outros CSS com os bytes da v3.18.1; a fixture da tag', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(atual(nome)), sha, nome);
   assert.equal(sha256('test/fixtures/telas-v3.18.1.css'), '8eb57da191c50eb42d401a814611d3df660c8b463c3309bab4ab882dbee4939c');
 });
 
@@ -73,7 +76,7 @@ test('a ação da linha: só text-decoration: none, sem !important, fora de @med
   // O :hover de nenhuma outra regra muda (o patch acima), e nenhum outro CSS
   // fala do atributo.
   for (const nome of ['casca', 'janelas', 'controles', 'onevessel', 'relatorio', 'previa', 'impressao']) {
-    assert.doesNotMatch(ler(`css/${nome}.css`), /data-abre-linha/, nome);
+    assert.doesNotMatch(ler(atual(nome)), /data-abre-linha/, nome);
   }
   assert.equal((telas.match(/\[data-abre-linha\]/g) ?? []).length, 1);
 });
@@ -95,9 +98,7 @@ test('exemplo: seção da ação da linha depois da coluna estreita, nos dois te
   assert.match(exemplo, /\n {2}\.hover\\:underline:hover \{ text-decoration-line: underline; \}/);
 });
 
-test('package.json 3.18.2; README com a tag, a ação da linha e por que é patch', () => {
-  assert.equal(pacote.version, '3.18.2');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.18\.2"/);
+test('README com a ação da linha e por que é patch', () => {
   assert.match(leiame, /\*\*Ação da linha sem sublinhado\*\* \(v3\.18\.2\)/);
   assert.match(leiame, /\*\*Por que a v3\.18\.2 é patch:\*\*/);
 });

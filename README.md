@@ -24,7 +24,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `icons/` | `plataforma/`: os ícones do PWA da OneVessel (192, 512, maskable, apple-touch-icon e o SVG de origem); `bordo/`, `paradas/` e `materiais/`: só o `icone.svg` de cada módulo, que não é instalável (v3.14.0) |
 | `marca/` | O logo horizontal da BRAM Offshore (`bram-offshore-horizontal.png`, 2425×1073, fundo transparente), para o timbre dos relatórios (v3.10.0) |
 | `manifestos/` | O `plataforma.webmanifest`, modelo do manifesto do PWA da OneVessel, o único instalável (desde a v3.14.0; os dos módulos saíram) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha. ESM puro, sem dependência (nem de React), com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha; desde a v3.20.0, o plural, as datas e os teclados das abas, da lista de cards, do menu e do "+ Filtro". ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `controles.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (sem exceção desde a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
 | `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo; e `v3.15.0.test.mjs`: toda regra do `casca.css` da v3.14.0 igual, o que nasceu exatamente pela lista, a lateral recolhida por escolha com as mesmas declarações da de abaixo de 1024px (sem a margem), nenhuma `transition`, o botão escondido abaixo de 1024px, o núcleo (ler, gravar, alternar, aplicar, armazenamento quebrado, evento de outra aba) e o exemplo; e `v3.15.1.test.mjs`: toda regra do `casca.css` da v3.15.0 igual, fora as alteradas pelo nome (o `data-fixo` e o botão), nenhuma nascida, os dois blocos de recolhido ainda iguais, o botão com texto, o rodapé na ordem e, com o Chromium do Playwright instalado, os centros dos ícones medidos no exemplo recolhido (iguais, com 1px de tolerância, a 1280px pelo atributo e a 900px pela largura). Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.19.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.20.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -390,6 +390,112 @@ CSS e tokens da direção visual e das regras C de 30 e 31/10 (livro v4) e o blo
 - **Por que a v3.19.0 é minor:** classes, tokens e regras novas (`.ov-tag`, `.ov-tag-ponto`, `.ov-motivo`, `.ov-reticencias`, `.ov-rolagem`, `.ov-pular`, os filetes e o `data-some-no-tablet`), e as regras que mudam de valor estão na lista acima.
 - **O que muda na tela dos apps ao adotar:** todo `.ov-btn-icone` passa a desenhar o ícone com 18px (o app tira o `size`); a visão selecionada fica preenchida em `ov-acao-suave`, com contorno `ov-acao` e rótulo 600 (antes `ov-item-ativo` com contorno `ov-borda-forte` e 500); no toque, todo campo vai a 48px, o campo de linha também, e as abas internas, a conta da barra superior e o chip de filtro com o ✕ vão a 48; o texto do contador de pendências escurece no claro; o indicador em alerta ganha o filete laranja de 3px à esquerda; o desabilitado fica menos apagado (0,6); e o `.meta` do item realçado da paleta clareia no escuro. O resto só aparece onde o app puser a classe ou o atributo novo.
 
+### Texto, datas e teclado (v3.20.0)
+
+Seis núcleos novos em `js/`, das decisões C de 31/10 (C8, C18, C19, C10) e do bloco D do livro v4. Nenhum CSS, token ou `js/` de antes muda. As regras de uso estão no `livro-da-marca.md` (Tom e escrita; Acessibilidade) e no `componentes.md` (Lista de cards, Visões e filtros, Painel lateral, Menu), no `onevessel-docs`. Como os outros núcleos: lógica pura, sem DOM e sem framework; o app descreve a tecla (`{ key, ctrlKey, metaKey, altKey, shiftKey }`, o `TeclaPressionada` do `teclas-do-painel.js`) e aplica a ação. **Com Ctrl, ⌘, Alt ou Shift, setas, Home, End e Enter não são dos núcleos** (como na tabela e no painel; Alt ← é o voltar do navegador); só o Esc e o Tab do menu fecham com qualquer modificador.
+
+**Plural** (`texto.js`, C8): nunca "(s)"; singular só para 1; zero com número; o número em pt-BR.
+
+```js
+import { plural, palavra } from 'onevessel-ui/js/texto.js'
+
+plural(3, 'pessoa', 'pessoas')       // "3 pessoas"
+plural(0, 'atividade', 'atividades') // "0 atividades"
+plural(1234, 'pessoa', 'pessoas')    // "1.234 pessoas"
+palavra(1, 'dia', 'dias')            // "dia" (só a palavra, para quem já escreve o número)
+```
+
+**Data e hora** (`datas.js`, C18): sempre no fuso de Brasília (`FUSO_DE_BRASILIA`, `America/Sao_Paulo`, V2 de 31/10), nunca o do aparelho nem o do processo (na Vercel, UTC: o instante 02:30Z ainda é o dia anterior em Brasília); 24 h, sem segundos, sem "h" na hora. Aceita `Date`, texto ISO e milissegundos; vazio ou inválido devolve `""`. **Texto só com a data** (`"2026-10-26"`, a chave de dia do Paradas) é o dia de Brasília que ele nomeia, à meia-noite. Um `Date` é sempre instante: a data de `type="date"` que a Bordo grava à meia-noite UTC (os documentos do despacho) continua no `formatarData` dela, que lê em UTC. O "às" da frase ("encerrada em 26/10/2026 às 09:00") é do app.
+
+```js
+import { data, dataHora, dataHoraCurta, decorrido, diaRelativo, title } from 'onevessel-ui/js/datas.js'
+
+data(i)                          // "26/10/2026"
+dataHora(i)                      // "26/10/2026 09:00" (registro histórico)
+dataHoraCurta(i)                 // "27/10, 20:00" no ano corrente; de outro ano, a dataHora
+decorrido(Date.now() - inicio)   // "agora" · "há 45 min" · "há 3h" · "há 3h05" · "há 2 dias"
+diaRelativo(i)                   // "hoje" · "ontem" · "24/10/2026"
+title(i)                         // a dataHora, para o title de toda forma curta ou relativa
+```
+
+```html
+<time datetime="2026-10-27T23:00:00Z" title="27/10/2026 20:00">27/10, 20:00</time>
+<span class="ov-estado" data-tom="andamento" title="31/10/2026 06:55">Em andamento há 3h05</span>
+```
+
+`decorrido` recebe milissegundos (negativo, de relógio adiantado, é "agora"); os minutos depois da hora vão com dois dígitos e só quando não são zero. `dataHoraCurta` e `diaRelativo` recebem um `agora` opcional (o teste passa um fixo).
+
+**Teclado das abas** (`teclas-das-abas.js`, C19), para as visões (`.ov-visoes`) e as abas internas do painel (`.ov-abas-internas`): ←→ com volta, Home, End; o resto é `null`. **A troca acontece no foco** (o app ativa a aba que recebe o foco, no mesmo passo) e **só a ativa entra no Tab** (`tabindex="0"` nela e `-1` nas outras, do app, como o `role`, o `aria-selected` e o `aria-controls`). Sem aba ativa (`atual` -1), → vai à primeira e ← à última.
+
+```js
+import { abaDeDestino } from 'onevessel-ui/js/teclas-das-abas.js'
+
+function aoTeclar(evento) {                    // no role="tablist"
+  const destino = abaDeDestino(atual, abas.length, evento)
+  if (destino === null) return
+  evento.preventDefault()
+  ativar(abas[destino].id)                     // aria-selected, tabindex 0/-1 e o painel
+  botoes[destino].focus()
+}
+```
+
+**Teclado da Lista de cards** (`teclas-da-lista.js`, C10): uma parada de Tab por lista; ↑↓ entre cards **sem volta** (no primeiro, ↑ não faz nada), Home, End; Enter abre e fecha o card em foco; Esc dentro do card devolve o foco ao card. `acaoDaTeclaNaLista(tecla, indice, total, alvo)` devolve `{ foco: i }`, `{ alternar: i }`, `{ voltarAoCard: i }` ou `null` (o app não chama `preventDefault`). `indice` é o card onde está o foco; `alvo` diz onde, dentro dele:
+
+| `alvo` | O foco está | ↑↓ Home End | Enter | Esc |
+| --- | --- | --- | --- | --- |
+| `'card'` | no próprio card (o elemento com o `tabindex`) | andam entre cards | `{ alternar }` | `null` |
+| `'controle'` | num botão ou link do card | andam entre cards (como da Excluir na linha da tabela) | `null` (é do botão) | `{ voltarAoCard }` |
+| `'campo'` | num campo de texto ou de escolha do card | `null` (cursor do campo) | `null` (a quebra de linha do `textarea`) | `{ voltarAoCard }` |
+
+**Num campo de texto dentro do card, o núcleo ignora ↑↓, Home, End e Enter**: são do campo. Só o Esc volta ao card; um campo que usa o Esc (uma lista aberta) chama `preventDefault`, e o app não pergunta ao núcleo com `evento.defaultPrevented`. Para classificar o foco, o `ehCampo` do `teclas-do-painel.js` serve.
+
+**Os controles do card só entram no Tab no card ativo.** O card ativo é o de `cardDoTab(total, ultimoComFoco)` (o último que teve o foco, se ainda está na lista; senão o primeiro; -1 com a lista vazia): ele leva `tabindex="0"` e os outros cards `tabindex="-1"`; **os botões, links e campos de todo card que não é o ativo levam `tabindex="-1"`**, e os do ativo ficam sem `tabindex` (na ordem natural). Quando o foco entra noutro card (setas, clique), ele vira o ativo e os `tabindex` trocam. No índice de dias do Paradas, a lixeira só entra no Tab da linha em foco, pela mesma regra.
+
+```js
+import { acaoDaTeclaNaLista, cardDoTab } from 'onevessel-ui/js/teclas-da-lista.js'
+import { ehCampo } from 'onevessel-ui/js/teclas-do-painel.js'
+
+function aoTeclar(evento) {                    // na lista
+  if (evento.defaultPrevented) return
+  const card = evento.target.closest('[data-card]')
+  const indice = cards.indexOf(card)
+  const alvo = evento.target === card ? 'card' : ehCampo(evento.target) ? 'campo' : 'controle'
+  const acao = acaoDaTeclaNaLista(evento, indice, cards.length, alvo)
+  if (!acao) return
+  evento.preventDefault()
+  if ('foco' in acao) cards[acao.foco].focus()
+  else if ('alternar' in acao) alternar(acao.alternar)
+  else cards[acao.voltarAoCard].focus()
+}
+```
+
+**Teclado do Menu** (`menu-nucleo.js`, bloco D): o ⋮, o "+ Filtro", o "Exibir", o seletor de embarcação e o menu da conta. ↑↓ com volta, Home, End; Esc fecha e devolve o foco ao gatilho; Tab (e Shift Tab) fecha **sem** `preventDefault`, e o foco segue; Enter e Espaço são do próprio item (botão ou link de verdade). `acaoDaTeclaNoMenu(tecla, atual, total)` devolve `{ foco: i }`, `{ fechar: true, devolverFoco }` ou `null`. Abrir, posicionar, focar o primeiro item, fechar no clique fora, na rolagem e no redimensionar ficam no app; o Esc o app ouve no `document`, para fechar mesmo com o foco fora do menu. O aviso do "+ Filtro" conta como item (focável, `aria-disabled`).
+
+```js
+import { acaoDaTeclaNoMenu } from 'onevessel-ui/js/menu-nucleo.js'
+
+function aoTeclar(evento) {                    // no role="menu" (e o Esc no document)
+  const itens = [...menu.querySelectorAll('[role^="menuitem"]')]
+  const acao = acaoDaTeclaNoMenu(evento, itens.indexOf(document.activeElement), itens.length)
+  if (!acao) return
+  if ('foco' in acao) { evento.preventDefault(); itens[acao.foco].focus() }
+  else fechar(acao.devolverFoco)               // Esc: foca o gatilho; Tab: deixa o foco seguir
+}
+```
+
+**"+ Filtro"** (`filtro-nucleo.js`, bloco D): `menuDoFiltro(campos, emUso, opcoes)` devolve `{ itens, aviso }`. `itens` são os campos da visão que ainda não filtram e têm **duas opções ou mais** na lista, na ordem dos campos; sem nenhum, `aviso` é `TODOS_EM_USO` ("Todos os filtros em uso") quando algum filtro está em uso, e `NADA_PARA_FILTRAR` ("Nada para filtrar nesta lista") quando nenhum está — o critério do Paradas #104, aceito em 29/10. **O botão nunca some** (28/10, AJ4): sem itens, o menu abre com o aviso, um `menuitem` com `aria-disabled`, focável, sem ação. O segundo passo (os valores do campo, com "Voltar") e os chips são do app.
+
+```js
+import { menuDoFiltro } from 'onevessel-ui/js/filtro-nucleo.js'
+
+const { itens, aviso } = menuDoFiltro(['tipo', 'empresa', 'turno'], Object.keys(filtros), (campo) => valoresNaLista(campo))
+// itens: ['empresa']   aviso: null
+// sem itens: aviso "Todos os filtros em uso" ou "Nada para filtrar nesta lista"
+```
+
+- **Por que a v3.20.0 é minor:** só arquivos novos em `js/` (seis `.js` com os seus `.d.ts`, todos em `exports`). Os CSS, o `tokens.json` e os `js/` de antes ficam com os bytes da v3.19.0 (o teste da versão cobra pelo sha256).
+- **O que muda na tela dos apps ao adotar:** nada, até o app trocar o código dele pelo núcleo. Ao trocar: datas e horas que hoje saem no fuso do aparelho (o `formatDiaHora` e o `formatDataHora` do Paradas) passam ao de Brasília; o "(s)" sai; o milhar ganha o ponto; as abas do `PainelDaTt` ganham Home e End; o "+ Filtro" da Bordo deixa de sumir e deixa de oferecer campo de uma opção só.
+
 ### Relatório (papel e impressão)
 
 Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no `relatorio.css`, com os mesmos valores, fora três regras: a `.rel-pagina` ganhou `page: relatorio`, o `.rel-tabela th` subiu de 11px para 8,5pt e a `.rel-barra` virou interface (fonte do sistema, `--ov-*`, sem o `max-width: 210mm`). O `impressao.css` foi reescrito sem seletor global. As regras do documento (Timbre, resumo, estados, nome do arquivo) estão em `relatorios-e-logos.md`, no `onevessel-docs`.
@@ -547,6 +653,12 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/alteracoes-nucleo.js` | "Há alterações nesta tela" (v3.6.0): o registro em árvore e o texto único do "Descartar alterações?" |
 | `js/teclas-da-tabela.js` | O teclado da linha da `.ov-tabela` (v3.8.0): ↑↓ só movem o foco entre linhas, Enter abre, X marca onde há seleção; o destino sem dar a volta e a linha que recebe o Tab |
 | `js/lateral-nucleo.js` | A lateral recolhida por escolha (v3.15.0): `CHAVE_LATERAL` (`ov-lateral`), `lerLateral`, `gravarLateral`, `alternarLateral`, `aplicarLateral` (o `data-lateral` da casca), `botaoDaLateral` (ícone, texto, rótulo e `aria-expanded`) e `ouvirLateral` (o evento `storage` de outra aba); armazenamento bloqueado não derruba nada (ver Casca) |
+| `js/texto.js` | Plural (v3.20.0, C8): `plural(n, um, varios)` ("3 pessoas", "1.234 pessoas") e `palavra(n, um, varios)` (só a palavra); nunca "(s)" |
+| `js/datas.js` | Data e hora no fuso de Brasília (v3.20.0, C18): `data`, `dataHora`, `dataHoraCurta`, `decorrido`, `diaRelativo`, `title` e `FUSO_DE_BRASILIA` |
+| `js/teclas-das-abas.js` | O teclado das visões e das abas internas (v3.20.0, C19): `abaDeDestino` (←→ com volta, Home, End) |
+| `js/teclas-da-lista.js` | O teclado da Lista de cards (v3.20.0, C10): `acaoDaTeclaNaLista` (↑↓ sem volta, Home, End, Enter, Esc de dentro do card) e `cardDoTab` |
+| `js/menu-nucleo.js` | O teclado do Menu (v3.20.0, bloco D): `acaoDaTeclaNoMenu` (↑↓ com volta, Home, End, Esc devolve ao gatilho, Tab fecha sem prender) |
+| `js/filtro-nucleo.js` | O "+ Filtro" (v3.20.0, bloco D): `menuDoFiltro` (os campos a oferecer, ou o aviso), `TODOS_EM_USO` e `NADA_PARA_FILTRAR` |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
@@ -557,7 +669,15 @@ import { abrirCamada, camadasAbertas } from 'onevessel-ui/js/camada.js'
 import { criarRegistroDeAlteracoes, DESCARTAR } from 'onevessel-ui/js/alteracoes-nucleo.js'
 import { acaoDaTeclaNaLinha, linhaDeDestino, linhaDoTab } from 'onevessel-ui/js/teclas-da-tabela.js'
 import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral } from 'onevessel-ui/js/lateral-nucleo.js'
+import { plural, palavra } from 'onevessel-ui/js/texto.js'
+import { data, dataHora, dataHoraCurta, decorrido, diaRelativo, title } from 'onevessel-ui/js/datas.js'
+import { abaDeDestino } from 'onevessel-ui/js/teclas-das-abas.js'
+import { acaoDaTeclaNaLista, cardDoTab } from 'onevessel-ui/js/teclas-da-lista.js'
+import { acaoDaTeclaNoMenu } from 'onevessel-ui/js/menu-nucleo.js'
+import { menuDoFiltro, TODOS_EM_USO, NADA_PARA_FILTRAR } from 'onevessel-ui/js/filtro-nucleo.js'
 ```
+
+Desde a v3.20.0, os seis da rodada de UX (plural, datas e os quatro de teclado); o contrato e um exemplo de cada estão em **Texto, datas e teclado (v3.20.0)**.
 
 `js/package.json` só tem `{"type": "module"}`: o pacote é CommonJS (o preset do Tailwind usa `module.exports`), e assim o Node carrega `js/` como ESM sem aviso.
 

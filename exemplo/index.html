@@ -1416,6 +1416,32 @@
     ouvirLateral(window, mostrar)
   })
 
+  // Visões e abas internas pelo núcleo das abas (v3.20.0, C19): ←→ com
+  // volta, Home e End; a troca acontece no foco e só a ativa entra no Tab.
+  // Aqui só o aria-selected e o tabindex mudam: os painéis da amostra ficam
+  // como estão.
+  import('../js/teclas-das-abas.js').then(({ abaDeDestino }) => {
+    for (const lista of document.querySelectorAll('[role="tablist"]')) {
+      const abas = [...lista.querySelectorAll('[role="tab"]')]
+      const ativar = (aba) => {
+        for (const a of abas) {
+          a.setAttribute('aria-selected', String(a === aba))
+          a.tabIndex = a === aba ? 0 : -1
+        }
+      }
+      ativar(abas.find((a) => a.getAttribute('aria-selected') === 'true') ?? abas[0])
+      for (const aba of abas) aba.addEventListener('click', () => ativar(aba))
+      lista.addEventListener('keydown', (evento) => {
+        const atual = abas.findIndex((a) => a.getAttribute('aria-selected') === 'true')
+        const destino = abaDeDestino(atual, abas.length, evento)
+        if (destino === null) return
+        evento.preventDefault()
+        ativar(abas[destino])
+        abas[destino].focus()
+      })
+    }
+  })
+
   // Amostras de cor lidas do próprio tokens.css.
   const nomes = [
     'ov-fundo', 'ov-superficie', 'ov-borda', 'ov-texto', 'ov-texto-secundario',

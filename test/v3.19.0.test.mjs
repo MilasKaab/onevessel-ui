@@ -30,6 +30,10 @@ const TABLET = '@media (min-width: 768px) and (max-width: 1023px)';
 const MOVIMENTO = '@media (prefers-reduced-motion: reduce)';
 const GRANDE_SEL = '.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"])';
 
+// A regra do alerta desce para depois dos filetes (mesma força: vence pela
+// ordem); é a única velha que muda de lugar.
+const ALERTA = '|.ov-indicador[data-alerta="true"]';
+
 const declaracoes = (corpo) => corpo.split(';').map((d) => d.replace(/\s+/g, ' ').trim()).filter(Boolean);
 const declaracoesEm = (texto, media, seletor) => {
   const r = regras(texto).find((x) => x.media === media && x.seletores.includes(seletor));
@@ -50,6 +54,7 @@ const ALTERADAS = {
     '|.ov-visao[aria-selected="true"]': ['background: var(--ov-acao-suave)', 'color: var(--ov-texto)', 'box-shadow: inset 0 0 0 1px var(--ov-acao)', 'font-weight: 600'],
     '|.ov-visao[aria-current="page"]': ['background: var(--ov-acao-suave)', 'color: var(--ov-texto)', 'box-shadow: inset 0 0 0 1px var(--ov-acao)', 'font-weight: 600'],
     [`|${GRANDE_SEL}`]: ['background: var(--ov-acao-suave)', 'color: var(--ov-texto)', 'box-shadow: inset 0 -2px 0 var(--ov-acao)', 'font-weight: 500'],
+    '|.ov-indicador[data-alerta="true"]': ['border-color: var(--ov-destaque)', 'box-shadow: inset 3px 0 0 var(--ov-destaque)'],
     '|.ov-contador-destaque': ['display: inline-flex', 'align-items: center', 'height: 20px', 'padding: 0 7px', 'border-radius: var(--ov-raio-pill)', 'background: var(--ov-destaque-suave)', 'color: var(--ov-destaque-texto)', 'font-size: 12px', 'font-weight: 600', 'font-variant-numeric: tabular-nums'],
   },
 };
@@ -87,11 +92,11 @@ for (const nome of NOMES) {
     }
   });
 
-  test(`${nome}.css: o que nasceu na v3.19.0 é exatamente a lista, e a ordem das velhas não muda`, () => {
+  test(`${nome}.css: o que nasceu na v3.19.0 é exatamente a lista, e a ordem das velhas não muda (fora a do alerta, que desce)`, () => {
     const velhas = new Set(chaves(ANTES[nome]));
     assert.deepEqual(chaves(ATUAL[nome]).filter((c) => !velhas.has(c)), NOVAS[nome]);
-    const novas = new Set(NOVAS[nome]);
-    assert.deepEqual(chaves(ATUAL[nome]).filter((c) => !novas.has(c)), chaves(ANTES[nome]));
+    const fica = (c) => !NOVAS[nome].includes(c) && c !== ALERTA;
+    assert.deepEqual(chaves(ATUAL[nome]).filter(fica), chaves(ANTES[nome]).filter(fica));
   });
 }
 
@@ -240,8 +245,11 @@ test('filetes: os seis tons do indicador a 3px por sombra interna (não borda); 
   const t = ATUAL.telas;
   const COR = { neutro: 'ov-neutro', info: 'ov-info', andamento: 'ov-status-andamento', atencao: 'ov-atencao', erro: 'ov-erro', sucesso: 'ov-sucesso' };
   for (const [tom, cor] of Object.entries(COR)) assert.deepEqual(declaracoesEm(t, '', `.ov-indicador[data-filete="${tom}"]`), [`box-shadow: inset 3px 0 0 var(--${cor})`]);
-  // A borda de alerta continua por border-color, e nada no indicador mexe em box-shadow fora dos filetes.
-  assert.deepEqual(declaracoesEm(t, '', '.ov-indicador[data-alerta="true"]'), ['border-color: var(--ov-destaque)']);
+  // Em alerta, a borda e o filete em ov-destaque (o filete de alerta substitui
+  // o de status), com ou sem data-filete: mesma força, logo depois dos filetes.
+  assert.deepEqual(declaracoesEm(t, '', '.ov-indicador[data-alerta="true"]'), ['border-color: var(--ov-destaque)', 'box-shadow: inset 3px 0 0 var(--ov-destaque)']);
+  const ordem = chaves(t);
+  assert.equal(ordem.indexOf(ALERTA), ordem.indexOf('|.ov-indicador[data-filete="sucesso"]') + 1);
   for (const tom of ['erro', 'atencao']) assert.deepEqual(declaracoesEm(t, '', `.ov-pendencia[data-tom="${tom}"]`), [`box-shadow: inset 2px 0 0 var(--ov-${tom})`]);
   assert.doesNotMatch(declaracoesEm(t, '', '.ov-pendencia').join('; '), /border-radius/);
 });
@@ -280,7 +288,11 @@ test('tabela no tablet e rolagem: a coluna sai só entre 768 e 1023; a .ov-rolag
   assert.match(rolagem, /overflow-x: auto/);
   assert.equal((rolagem.match(/ local/g) ?? []).length, 2);
   assert.equal((rolagem.match(/ scroll/g) ?? []).length, 2);
-  assert.equal((rolagem.match(/var\(--ov-veu\)/g) ?? []).length, 2);
+  // A sombra: ov-texto-secundario (claro no escuro, escuro no claro), a 40% na
+  // borda (a cor em -150% do raio), trocável por --rolagem-sombra; sem
+  // color-mix nem token novo.
+  assert.equal((rolagem.match(/var\(--rolagem-sombra, var\(--ov-texto-secundario\)\) -150%, transparent/g) ?? []).length, 2);
+  assert.doesNotMatch(rolagem, /ov-veu|color-mix/);
 });
 
 test('pular: fora da tela até o foco por teclado, aí no topo acima de tudo com o anel do livro; 48 no toque', () => {
@@ -424,17 +436,20 @@ test('medida: visão selecionada 600 com contorno ov-acao; a grande continua 500
   assert.match(r.grande.sombra, /0px -2px 0px 0px inset$/);
 });
 
-test('medida: filete por sombra e a borda de alerta juntos; a pendência com o filete de 2px', { skip: chromium ? false : motivo }, async () => {
+test('medida: em alerta, a borda e o filete em ov-destaque (com e sem data-filete); a pendência com o filete de 2px', { skip: chromium ? false : motivo }, async () => {
   const r = await comPagina({}, async (p) => {
     const alerta = p.locator('.estados-tags [data-alerta="true"]').first();
     return {
       sombra: await alerta.evaluate((e) => getComputedStyle(e).boxShadow),
+      semFilete: await p.locator('.telas-moldura .ov-indicador[data-alerta="true"]:not([data-filete])').first().evaluate((e) => getComputedStyle(e).boxShadow),
+      destaque: await alerta.evaluate((e) => { const d = document.createElement('div'); d.style.color = 'var(--ov-destaque)'; e.append(d); const c = getComputedStyle(d).color; d.remove(); return c; }),
       borda: await alerta.evaluate((e) => getComputedStyle(e).borderLeftColor === getComputedStyle(e).borderTopColor),
       laranja: await alerta.evaluate((e) => { const d = document.createElement('div'); d.style.color = 'var(--ov-destaque)'; e.append(d); const c = getComputedStyle(d).color; d.remove(); return getComputedStyle(e).borderTopColor === c; }),
       pendencia: await p.locator('a.ov-pendencia[data-tom="erro"]').first().evaluate((e) => getComputedStyle(e).boxShadow),
     };
   });
-  assert.match(r.sombra, /3px 0px 0px 0px inset$/);
+  assert.equal(r.sombra, `${r.destaque} 3px 0px 0px 0px inset`);
+  assert.equal(r.semFilete, `${r.destaque} 3px 0px 0px 0px inset`);
   assert.equal(r.borda, true);
   assert.equal(r.laranja, true);
   assert.match(r.pendencia, /2px 0px 0px 0px inset$/);
@@ -466,3 +481,50 @@ test('medida: as reticências animam e param, visíveis, com movimento reduzido'
   assert.equal((await ler({})).nome, 'ovReticencia');
   assert.deepEqual(await ler({ reducedMotion: 'reduce' }), { nome: 'none', opacidade: '1' });
 });
+
+// A sombra da rolagem, no pixel: no meio da rolagem, as duas pontas mais
+// claras (escuro) ou mais escuras (claro) que o miolo; no começo, só a da
+// direita; no fim, só a da esquerda. Nos dois temas, sobre ov-superficie.
+const pixels = async (p, alvo) => {
+  const png = (await alvo.screenshot()).toString('base64');
+  return p.evaluate(async (dados) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${dados}`;
+    await img.decode();
+    const c = document.createElement('canvas');
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d');
+    g.drawImage(img, 0, 0);
+    const y = Math.floor(img.height / 2);
+    const luz = (x) => { const [r, gg, b] = g.getImageData(x, y, 1, 1).data; return 0.2126 * r + 0.7152 * gg + 0.0722 * b; };
+    return { esquerda: luz(1), meio: luz(Math.floor(img.width / 2)), direita: luz(img.width - 2) };
+  }, png);
+};
+
+for (const tema of ['escuro', 'claro']) {
+  test(`medida no tema ${tema}: a sombra da rolagem se vê nas duas pontas e some no fim`, { skip: chromium ? false : motivo }, async () => {
+    const navegador = await chromium.launch();
+    try {
+      const p = await navegador.newPage({ viewport: { width: 800, height: 400 } });
+      // Na origem do exemplo (file://): de about:blank as folhas locais não carregam.
+      await p.goto(url('exemplo/index.html').href);
+      await p.setContent(`<!doctype html><html data-theme="${tema}"><head>${FOLHAS}</head><body style="margin:0;padding:20px;background:var(--ov-fundo)">`
+        + '<div class="ov-rolagem" style="width:400px"><div style="width:1600px;height:60px"></div></div></body></html>');
+      const caixa = p.locator('.ov-rolagem');
+      const ir = (x) => caixa.evaluate((e, v) => { e.scrollLeft = v === 'fim' ? e.scrollWidth : v; }, x);
+      const diferenca = (m) => ({ esquerda: Math.abs(m.esquerda - m.meio), direita: Math.abs(m.direita - m.meio) });
+      await ir(600);
+      const meio = diferenca(await pixels(p, caixa));
+      await ir(0);
+      const inicio = diferenca(await pixels(p, caixa));
+      await ir('fim');
+      const fim = diferenca(await pixels(p, caixa));
+      // Visível: 20 ou mais de luminância (0–255) na ponta; sumida: menos de 2.
+      assert.ok(meio.esquerda >= 20 && meio.direita >= 20, `meio ${JSON.stringify(meio)}`);
+      assert.ok(inicio.esquerda < 2 && inicio.direita >= 20, `início ${JSON.stringify(inicio)}`);
+      assert.ok(fim.direita < 2 && fim.esquerda >= 20, `fim ${JSON.stringify(fim)}`);
+    } finally {
+      await navegador.close();
+    }
+  });
+}

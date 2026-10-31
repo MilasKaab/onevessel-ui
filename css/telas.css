@@ -125,16 +125,19 @@ a.ov-visao { text-decoration: none; }
 /* O indicador que é link: o mesmo realce do cartão clicável (v3.12; até a
    v3.11 a borda ia a ov-borda-forte e escondia a borda de alerta). */
 a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); color: inherit; }
-.ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }
 /* Filete de status (v3.19, livro v4): 3px à esquerda, na cor do que o
-   indicador conta, por sombra interna, não por borda: a borda de alerta
-   (border-color, acima) convive com ele. Sem atributo, sem filete. */
+   indicador conta, por sombra interna, não por borda. Sem atributo, sem
+   filete. */
 .ov-indicador[data-filete="neutro"] { box-shadow: inset 3px 0 0 var(--ov-neutro); }
 .ov-indicador[data-filete="info"] { box-shadow: inset 3px 0 0 var(--ov-info); }
 .ov-indicador[data-filete="andamento"] { box-shadow: inset 3px 0 0 var(--ov-status-andamento); }
 .ov-indicador[data-filete="atencao"] { box-shadow: inset 3px 0 0 var(--ov-atencao); }
 .ov-indicador[data-filete="erro"] { box-shadow: inset 3px 0 0 var(--ov-erro); }
 .ov-indicador[data-filete="sucesso"] { box-shadow: inset 3px 0 0 var(--ov-sucesso); }
+/* Em alerta: a borda em ov-destaque e, desde a v3.19, o filete de alerta,
+   que substitui o de status (componentes.md, Indicador), com ou sem
+   data-filete. Mesma força dos filetes e depois deles: vence pela ordem. */
+.ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); box-shadow: inset 3px 0 0 var(--ov-destaque); }
 .ov-indicador-rotulo { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ov-texto-secundario); }
 .ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque); }
 .ov-indicador-valor { margin-top: 8px; font: 600 32px/40px var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
@@ -225,15 +228,19 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    no tablet. Sombra na borda do lado que tem conteúdo escondido, só com
    CSS: as duas capas (attachment local) andam com o conteúdo e cobrem as
    sombras (attachment scroll, presas na caixa) quando se chega à ponta.
-   A capa tem a cor da superfície (--rolagem-fundo, ov-superficie sem ele);
-   a sombra é o ov-veu, que já muda com o tema. As linhas da tabela não têm
-   fundo, e a sombra aparece por baixo delas.
+   A capa tem a cor da superfície (--rolagem-fundo, ov-superficie sem ele).
+   A sombra é o ov-texto-secundario (--rolagem-sombra), claro no escuro e
+   escuro no claro: uma sombra escura não aparece sobre o fundo escuro (o
+   ov-veu dava 1,1:1). A cor começa em -150% do raio, e na borda chega a 40%
+   de opacidade: 2,2:1 sobre ov-superficie e ov-superficie-elevada no
+   escuro, 1,9:1 no claro. Sem color-mix, que tablet antigo não tem. As
+   linhas da tabela não têm fundo, e a sombra aparece por baixo delas.
      <div class="ov-cartao ov-rolagem"><table class="ov-tabela">…</table></div> */
 .ov-rolagem { overflow-x: auto; background:
     linear-gradient(to right, var(--rolagem-fundo, var(--ov-superficie)) 30%, transparent) left center / 40px 100% no-repeat local,
     linear-gradient(to left, var(--rolagem-fundo, var(--ov-superficie)) 30%, transparent) right center / 40px 100% no-repeat local,
-    radial-gradient(farthest-side at 0 50%, var(--ov-veu), transparent) left center / 14px 100% no-repeat scroll,
-    radial-gradient(farthest-side at 100% 50%, var(--ov-veu), transparent) right center / 14px 100% no-repeat scroll;
+    radial-gradient(farthest-side at 0 50%, var(--rolagem-sombra, var(--ov-texto-secundario)) -150%, transparent) left center / 14px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--rolagem-sombra, var(--ov-texto-secundario)) -150%, transparent) right center / 14px 100% no-repeat scroll;
   background-color: var(--rolagem-fundo, var(--ov-superficie)); }
 
 /* ---------- Barra de ações em massa ---------- */

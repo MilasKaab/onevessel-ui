@@ -11,7 +11,7 @@
    Botão: 36px no computador e 48px em pointer: coarse, peso 500, raio
    ov-raio-md. O .ov-btn-sm (28px) é só do computador: no toque vai a 48
    como os outros.
-   Campo: 44px em qualquer tela, texto de 16px, fundo ov-superficie-recuada
+   Campo: 44px no computador e 48px no toque (v3.19, C30), texto de 16px, fundo ov-superficie-recuada
    (o do livro para o campo dentro de cartão; o mesmo fora dele), borda
    ov-borda-controle. O foco é o anel único do livro, sem halo e sem trocar
    a borda: o halo era sombra, e sombra some nas cores forçadas.
@@ -23,7 +23,28 @@
 
 /* ---------- Botões ---------- */
 .ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ov-altura-controle); padding: 0 14px; border-radius: var(--ov-raio-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s, border-color .12s; }
-.ov-btn:disabled { opacity: .45; cursor: not-allowed; }
+/* Desabilitado a .6 (v3.19, C13; era .45): o motivo vai no title e, no
+   toque, escrito abaixo do botão (.ov-motivo). */
+.ov-btn:disabled { opacity: .6; cursor: not-allowed; }
+/* Salvando (v3.19, C13): o botão não fica desabilitado nem muda de
+   variante; o app põe aria-busy="true", troca o rótulo pelo gerúndio com as
+   .ov-reticencias e ignora o clique até a resposta (contrato no README). */
+.ov-btn[aria-busy="true"] { cursor: progress; }
+/* Três pontos que acendem em sequência, só por opacidade (a largura não
+   muda), 1,2 s por ciclo; parados e visíveis com movimento reduzido.
+     <button class="ov-btn ov-btn-primario" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+   O rótulo e as reticências num span só: soltas no botão, o gap de 8px do
+   .ov-btn as separaria da palavra. */
+.ov-reticencias { display: inline-flex; }
+.ov-reticencias > span { opacity: .3; animation: ovReticencia 1.2s ease-in-out infinite; }
+.ov-reticencias > span:nth-child(2) { animation-delay: .2s; }
+.ov-reticencias > span:nth-child(3) { animation-delay: .4s; }
+@keyframes ovReticencia { 0%, 60%, 100% { opacity: .3; } 30% { opacity: 1; } }
+/* O motivo do desabilitado escrito (v3.19, C13): no toque, onde o title não
+   existe; fora dele some e continua valendo como descrição (o app liga pelo
+   aria-describedby do botão, com o mesmo texto no title). 12/16, o rótulo
+   do livro, o mínimo da interface. */
+.ov-motivo { display: none; margin: 4px 0 0; font: 400 12px/16px var(--font-sans); color: var(--ov-texto-terciario); }
 .ov-btn-primario { background: var(--ov-acao); color: var(--ov-sobre-acao); }
 /* No hover o texto vira ov-fundo (v3.11, PV-4): o ciano do escuro com o
    ov-sobre-acao dava 1,72:1. ov-fundo sobre ov-acao-hover: 10,99:1 no escuro
@@ -36,10 +57,13 @@
 .ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
 .ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
+/* O ícone do botão só de ícone é do pacote (v3.19, C17): 18px; o app não
+   passa size. Ao lado de texto, os 16 de sempre. */
+.ov-btn-icone svg { width: 18px; height: 18px; flex: none; }
 .ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
 /* Toque: 48px, o alvo do livro (era 44 até a v3.11). O .ov-btn vem depois
    do .ov-btn-sm, com a mesma força: o pequeno também sobe. */
-@media (pointer: coarse) { .ov-btn { height: var(--ov-altura-toque); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } }
+@media (pointer: coarse) { .ov-btn { height: var(--ov-altura-toque); } .ov-btn-icone { width: var(--ov-altura-toque); height: var(--ov-altura-toque); } .ov-motivo { display: block; } }
 
 /* ---------- Campos ---------- */
 .ov-campo-grupo { display: flex; flex-direction: column; gap: 6px; }
@@ -62,15 +86,25 @@ textarea.ov-campo { height: auto; min-height: var(--ov-altura-campo); padding: 9
    Formulário é sempre o .ov-campo de 44. */
 .ov-campo[data-densidade="linha"] { height: var(--ov-altura-controle); font-size: 14px; line-height: 20px; vertical-align: middle; }
 textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-altura-controle); padding: 7px 12px; }
-/* No toque, o campo de linha é o .ov-campo de 44 e 16px: o campo não vai a
-   48 em tela nenhuma, e texto abaixo de 16px faz o Safari do iPhone dar zoom
-   no foco. */
+/* No toque, todo controle tem 48px, o campo inclusive (revisto em 31/10,
+   C30; até a v3.18 o campo ficava em 44 e não ia a 48 em tela nenhuma): o campo
+   e o campo de linha vão a 48 e 16px (texto abaixo de 16px faz o Safari do
+   iPhone dar zoom no foco). No textarea, 48 de mínimo e o padding de 11px,
+   que põe a primeira linha de 16/24 no meio dos 48, como no input. */
 @media (pointer: coarse) {
-  .ov-campo[data-densidade="linha"] { height: var(--ov-altura-campo); font-size: 16px; line-height: 24px; }
-  textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-altura-campo); padding: 9px 12px; }
+  .ov-campo { height: var(--ov-altura-toque); }
+  textarea.ov-campo { min-height: var(--ov-altura-toque); padding: 11px 12px; }
+  .ov-campo[data-densidade="linha"] { height: var(--ov-altura-toque); font-size: 16px; line-height: 24px; }
+  textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-altura-toque); padding: 11px 12px; }
 }
 .ov-ajuda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
 .ov-erro-campo { display: flex; gap: 6px; align-items: flex-start; font-size: 13px; line-height: 18px; color: var(--ov-erro); }
 /* O ícone do erro (v3.13): o CircleAlert de 16px, aria-hidden, centrado na
    primeira linha de 18px e sem encolher quando o texto quebra. */
 .ov-erro-campo > svg { flex: none; width: 16px; height: 16px; margin-top: 1px; }
+
+/* ---------- Movimento reduzido ---------- */
+/* As reticências param, os três pontos visíveis. */
+@media (prefers-reduced-motion: reduce) {
+  .ov-reticencias > span { animation: none; opacity: 1; }
+}

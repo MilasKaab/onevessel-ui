@@ -1,0 +1,266 @@
+/* OneVessel — telas (v3.12): tipografia, cartão e indicadores, Precisa de
+   você (com o miolo do item), visões e filtros, contador, progresso, segmentado, checkbox,
+   tabela, barra de ações em massa e esqueleto.
+   Importável sozinho, como a casca e as janelas: depende de tokens.css e,
+   só para o movimento reduzido da barra de massa, do @keyframes ovFade de
+   casca.css. Sem regra de html, body, a, button, *, tamanho de fonte base,
+   movimento reduzido global ou impressão; cada caixa nova declara a própria
+   fonte e cor.
+
+   Larguras: os indicadores ficam em 4 colunas, 2 de 768 a 1023px e 1 abaixo
+   de 768px; abaixo de 768px a .ov-tabela com td.nome vira lista de linhas
+   do celular e a barra de massa sobe acima da .ov-barra-inferior. O app não
+   troca de classe nem precisa saber a largura. */
+
+:where(.ov-cartao, .ov-indicador, .ov-indicadores, .ov-pendencias, .ov-pendencias-cab, .ov-pendencia, .ov-pendencias-ver-tudo,
+  .ov-pendencia-estado, .ov-pendencia-texto, .ov-pendencia-titulo, .ov-pendencia-id, .ov-pendencia-contexto, .ov-pendencia-seta,
+  .ov-visao, .ov-chip-filtro, .ov-segmentado, .ov-acoes-massa, .ov-esqueleto, .ov-esqueleto-texto, .ov-esqueleto-linha) {
+  box-sizing: border-box;
+}
+:where(.ov-tabela th, .ov-tabela td, .ov-tabela tr) { box-sizing: border-box; }
+
+/* ---------- Tipografia ---------- */
+.ov-titulo-1 { margin: 0; font: 600 24px/32px var(--font-sans); letter-spacing: -.015em; }
+.ov-titulo-2 { margin: 0; font: 600 20px/28px var(--font-sans); letter-spacing: -.01em; }
+.ov-titulo-3 { margin: 0; font: 600 16px/24px var(--font-sans); }
+.ov-legenda { font-size: 13px; line-height: 18px; color: var(--ov-texto-terciario); }
+.ov-rotulo { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ov-texto-terciario); }
+
+/* ---------- Checkbox e segmentado ---------- */
+.ov-check { width: 18px; height: 18px; accent-color: var(--ov-acao); }
+.ov-segmentado { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--ov-raio-md); background: var(--ov-fundo); border: 1px solid var(--ov-borda-forte); }
+.ov-segmentado button { height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-texto-secundario); font-weight: 500; cursor: pointer; }
+.ov-segmentado button[aria-pressed="true"] { background: var(--ov-superficie-elevada); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+/* Toque: os botões vão aos 48px do livro (eram 30); o segmentado fica com
+   56 (48 + 3 + 3 de recuo + a borda). */
+@media (pointer: coarse) { .ov-segmentado button { min-height: var(--ov-altura-toque); } }
+
+/* ---------- Visões salvas e filtros ---------- */
+/* "+ Filtro" e "Exibir" são .ov-menu da casca. */
+.ov-visoes { display: flex; gap: 4px; flex-wrap: wrap; }
+.ov-visao { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); cursor: pointer; }
+/* Aba de rota (v3.11): a .ov-visao também é um link de navegação, com
+   aria-current="page" na rota aberta, no mesmo desenho da selecionada. O
+   tablist (aria-selected) fica para a visão que filtra a mesma tela. */
+.ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+a.ov-visao { text-decoration: none; }
+.ov-visao .ov-tnum { color: var(--ov-texto-terciario); }
+/* Toque: 48px de altura mínima (eram 32), o alvo do livro. Uma linha de
+   .ov-visoes que quebra ganha outra fileira de 48px, 4px abaixo (o gap vale
+   nas duas direções): 52px a mais por fileira. */
+@media (pointer: coarse) { .ov-visao { min-height: var(--ov-altura-toque); } }
+/* Visões grandes (v3.18): a divisão principal da tela, num controle com cara
+   de cartão, preso sob a barra superior (opaco: os cards não aparecem por
+   baixo; abaixo da barra e dos menus). Partes iguais, divisória de 1px.
+   No botão: ícone e rótulo numa linha, o .ov-rotulo (contagem por extenso)
+   numa linha própria abaixo; o .ov-tnum (o número) só no controle estreito.
+   A selecionada: ov-acao-suave e filete de 2px por sombra interna; rótulo em
+   ov-texto (o ov-acao-texto dá 4,07:1 no tema claro), ícone em
+   ov-acao-texto. O anel de foco fica para dentro: o cartão corta o que passa
+   da borda. */
+.ov-visoes[data-tamanho="grande"] { position: sticky; top: var(--ov-barra-superior); z-index: var(--ov-z-flutuante); display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; box-sizing: border-box; overflow: hidden; container-type: inline-size; container-name: ov-visoes; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-md); background: var(--ov-superficie); }
+.ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: wrap; justify-content: center; align-content: center; gap: 2px 6px; min-width: 0; height: 62px; padding: 0 12px; border-radius: 0; text-align: center; }
+.ov-visoes[data-tamanho="grande"] > .ov-visao svg { flex: 0 0 auto; }
+.ov-visoes[data-tamanho="grande"] > .ov-visao + .ov-visao { border-left: 1px solid var(--ov-borda); }
+.ov-visoes[data-tamanho="grande"] > .ov-visao:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
+.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) { background: var(--ov-acao-suave); color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
+.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) svg { color: var(--ov-acao-texto); }
+.ov-visoes[data-tamanho="grande"] .ov-rotulo { flex: 0 0 100%; color: var(--ov-texto-secundario); }
+.ov-visoes[data-tamanho="grande"] .ov-tnum { display: none; color: var(--ov-texto-secundario); }
+/* A troca olha a largura do próprio controle, não a da janela (v3.18.1): numa
+   coluna estreita no computador (1024 com o painel aberto, ~115px por
+   visão) o subtítulo não cabia nos 64px. O subtítulo pede ~155px de texto e
+   24 de padding; abaixo de 400px de controle (duas visões de 200; a
+   consulta mede sem o contorno, 398) vira o número, e o controle, 56px (54
+   nas visões e 2 do contorno). A altura mora nas visões, porque o
+   contêiner não se consulta a si mesmo. */
+@media (max-width: 767px) {
+  .ov-visoes[data-tamanho="grande"] { top: calc(var(--ov-barra-superior) + env(safe-area-inset-top, 0px)); }
+}
+@container ov-visoes (width < 398px) {
+  .ov-visoes[data-tamanho="grande"] > .ov-visao { flex-wrap: nowrap; height: 54px; padding: 0 8px; }
+  .ov-visoes[data-tamanho="grande"] .ov-rotulo { display: none; }
+  .ov-visoes[data-tamanho="grande"] .ov-tnum { display: inline; }
+}
+.ov-chip-filtro { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--ov-raio-sm); border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font-size: 13px; color: var(--ov-texto); }
+.ov-chip-filtro .campo { color: var(--ov-texto-terciario); }
+.ov-chip-filtro button { width: 22px; height: 22px; display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: var(--ov-texto-terciario); cursor: pointer; }
+
+/* ---------- Contador e progresso ---------- */
+.ov-contador-destaque { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--ov-raio-pill); background: var(--ov-destaque-suave); color: var(--ov-destaque); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ov-progresso { height: 4px; border-radius: var(--ov-raio-pill); background: var(--ov-borda); overflow: hidden; }
+.ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }
+
+/* ---------- Cartões e indicadores ---------- */
+/* Cartão em repouso se separa por borda, não por sombra, nos dois temas
+   (livro da marca; a sombra do tema claro saiu na v3.11). */
+.ov-cartao { background: var(--ov-superficie); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); }
+/* Cartão aberto (v3.11): o registro do painel, com aria-current="true" no
+   cartão. Borda ov-acao e fundo ov-acao-suave sobre a ov-superficie do
+   cartão (a ov-acao-suave é translúcida: vai como imagem, por cima da cor),
+   como a linha selecionada da tabela. O :where deixa a regra fraca: a borda
+   de alerta que o app põe numa classe dele continua vencendo. */
+.ov-cartao:where([aria-current="true"]) { border-color: var(--ov-acao); background-image: linear-gradient(var(--ov-acao-suave), var(--ov-acao-suave)); }
+/* Cartão clicável (v3.12): o cartão que é link ou botão. No hover, o realce
+   do livro, ov-linha-hover, como imagem por cima da ov-superficie (é
+   translúcido: como cor de fundo, deixaria ver a página); a borda não muda.
+   O aberto não muda no hover. Regras fracas (:where), como a do aberto: a
+   borda e o fundo que o app põe numa classe dele continuam vencendo. */
+.ov-cartao:where(a, button:not(:disabled)) { cursor: pointer; }
+.ov-cartao:where(a:hover, button:hover:not(:disabled)):where(:not([aria-current="true"])) { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); }
+.ov-indicador { display: block; padding: 20px; color: inherit; transition: border-color .12s; }
+/* O indicador que é link: o mesmo realce do cartão clicável (v3.12; até a
+   v3.11 a borda ia a ov-borda-forte e escondia a borda de alerta). */
+a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); color: inherit; }
+.ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }
+.ov-indicador-rotulo { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ov-texto-secundario); }
+.ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque); }
+.ov-indicador-valor { margin-top: 8px; font: 600 32px/40px var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.ov-indicador-nota { margin-top: 2px; font-size: 13px; color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
+/* Grade: 4 colunas no computador, 2 de 768 a 1023px, 1 no celular (abaixo).
+   Até 4 indicadores por tela é regra do app. Serve em div ou ul. */
+.ov-indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ov-esp-4); margin: 0; padding: 0; list-style: none; }
+/* Em ul, o item da grade é o li: ele vira flex e o cartão ocupa a altura
+   dele, e os cartões de uma linha ficam da mesma altura (v3.8). Em div, o
+   cartão já é o item da grade e estica sozinho. */
+.ov-indicadores > li { display: flex; min-width: 0; }
+.ov-indicadores > li > .ov-indicador { flex: 1 1 auto; min-width: 0; }
+
+/* ---------- Precisa de você ---------- */
+/* Contêiner: .ov-cartao.ov-pendencias. Dentro, nesta ordem: .ov-pendencias-cab
+   (título, .ov-contador-destaque e o "Ver tudo"), os itens .ov-pendencia
+   (soltos ou numa .ov-pendencias-lista) ou, sem item, o .ov-pendencias-vazio
+   ("Nada pendente com você."). O máximo de 5 é regra do app. */
+.ov-pendencias-cab { display: flex; align-items: center; gap: 8px; padding: 14px 16px; }
+.ov-pendencia { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; border-top: 1px solid var(--ov-borda); }
+.ov-pendencias { display: flex; flex-direction: column; overflow: hidden; color: var(--ov-texto); font: var(--ov-fonte-corpo); }
+.ov-pendencias-lista { margin: 0; padding: 0; list-style: none; }
+/* Item que é link: realce em ov-linha-hover, sem cor de link; o anel de
+   foco fica para dentro, porque o cartão corta o que passa da borda. */
+.ov-pendencias a.ov-pendencia { color: inherit; text-decoration: none; }
+.ov-pendencias a.ov-pendencia:hover { background: var(--ov-linha-hover); }
+.ov-pendencias a.ov-pendencia:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
+/* "Ver tudo": link à direita do cabeçalho. A margem negativa deixa o alvo
+   maior que a linha sem mudar a altura do cabeçalho. */
+.ov-pendencias-ver-tudo { margin: -4px -8px -4px auto; display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 8px; border-radius: var(--ov-raio-sm); color: var(--ov-acao-texto); font: var(--ov-fonte-corpo-forte); text-decoration: none; white-space: nowrap; }
+.ov-pendencias-ver-tudo:hover { color: var(--ov-acao-hover); }
+.ov-pendencias-ver-tudo:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
+.ov-pendencias-vazio { margin: 0; padding: 0 16px 16px; font: var(--ov-fonte-legenda); color: var(--ov-texto-terciario); }
+/* Miolo do item (v3.8): o .ov-estado numa coluna de largura fixa (as
+   palavras alinham), título e contexto em duas linhas, a seta no fim.
+     <a class="ov-pendencia" href="…">
+       <span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span>
+       <span class="ov-pendencia-texto">
+         <span class="ov-pendencia-titulo"><span class="ov-pendencia-id">1234</span>Título</span>
+         <span class="ov-pendencia-contexto">Contexto</span>
+       </span>
+       <svg class="ov-pendencia-seta" aria-hidden="true">…</svg>
+     </a>
+   Item sem link: div.ov-pendencia, sem a seta e sem CSS próprio; o realce
+   e o anel de foco continuam só no a. Identificador, contexto e seta em
+   ov-texto-terciario, a cor de metadado. */
+.ov-pendencia-estado { flex: 0 0 88px; }
+.ov-pendencia-texto { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.ov-pendencia-titulo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ov-pendencia-id { margin-right: 8px; font-weight: 400; font-size: 12px; line-height: 16px; font-family: var(--font-mono); color: var(--ov-texto-terciario); }
+.ov-pendencia-contexto { font-size: 12px; line-height: 16px; color: var(--ov-texto-terciario); }
+.ov-pendencia-seta { flex: 0 0 auto; color: var(--ov-texto-terciario); }
+@media (pointer: coarse) {
+  .ov-pendencias-ver-tudo { height: var(--ov-altura-toque); margin-top: -12px; margin-bottom: -12px; }
+}
+
+/* ---------- Tabela ---------- */
+.ov-tabela { width: 100%; border-collapse: collapse; }
+.ov-tabela th { height: 36px; padding: 0 12px; text-align: left; font-size: 12px; font-weight: 500; color: var(--ov-texto-terciario); border-bottom: 1px solid var(--ov-borda); white-space: nowrap; }
+.ov-tabela td { height: var(--ov-linha-tabela); padding: 0 12px; border-bottom: 1px solid var(--ov-borda); white-space: nowrap; }
+.ov-tabela tbody tr:hover { background: var(--ov-linha-hover); }
+.ov-tabela tbody tr[aria-selected="true"] { background: var(--ov-acao-suave); box-shadow: inset 2px 0 0 var(--ov-acao); }
+.ov-tabela .num { text-align: right; font-variant-numeric: tabular-nums; }
+.ov-tabela .nome { font-weight: 500; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+/* Numa tela larga (v3.16.0), a partir de 1024px, o nome perde o teto de
+   320px e fica com o espaço que sobra; números e datas, no tamanho natural
+   (nowrap). Abaixo de 1024px o atributo não muda nada. */
+@media (min-width: 1024px) { .ov-tela[data-largura="larga"] .ov-tabela .nome { max-width: none; } }
+.ov-tabela .meta { color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
+.ov-tabela[data-densidade="compacta"] td { height: 36px; }
+.ov-tabela[data-densidade="conforto"] td { height: 56px; }
+/* O que só a lista do celular mostra (v3.11): o rótulo de um número solto,
+   onde o cabeçalho sai ("12 atividades"). O par, .ov-fora-do-celular, some
+   na lista e fica de 768px para cima, no tablet também (abaixo). */
+.ov-tabela .ov-so-no-celular { display: none; }
+/* A ação da linha (v3.18.2): data-abre-linha marca o botão ou link da célula
+   que faz o mesmo que clicar na linha (abrir o painel ou ir ao registro). Ele
+   não sublinha, nem no hover. Um link de célula que leva a outro lugar não
+   leva o atributo e continua sublinhando. O td dá a especificidade (0,2,1)
+   que vence o hover:underline (0,2,0) de um Tailwind sem camada que entra
+   depois do pacote (o 3 do Paradas); sem !important. */
+.ov-tabela td [data-abre-linha] { text-decoration: none; }
+
+/* ---------- Barra de ações em massa ---------- */
+.ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
+/* data-flutuante: a posição e a entrada. Centrada, 24px acima do rodapé (e
+   da área segura), em ov-fundo-barra sem desfoque; entra subindo 12px em
+   180ms. Sem o atributo, a caixa fica onde o app a puser, como até a v3.6.
+   Com ela na tela, a .ov-toasts leva data-com-barra (janelas.css). */
+.ov-acoes-massa[data-flutuante] { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: var(--ov-z-flutuante); width: max-content; max-width: calc(100vw - 32px); transform: translateX(-50%); white-space: nowrap; background: var(--ov-fundo-barra); color: var(--ov-texto); font: var(--ov-fonte-corpo-forte); animation: ovSobeCentro .18s cubic-bezier(.32,.72,0,1); }
+@keyframes ovSobeCentro { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+/* Toque (v3.13): os botões vão a 48px e a caixa, com a borda de 1px dentro
+   (border-box), passa a 50 para contê-los; com 48 eles passavam 1px em
+   cima e embaixo, por cima da borda. */
+@media (pointer: coarse) { .ov-acoes-massa { height: calc(var(--ov-altura-toque) + 2px); } }
+
+/* ---------- Esqueleto ---------- */
+/* Carregando no formato da tela, sem spinner. .ov-esqueleto é o bloco (o
+   app dá a altura; 48px sem ela), .ov-esqueleto-texto uma linha de texto de
+   corpo (o app dá a largura) e .ov-esqueleto-linha uma linha de tabela com
+   as linhas de texto dentro. Também serve uma <tr> da .ov-tabela com um
+   .ov-esqueleto-texto por célula. O esqueleto leva aria-hidden e o
+   contêiner aria-busy="true"; a animação é só de opacidade. */
+.ov-esqueleto, .ov-esqueleto-texto { display: block; background: var(--ov-item-ativo); animation: ovPulso 1.2s ease-in-out infinite alternate; }
+.ov-esqueleto { min-height: 48px; border-radius: var(--ov-raio-md); }
+.ov-esqueleto-texto { height: 12px; margin: 4px 0; border-radius: var(--ov-raio-sm); }
+.ov-esqueleto-linha { display: flex; align-items: center; gap: 12px; height: var(--ov-linha-tabela); padding: 0 12px; border-bottom: 1px solid var(--ov-borda); }
+.ov-esqueleto-linha > .ov-esqueleto-texto { flex: 1; margin: 0; }
+@keyframes ovPulso { from { opacity: 1; } to { opacity: .5; } }
+
+/* ---------- 768 a 1023px: indicadores em 2 colunas ---------- */
+@media (max-width: 1023px) {
+  .ov-indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Abaixo de 768px: lista de linhas do celular ---------- */
+/* A .ov-tabela com uma célula td.nome vira lista: linha de 64px ou mais, o
+   nome em cima, em 16px, e as outras células numa linha de legenda,
+   separadas por "·". O cabeçalho sai da tela e continua para o leitor de
+   tela. A célula com .ov-check fica à esquerda, no meio da linha. A marcação
+   é a do computador; a .nome na célula do nome já era a classe da coluna.
+   Tabela sem td.nome (as da plataforma até a v3.6) fica como estava: rola de
+   lado. Navegador sem :has() também. */
+@media (max-width: 767px) {
+  .ov-indicadores { grid-template-columns: minmax(0, 1fr); }
+
+  .ov-tabela:has(td.nome), .ov-tabela:has(td.nome) tbody { display: block; }
+  .ov-tabela:has(td.nome) thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ov-tabela:has(td.nome) tbody tr { position: relative; display: flex; flex-wrap: wrap; align-items: baseline; align-content: center; row-gap: 2px; min-height: 64px; padding: 8px 16px; border-bottom: 1px solid var(--ov-borda); font: var(--ov-fonte-legenda); color: var(--ov-texto-terciario); }
+  .ov-tabela:has(td.nome) td { display: block; height: auto; padding: 0; border-bottom: 0; white-space: normal; }
+  .ov-tabela:has(td.nome) td:empty { display: none; }
+  .ov-tabela:has(td.nome) td.nome { order: -1; flex: 1 0 100%; min-width: 0; max-width: none; white-space: nowrap; font: var(--ov-fonte-corpo-grande); font-weight: 500; color: var(--ov-texto); }
+  .ov-tabela:has(td.nome) td:not(.nome, :empty, :has(.ov-check)) ~ td:not(.nome, :empty, :has(.ov-check))::before { content: "·"; content: "·" / ""; padding: 0 6px; }
+  .ov-tabela:has(td.nome) tbody tr:has(.ov-check) { padding-left: 46px; }
+  .ov-tabela:has(td.nome) td:has(.ov-check) { position: absolute; left: 16px; top: 50%; display: flex; transform: translateY(-50%); }
+  .ov-tabela:has(td.nome) .ov-so-no-celular { display: inline; }
+  .ov-tabela:has(td.nome) .ov-fora-do-celular { display: none; }
+
+  .ov-esqueleto-linha { height: auto; min-height: 64px; padding: 0 16px; }
+
+  /* Acima da .ov-barra-inferior, quando a casca tem uma. */
+  .ov-casca:has(.ov-barra-inferior) .ov-acoes-massa[data-flutuante] { bottom: calc(var(--ov-barra-inferior) + env(safe-area-inset-bottom, 0px) + 24px); }
+}
+
+/* ---------- Movimento reduzido ---------- */
+/* A barra não sobe: só aparece (ovFade, da casca), já no lugar. O
+   esqueleto não pulsa. */
+@media (prefers-reduced-motion: reduce) {
+  .ov-acoes-massa[data-flutuante] { animation-name: ovFade; }
+  .ov-esqueleto, .ov-esqueleto-texto { animation: none; }
+}

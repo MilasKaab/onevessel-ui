@@ -113,7 +113,8 @@ test('os outros CSS com os bytes da v3.15.0', () => {
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
     tokens: '28569ab7f0be7c421d0db9bbd69eae4127d1c6f12d938fa503d88e6aa79805be',
   };
-  const FIXTURE = { telas: 'v3.15.1', tokens: 'v3.15.1', janelas: 'v3.16.0' };
+  // Os que a v3.19.0 muda (controles) são a fixture da v3.18.2.
+  const FIXTURE = { telas: 'v3.15.1', tokens: 'v3.15.1', janelas: 'v3.16.0', controles: 'v3.18.2' };
   for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(FIXTURE[nome] ? `test/fixtures/${nome}-${FIXTURE[nome]}.css` : `css/${nome}.css`), sha, nome);
 });
 
@@ -142,11 +143,13 @@ test('núcleo: o botão em cada estado traz o texto, igual ao rótulo', () => {
   assert.match(ler('js/lateral-nucleo.d.ts'), /texto: string;/);
 });
 
-test('exemplo: rodapé na ordem (filete, botão com texto, conta) nos dois temas, e o script troca o texto', () => {
+// Desde a v3.19.0 (C26, L8) a conta saiu do rodapé da lateral: o botão é o
+// último item, e o exemplo segue a regra.
+test('exemplo: rodapé na ordem (filete, botão com texto) nos dois temas, e o script troca o texto', () => {
   const rodape = '<div class="ov-lateral-rodape">\n'
     + '            <div class="ov-lateral-grupo"></div>\n'
     + '            <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>\n'
-    + '            <button class="ov-conta" ';
+    + '          </div>';
   for (const tema of ['escuro', 'claro']) {
     const i = exemplo.indexOf(`<div class="moldura" data-theme="${tema}">`);
     assert.ok(i > 0, tema);
@@ -206,7 +209,8 @@ const medir = async (largura, recolhida) => {
 const todosNoEixo = (medidas, rotulo) => {
   assert.equal(medidas.length, 2, rotulo);
   for (const itens of medidas) {
-    assert.ok(itens.length >= 10, rotulo);
+    // 9 desde a v3.19.0: a conta saiu do rodapé (C26).
+    assert.ok(itens.length >= 9, rotulo);
     const eixo = itens[0].centro;
     for (const { item, centro } of itens) assert.ok(Math.abs(centro - eixo) <= 1, `${rotulo}: ${item} a ${centro}px, eixo a ${eixo}px`);
   }

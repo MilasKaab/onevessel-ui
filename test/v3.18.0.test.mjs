@@ -80,7 +80,8 @@ test('os outros CSS com os bytes da v3.17.0', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  const DE = { janelas: 'test/fixtures/janelas-v3.18.0.css' };
+  // Os que a v3.19.0 muda (casca, tokens, controles) são as fixtures da v3.18.2.
+  const DE = { janelas: 'test/fixtures/janelas-v3.18.0.css', casca: 'test/fixtures/casca-v3.18.2.css', tokens: 'test/fixtures/tokens-v3.18.2.css', controles: 'test/fixtures/controles-v3.18.2.css' };
   for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(DE[nome] ?? `css/${nome}.css`), sha, nome);
   assert.equal(sha256('test/fixtures/telas-v3.18.0.css'), '8dd002efe39253a1c601a458dce50bae472d8d92bee6d82bbacadff5f8ad56f4');
   assert.equal(sha256('test/fixtures/telas-v3.17.0.css'), '3eed809d323ba240d4e8065fe31447bd0ddf3f5c6f52a43825e8a97575390fe0');
@@ -134,7 +135,7 @@ test('abaixo de 768px: 56px, top somando a área segura, o número no lugar do t
   assert.deepEqual(declaracoesEm(telas, CELULAR, ROTULO), ['display: none']);
   assert.deepEqual(declaracoesEm(telas, CELULAR, NUMERO), ['display: inline']);
   // A mesma altura do .ov-cabecalho-movel, que leva a área segura.
-  assert.match(declaracoesEm(ler('css/casca.css'), '', '.ov-cabecalho-movel').join('; '), /height: calc\(var\(--ov-barra-superior\) \+ env\(safe-area-inset-top, 0px\)\)/);
+  assert.match(declaracoesEm(ler('test/fixtures/casca-v3.18.2.css'), '', '.ov-cabecalho-movel').join('; '), /height: calc\(var\(--ov-barra-superior\) \+ env\(safe-area-inset-top, 0px\)\)/);
 });
 
 // ---------- Contraste, pelos tokens, nos dois temas ----------

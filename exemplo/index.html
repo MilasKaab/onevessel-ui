@@ -77,10 +77,17 @@
      botão da célula sem a cara de botão, como nos apps. */
   .hover\:underline:hover { text-decoration-line: underline; }
   .acao-linha .ov-tabela button { padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  /* v3.19.0: o botão com o motivo escrito embaixo (no toque), a barra de
+     progresso em segmentos e a grade dos seis filetes. */
+  .botao-com-motivo { display: inline-flex; flex-direction: column; align-items: flex-start; }
+  .progresso-segmentos { display: flex; }
+  .progresso-segmentos > span { border-radius: 0; }
+  .estados-moldura .ov-indicadores { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
 <body>
+<a class="ov-pular" href="#exemplo-inicio">Pular para o conteúdo</a>
 
 <header class="topo">
   <div class="amostra">
@@ -96,18 +103,19 @@
 <main class="pagina">
 
   <section class="secao">
-    <h2 class="ov-titulo-1">Casca</h2>
-    <p class="ov-legenda">Mude a largura da janela: lateral de 240px a partir de 1024px, recolhida em 56px de 768 a 1023px, e cabeçalho com barra inferior abaixo de 768px. A partir de 1024px, o botão no rodapé da lateral, primeiro item depois do filete e acima da conta, recolhe e expande (v3.15.0; com texto desde a v3.15.1): a escolha fica no aparelho, em <code class="ov-codigo">ov-lateral</code>, e vale para as duas cascas.</p>
+    <h2 class="ov-titulo-1" id="exemplo-inicio" tabindex="-1">Casca</h2>
+    <p class="ov-legenda">Mude a largura da janela: lateral de 240px a partir de 1024px, recolhida em 56px de 768 a 1023px, e cabeçalho com barra inferior abaixo de 768px. A partir de 1024px, o botão no rodapé da lateral, depois do filete, recolhe e expande (v3.15.0; com texto desde a v3.15.1): a escolha fica no aparelho, em <code class="ov-codigo">ov-lateral</code>, e vale para as duas cascas. Desde a v3.19.0 a conta mora só na barra superior a partir de 768px (C26, L8): o rodapé da lateral fica só com o Recolher. Com o foco por teclado (Tab) na moldura, aparece primeiro o "Pular para o conteúdo" (<code class="ov-codigo">.ov-pular</code>), que leva ao h1 da tela.</p>
 
     <p class="ov-rotulo moldura-rotulo">Bordo · tema escuro · vários navios (seletor com seta)</p>
     <div class="moldura" data-theme="escuro">
+      <a class="ov-pular" href="#tela-conveses-escuro">Pular para o conteúdo</a>
       <div class="ov-casca">
         <nav class="ov-lateral" aria-label="Bordo">
           <div class="ov-lateral-marca">
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <button class="ov-seletor-embarcacao" type="button" aria-haspopup="menu" aria-expanded="false" title="Embarcação: Bram Power"><i data-icone="anchor"></i><span class="ov-lateral-texto">Bram Power</span></button>
@@ -126,7 +134,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -145,7 +152,7 @@
             </div>
           </header>
           <main class="ov-tela">
-            <h1 class="ov-titulo-1">Conveses</h1>
+            <h1 class="ov-titulo-1" id="tela-conveses-escuro" tabindex="-1">Conveses</h1>
             <div class="ov-somente-leitura"><i data-icone="eye"></i>Somente leitura: seu perfil pode ver, mas não alocar leitos.</div>
             <div class="cartao"><p style="margin:0">22 de 49 leitos ocupados no convés principal.</p></div>
             <div class="cartao ov-vazio">
@@ -167,6 +174,7 @@
 
     <p class="ov-rotulo moldura-rotulo" style="margin-top: var(--ov-esp-6)">Paradas · tema claro · um navio só (seletor fixo) · com fila offline</p>
     <div class="moldura" data-theme="claro">
+      <a class="ov-pular" href="#tela-dia-claro">Pular para o conteúdo</a>
       <div class="ov-casca">
         <nav class="ov-lateral" aria-label="Paradas">
           <div class="ov-lateral-marca">
@@ -189,7 +197,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -210,7 +217,7 @@
           </header>
           <div class="ov-faixa"><i data-icone="refresh-cw"></i>2 alterações não subiram. Elas sobem quando a conexão voltar.</div>
           <main class="ov-tela">
-            <h1 class="ov-titulo-1">12/10</h1>
+            <h1 class="ov-titulo-1" id="tela-dia-claro" tabindex="-1">12/10</h1>
             <div class="cartao"><p style="margin:0">38 serviços, 6 em andamento.</p></div>
           </main>
           <nav class="ov-barra-inferior" aria-label="Paradas">
@@ -295,7 +302,7 @@
 
   <section class="secao">
     <h2 class="ov-titulo-1">Botões e campos</h2>
-    <p class="ov-legenda">Do controles.css: botões de 36px no computador e 48px no toque (o pequeno também); campo de 44px com texto de 16px, fundo recuado dentro e fora do cartão e o anel único no foco; rótulo, ajuda e erro (com o CircleAlert de 16px); o textarea, com a altura pelo rows; o campo de linha (data-densidade="linha"), com 36px e 14px no computador e o campo de 44 no toque; o segmentado com 48px no toque; e o cartão clicável (botão e link), com o realce no hover, e o aberto, que não muda.</p>
+    <p class="ov-legenda">Do controles.css: botões de 36px no computador e 48px no toque (o pequeno também); campo de 44px com texto de 16px, fundo recuado dentro e fora do cartão e o anel único no foco; rótulo, ajuda e erro (com o CircleAlert de 16px); o textarea, com a altura pelo rows; o campo de linha (data-densidade="linha"), com 36px e 14px no computador; no toque, campo e campo de linha com 48px (v3.19.0, C30); o segmentado com 48px no toque; o botão só de ícone com o ícone de 18px do pacote (v3.19.0, C17); o desabilitado a 0,6, com o motivo no title e, no toque, escrito abaixo (.ov-motivo); o "Salvando…" (aria-busy, com as .ov-reticencias), que não fica desabilitado; e o cartão clicável (botão e link), com o realce no hover, e o aberto, que não muda.</p>
 
     <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
     <div class="controles-moldura" data-theme="escuro">
@@ -305,7 +312,9 @@
         <button class="ov-btn ov-btn-fantasma" type="button">Exportar</button>
         <button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Imprimir" title="Imprimir"><i data-icone="printer"></i></button>
         <button class="ov-btn ov-btn-secundario ov-btn-sm" type="button">Embarcar</button>
-        <button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha a embarcação">Aprovar</button>
+        <span class="botao-com-motivo"><button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha a embarcação" aria-describedby="motivo-aprovar-escuro">Aprovar</button><span class="ov-motivo" id="motivo-aprovar-escuro">Preencha a embarcação</span></span>
+        <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-secundario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
       </div>
       <div class="grade">
         <div class="ov-campo-grupo">
@@ -357,7 +366,9 @@
         <button class="ov-btn ov-btn-fantasma" type="button">Exportar</button>
         <button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Imprimir" title="Imprimir"><i data-icone="printer"></i></button>
         <button class="ov-btn ov-btn-secundario ov-btn-sm" type="button">Embarcar</button>
-        <button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha a embarcação">Aprovar</button>
+        <span class="botao-com-motivo"><button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha a embarcação" aria-describedby="motivo-aprovar-claro">Aprovar</button><span class="ov-motivo" id="motivo-aprovar-claro">Preencha a embarcação</span></span>
+        <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-secundario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
       </div>
       <div class="grade">
         <div class="ov-campo-grupo">
@@ -539,20 +550,21 @@
 
   <section class="secao">
     <h2 class="ov-titulo-1">Telas</h2>
-    <p class="ov-legenda">Precisa de você (com o miolo do item: estado, identificador, título, contexto e seta; o último sem link), indicadores em 4/2/1 colunas, visões (tablist) e abas de rota (link com aria-current), cartões com o aberto (aria-current), tabela (abaixo de 768px, lista de linhas: a tabela tem td.nome, o rótulo .ov-so-no-celular aparece e a coluna .ov-fora-do-celular some), esqueleto e barra de ações em massa flutuante (data-flutuante). Cada moldura faz o papel da tela.</p>
+    <p class="ov-legenda">Precisa de você (desde a v3.19.0 com as tags Urgente e Atenção, ponto e contagem, no cabeçalho, e o filete reto de 2px na cor da tag em cada item; o miolo do item: estado, identificador, título, contexto e seta; o último sem link), indicadores em 4/2/1 colunas, visões (tablist) e abas de rota (link com aria-current), a selecionada com ov-acao-suave, contorno ov-acao e rótulo 600 (v3.19.0), cartões com o aberto (aria-current), tabela (abaixo de 768px, lista de linhas: a tabela tem td.nome, o rótulo .ov-so-no-celular aparece e a coluna .ov-fora-do-celular some), esqueleto e barra de ações em massa flutuante (data-flutuante). Cada moldura faz o papel da tela.</p>
 
     <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
     <div class="telas-moldura" data-theme="escuro">
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv-escuro">
         <div class="ov-pendencias-cab">
           <h2 class="ov-titulo-3" id="pv-escuro">Precisa de você</h2>
-          <span class="ov-contador-destaque">3</span>
+          <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">1</span></span>
+          <span class="ov-tag" data-tom="atencao"><span class="ov-tag-ponto"></span>Atenção <span class="ov-tnum">2</span></span>
           <a class="ov-pendencias-ver-tudo" href="#">Ver tudo</a>
         </div>
         <ul class="ov-pendencias-lista">
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
-          <li><div class="ov-pendencia"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
+          <li><a class="ov-pendencia" href="#" data-tom="erro"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><a class="ov-pendencia" href="#" data-tom="atencao"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><div class="ov-pendencia" data-tom="atencao"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
         </ul>
       </section>
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv0-escuro">
@@ -596,13 +608,14 @@
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv-claro">
         <div class="ov-pendencias-cab">
           <h2 class="ov-titulo-3" id="pv-claro">Precisa de você</h2>
-          <span class="ov-contador-destaque">3</span>
+          <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">1</span></span>
+          <span class="ov-tag" data-tom="atencao"><span class="ov-tag-ponto"></span>Atenção <span class="ov-tnum">2</span></span>
           <a class="ov-pendencias-ver-tudo" href="#">Ver tudo</a>
         </div>
         <ul class="ov-pendencias-lista">
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
-          <li><a class="ov-pendencia" href="#"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
-          <li><div class="ov-pendencia"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
+          <li><a class="ov-pendencia" href="#" data-tom="erro"><span class="ov-estado ov-pendencia-estado" data-tom="erro">Urgente</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo"><span class="ov-pendencia-id">4521</span>Report urgente da Oceaneering</span><span class="ov-pendencia-contexto">aberto há 2h · equipe a bordo</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><a class="ov-pendencia" href="#" data-tom="atencao"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">João Pereira sem leito</span><span class="ov-pendencia-contexto">embarcou hoje, 08:10</span></span><i class="ov-pendencia-seta" data-icone="chevron-right"></i></a></li>
+          <li><div class="ov-pendencia" data-tom="atencao"><span class="ov-estado ov-pendencia-estado" data-tom="atencao">Atenção</span><span class="ov-pendencia-texto"><span class="ov-pendencia-titulo">Desembarque previsto de Ana Lima</span><span class="ov-pendencia-contexto">era 16/10 · sem link: quem resolve é o painel</span></span></div></li>
         </ul>
       </section>
       <section class="ov-cartao ov-pendencias" aria-labelledby="pv0-claro">
@@ -639,6 +652,111 @@
         </div>
       </div>
       <div class="ov-acoes-massa" data-flutuante role="toolbar" aria-label="1 selecionada"><span>1 selecionada</span><button class="ov-btn ov-btn-secundario ov-btn-sm" type="button">Embarcar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Limpar seleção" title="Limpar seleção">✕</button></div>
+    </div>
+  </section>
+
+  <section class="secao estados-tags">
+    <h2 class="ov-titulo-1">Estados, tags e filetes</h2>
+    <p class="ov-legenda">Livro v4 (v3.19.0): ponto + palavra para o estado de fluxo (Em andamento no amarelo, só no ponto); tag pastel (.ov-tag, cinco tons; sem data-tom, neutra), com ponto e contagem só no cabeçalho do "Precisa de você"; a tag forte do Crítico, com o ícone; o contador de pendências, com o texto em ov-destaque-texto (os apps trocam pelas tags ao adotar); a barra de progresso em segmentos com as cores dos status; os seis filetes do indicador (3px, por sombra interna) e o indicador em alerta com filete, a borda laranja convivendo com ele; e a tabela larga numa .ov-rolagem: entre 768 e 1023px as colunas data-some-no-tablet (Encerrada em, Encerrada por) saem, e o que ainda transborda rola de lado, com a sombra na borda que tem conteúdo escondido, que some no fim da rolagem.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
+    <div class="controles-moldura estados-moldura" data-theme="escuro">
+      <div class="linha">
+        <span class="ov-estado" data-tom="neutro">Aguardando PTW</span>
+        <span class="ov-estado" data-tom="info">Não iniciado</span>
+        <span class="ov-estado" data-tom="andamento">Em andamento há 3h10</span>
+        <span class="ov-estado" data-tom="erro">Suspensa</span>
+        <span class="ov-estado" data-tom="sucesso">Executada às 14:20</span>
+      </div>
+      <div class="linha">
+        <span class="ov-tag" data-tom="info">A bordo</span>
+        <span class="ov-tag" data-tom="neutro">Em terra</span>
+        <span class="ov-tag">Arquivada</span>
+        <span class="ov-tag" data-tom="atencao">Jornada: faltam 2h</span>
+        <span class="ov-tag" data-tom="erro">Jornada excedida</span>
+        <span class="ov-tag" data-tom="sucesso">Liberada</span>
+        <span class="ov-tag" data-tom="critico"><i data-icone="triangle-alert"></i>Crítico</span>
+      </div>
+      <div class="linha">
+        <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">2</span></span>
+        <span class="ov-tag" data-tom="atencao"><span class="ov-tag-ponto"></span>Atenção <span class="ov-tnum">5</span></span>
+        <span class="ov-tag" data-tom="info"><span class="ov-tag-ponto"></span>A bordo <span class="ov-tnum">30</span></span>
+        <span class="ov-tag" data-tom="sucesso"><span class="ov-tag-ponto"></span>Executadas <span class="ov-tnum">12</span></span>
+        <span class="ov-tag"><span class="ov-tag-ponto"></span>Em terra <span class="ov-tnum">19</span></span>
+        <span class="ov-contador-destaque">3</span>
+      </div>
+      <div class="ov-progresso progresso-segmentos" role="img" aria-label="12 executadas, 3 em andamento, 7 não iniciadas, 1 suspensa, 4 aguardando PTW">
+        <span style="width: 44.4%; --estado-cor: var(--ov-sucesso)"></span><span style="width: 11.1%; --estado-cor: var(--ov-status-andamento)"></span><span style="width: 25.9%; --estado-cor: var(--ov-info)"></span><span style="width: 3.8%; --estado-cor: var(--ov-erro)"></span><span style="width: 14.8%; --estado-cor: var(--ov-neutro)"></span>
+      </div>
+      <div class="ov-indicadores">
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro"><div class="ov-indicador-rotulo">Aguardando chegada</div><div class="ov-indicador-valor">4</div><div class="ov-indicador-nota">filete neutro</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="info"><div class="ov-indicador-rotulo">Não iniciadas</div><div class="ov-indicador-valor">7</div><div class="ov-indicador-nota">filete info</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="andamento"><div class="ov-indicador-rotulo">Em andamento</div><div class="ov-indicador-valor">3</div><div class="ov-indicador-nota">filete andamento</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="atencao"><div class="ov-indicador-rotulo">Aguardando PTW</div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota">filete atencao</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="erro"><div class="ov-indicador-rotulo">Suspensas</div><div class="ov-indicador-valor">1</div><div class="ov-indicador-nota">filete erro</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="sucesso"><div class="ov-indicador-rotulo">Executadas</div><div class="ov-indicador-valor">12</div><div class="ov-indicador-nota">filete sucesso</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito<span class="ov-indicador-alerta">Atenção</span></div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota">em alerta, com o filete neutro</div></a>
+      </div>
+      <div class="ov-cartao ov-rolagem">
+        <table class="ov-tabela" aria-label="Histórico de paradas">
+          <thead><tr><th>Nome</th><th>Data da TT</th><th class="num">Atividades</th><th class="num">Executadas</th><th class="num">Executado</th><th class="num">Canceladas</th><th class="num">Não concluídas</th><th data-some-no-tablet>Encerrada em</th><th data-some-no-tablet>Encerrada por</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td class="nome">Parada de outubro</td><td class="meta">12/10/2026</td><td class="num">48</td><td class="num">41</td><td class="num">85,4%</td><td class="num">3</td><td class="num">4</td><td class="meta" data-some-no-tablet>20/10/2026 18:00</td><td data-some-no-tablet>Ana Souza</td><td>Troca do guincho de popa e revisão dos geradores</td></tr>
+            <tr><td class="nome">Parada de setembro</td><td class="meta">08/09/2026</td><td class="num">36</td><td class="num">36</td><td class="num">100,0%</td><td class="num">0</td><td class="num">0</td><td class="meta" data-some-no-tablet>15/09/2026 09:00</td><td data-some-no-tablet>Carlos Lima</td><td>Sem pendências</td></tr>
+            <tr><td class="nome">Parada de agosto</td><td class="meta">04/08/2026</td><td class="num">52</td><td class="num">44</td><td class="num">84,6%</td><td class="num">5</td><td class="num">3</td><td class="meta" data-some-no-tablet>12/08/2026 17:30</td><td data-some-no-tablet>Ana Souza</td><td>Duas atividades ficaram para a próxima parada</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tema claro</p>
+    <div class="controles-moldura estados-moldura" data-theme="claro">
+      <div class="linha">
+        <span class="ov-estado" data-tom="neutro">Aguardando PTW</span>
+        <span class="ov-estado" data-tom="info">Não iniciado</span>
+        <span class="ov-estado" data-tom="andamento">Em andamento há 3h10</span>
+        <span class="ov-estado" data-tom="erro">Suspensa</span>
+        <span class="ov-estado" data-tom="sucesso">Executada às 14:20</span>
+      </div>
+      <div class="linha">
+        <span class="ov-tag" data-tom="info">A bordo</span>
+        <span class="ov-tag" data-tom="neutro">Em terra</span>
+        <span class="ov-tag">Arquivada</span>
+        <span class="ov-tag" data-tom="atencao">Jornada: faltam 2h</span>
+        <span class="ov-tag" data-tom="erro">Jornada excedida</span>
+        <span class="ov-tag" data-tom="sucesso">Liberada</span>
+        <span class="ov-tag" data-tom="critico"><i data-icone="triangle-alert"></i>Crítico</span>
+      </div>
+      <div class="linha">
+        <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">2</span></span>
+        <span class="ov-tag" data-tom="atencao"><span class="ov-tag-ponto"></span>Atenção <span class="ov-tnum">5</span></span>
+        <span class="ov-tag" data-tom="info"><span class="ov-tag-ponto"></span>A bordo <span class="ov-tnum">30</span></span>
+        <span class="ov-tag" data-tom="sucesso"><span class="ov-tag-ponto"></span>Executadas <span class="ov-tnum">12</span></span>
+        <span class="ov-tag"><span class="ov-tag-ponto"></span>Em terra <span class="ov-tnum">19</span></span>
+        <span class="ov-contador-destaque">3</span>
+      </div>
+      <div class="ov-progresso progresso-segmentos" role="img" aria-label="12 executadas, 3 em andamento, 7 não iniciadas, 1 suspensa, 4 aguardando PTW">
+        <span style="width: 44.4%; --estado-cor: var(--ov-sucesso)"></span><span style="width: 11.1%; --estado-cor: var(--ov-status-andamento)"></span><span style="width: 25.9%; --estado-cor: var(--ov-info)"></span><span style="width: 3.8%; --estado-cor: var(--ov-erro)"></span><span style="width: 14.8%; --estado-cor: var(--ov-neutro)"></span>
+      </div>
+      <div class="ov-indicadores">
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro"><div class="ov-indicador-rotulo">Aguardando chegada</div><div class="ov-indicador-valor">4</div><div class="ov-indicador-nota">filete neutro</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="info"><div class="ov-indicador-rotulo">Não iniciadas</div><div class="ov-indicador-valor">7</div><div class="ov-indicador-nota">filete info</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="andamento"><div class="ov-indicador-rotulo">Em andamento</div><div class="ov-indicador-valor">3</div><div class="ov-indicador-nota">filete andamento</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="atencao"><div class="ov-indicador-rotulo">Aguardando PTW</div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota">filete atencao</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="erro"><div class="ov-indicador-rotulo">Suspensas</div><div class="ov-indicador-valor">1</div><div class="ov-indicador-nota">filete erro</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="sucesso"><div class="ov-indicador-rotulo">Executadas</div><div class="ov-indicador-valor">12</div><div class="ov-indicador-nota">filete sucesso</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito<span class="ov-indicador-alerta">Atenção</span></div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota">em alerta, com o filete neutro</div></a>
+      </div>
+      <div class="ov-cartao ov-rolagem">
+        <table class="ov-tabela" aria-label="Histórico de paradas">
+          <thead><tr><th>Nome</th><th>Data da TT</th><th class="num">Atividades</th><th class="num">Executadas</th><th class="num">Executado</th><th class="num">Canceladas</th><th class="num">Não concluídas</th><th data-some-no-tablet>Encerrada em</th><th data-some-no-tablet>Encerrada por</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td class="nome">Parada de outubro</td><td class="meta">12/10/2026</td><td class="num">48</td><td class="num">41</td><td class="num">85,4%</td><td class="num">3</td><td class="num">4</td><td class="meta" data-some-no-tablet>20/10/2026 18:00</td><td data-some-no-tablet>Ana Souza</td><td>Troca do guincho de popa e revisão dos geradores</td></tr>
+            <tr><td class="nome">Parada de setembro</td><td class="meta">08/09/2026</td><td class="num">36</td><td class="num">36</td><td class="num">100,0%</td><td class="num">0</td><td class="num">0</td><td class="meta" data-some-no-tablet>15/09/2026 09:00</td><td data-some-no-tablet>Carlos Lima</td><td>Sem pendências</td></tr>
+            <tr><td class="nome">Parada de agosto</td><td class="meta">04/08/2026</td><td class="num">52</td><td class="num">44</td><td class="num">84,6%</td><td class="num">5</td><td class="num">3</td><td class="meta" data-some-no-tablet>12/08/2026 17:30</td><td data-some-no-tablet>Ana Souza</td><td>Duas atividades ficaram para a próxima parada</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -686,7 +804,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -696,7 +814,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -732,7 +849,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -742,7 +859,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -778,7 +894,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -788,7 +904,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -825,7 +940,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -835,7 +950,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -903,7 +1017,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -913,7 +1027,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -981,7 +1094,7 @@
             <i data-icone="ship"></i>
             <div class="ov-lateral-marca-texto">
               <span class="ov-lateral-marca-nome">Bordo</span>
-              <span class="ov-lateral-marca-sub">Conveses, embarque e despacho</span>
+              <span class="ov-lateral-marca-sub">Pessoas e acomodação</span>
             </div>
           </div>
           <div class="ov-lateral-grupo">Bordo</div>
@@ -991,7 +1104,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -1047,7 +1159,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -1099,7 +1210,6 @@
           <div class="ov-lateral-rodape">
             <div class="ov-lateral-grupo"></div>
             <button class="ov-lateral-alternar" type="button" aria-expanded="true" aria-label="Recolher barra lateral" title="Recolher barra lateral"><i data-icone="panel-left-close"></i><span class="ov-lateral-texto">Recolher barra lateral</span></button>
-            <button class="ov-conta" type="button" aria-haspopup="menu" aria-expanded="false" title="Ana Souza"><i data-icone="circle-user"></i><span class="ov-lateral-texto">Ana Souza</span></button>
           </div>
         </nav>
         <div class="ov-conteudo">
@@ -1264,6 +1374,7 @@
     'chevron-up': '<path d="m18 15-6-6-6 6"/>',
     'chevron-down': '<path d="m6 9 6 6 6-6"/>',
     'chevron-right': '<path d="m9 18 6-6-6-6"/>',
+    'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
     'circle-alert': '<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>',
     lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     'panel-left-close': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/>',
@@ -1310,6 +1421,7 @@
     'ov-fundo', 'ov-superficie', 'ov-borda', 'ov-texto', 'ov-texto-secundario',
     'ov-acao', 'ov-acao-hover', 'ov-foco', 'ov-destaque', 'ov-marca-azul', 'ov-marca-laranja',
     'ov-sucesso', 'ov-atencao', 'ov-erro', 'ov-neutro',
+    'ov-status-andamento', 'ov-critico', 'ov-destaque-texto',
   ]
   const grade = document.getElementById('cores')
   grade.innerHTML = nomes

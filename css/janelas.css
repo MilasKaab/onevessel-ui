@@ -74,6 +74,8 @@
 .ov-abas-internas { display: flex; gap: 16px; border-bottom: 1px solid var(--ov-borda); }
 .ov-abas-internas button { height: 36px; padding: 0; border: 0; background: none; color: var(--ov-texto-terciario); font-weight: 500; cursor: pointer; }
 .ov-abas-internas button[aria-selected="true"] { color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
+/* Toque (v3.19, PX17/BX26): 48px, o alvo do livro (eram 36). */
+@media (pointer: coarse) { .ov-abas-internas button { height: var(--ov-altura-toque); } }
 
 /* ---------- Folha móvel: rodapé, corpo e alturas (.ov-folha em casca.css) ---------- */
 /* Sem data-altura, a folha tem a altura do conteúdo (o "Mais", até 92%). */

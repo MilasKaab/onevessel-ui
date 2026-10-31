@@ -20,6 +20,9 @@ import { regras } from '../scripts/css-regras.mjs';
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
+// A casca e os controles mudam na v3.19.0: aqui, as fixtures da v3.18.2
+// (fixture com fixture).
+const casca = ler('test/fixtures/casca-v3.18.2.css');
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
 const tokensJson = JSON.parse(ler('tokens/tokens.json'));
@@ -43,7 +46,7 @@ const NOVAS = { casca: [`|${LARGA}`], telas: [`${COMPUTADOR}|${NOME}`] };
 for (const nome of ['casca', 'telas']) {
   test(`minor: toda regra do ${nome}.css da v3.15.1 igual, e só nasce ${NOVAS[nome][0]}`, () => {
     const antes = ler(`test/fixtures/${nome}-v3.15.1.css`);
-    const agora = ler(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`);
+    const agora = nome === 'telas' ? ler('test/fixtures/telas-v3.17.0.css') : casca;
     for (const r of regras(antes)) {
       for (const s of r.seletores) assert.deepEqual(declaracoesEm(agora, r.media, s), declaracoesEm(antes, r.media, s), `${r.media}|${s}`);
     }
@@ -57,7 +60,7 @@ for (const nome of ['casca', 'telas']) {
 
 test('minor: tokens.css da v3.15.1 mais uma linha, --ov-conteudo-largo; o conteudo-max continua 1280', () => {
   const antes = ler('test/fixtures/tokens-v3.15.1.css').split('\n');
-  const agora = ler('css/tokens.css').split('\n');
+  const agora = ler('test/fixtures/tokens-v3.18.2.css').split('\n');
   assert.deepEqual(agora.filter((l) => !antes.includes(l)), ['  --ov-conteudo-largo: 1864px;']);
   assert.deepEqual(antes.filter((l) => !agora.includes(l)), []);
   assert.equal(agora.indexOf('  --ov-conteudo-largo: 1864px;'), agora.indexOf('  --ov-conteudo-max: 1280px;') + 1);
@@ -76,20 +79,20 @@ test('os outros CSS com os bytes da v3.15.1', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'janelas' ? 'test/fixtures/janelas-v3.16.0.css' : `css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'janelas' ? 'test/fixtures/janelas-v3.16.0.css' : nome === 'controles' ? 'test/fixtures/controles-v3.18.2.css' : `css/${nome}.css`), sha, nome);
 });
 
 // ---------- O novo ----------
 
 test('a tela larga: só o teto, no token novo, fora de @media', () => {
-  assert.deepEqual(declaracoesEm(ler('css/casca.css'), '', LARGA), ['max-width: var(--ov-conteudo-largo)']);
+  assert.deepEqual(declaracoesEm(casca, '', LARGA), ['max-width: var(--ov-conteudo-largo)']);
   // Vem depois da .ov-tela, que segue no teto de leitura.
-  const o = ordem(ler('css/casca.css'));
+  const o = ordem(casca);
   assert.ok(o.indexOf(`|${LARGA}`) > o.indexOf('|.ov-tela'));
-  assert.match(declaracoesEm(ler('css/casca.css'), '', '.ov-tela').join('; '), /max-width: var\(--ov-conteudo-max\)/);
+  assert.match(declaracoesEm(casca, '', '.ov-tela').join('; '), /max-width: var\(--ov-conteudo-max\)/);
   // Nenhuma outra regra fala do atributo.
   for (const nome of ['casca', 'janelas', 'telas', 'controles', 'onevessel']) {
-    for (const r of regras(ler({ janelas: 'test/fixtures/janelas-v3.16.0.css', telas: 'test/fixtures/telas-v3.17.0.css' }[nome] ?? `css/${nome}.css`))) {
+    for (const r of regras(ler({ janelas: 'test/fixtures/janelas-v3.16.0.css', telas: 'test/fixtures/telas-v3.17.0.css', casca: 'test/fixtures/casca-v3.18.2.css', controles: 'test/fixtures/controles-v3.18.2.css' }[nome] ?? `css/${nome}.css`))) {
       for (const s of r.seletores) if (/data-largura/.test(s)) assert.ok([`|${LARGA}`, `${COMPUTADOR}|${NOME}`].includes(`${r.media}|${s}`), `${nome}: ${r.media}|${s}`);
     }
   }

@@ -26,6 +26,9 @@ const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const janelas = ler('test/fixtures/janelas-v3.18.0.css');
 const antes = ler('test/fixtures/janelas-v3.16.0.css');
+// Os CSS que a v3.19.0 muda são as fixtures da v3.18.2 (fixture com fixture).
+const V3182 = ['casca', 'controles', 'janelas', 'telas', 'tokens'];
+const atual = (nome) => (V3182.includes(nome) ? `test/fixtures/${nome}-v3.18.2.css` : `css/${nome}.css`);
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
 
@@ -79,7 +82,7 @@ test('os outros CSS com os bytes da v3.16.0', () => {
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
   };
-  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : `css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(SHA)) assert.equal(sha256(nome === 'telas' ? 'test/fixtures/telas-v3.17.0.css' : atual(nome)), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.18.0.css'), '8ab843278eafba3adb4923e70c818e56adf5abc0509467f6cc6c5b7d1f0da038');
   assert.equal(sha256('test/fixtures/janelas-v3.16.0.css'), '015a5e82157558910b90cf1237f0404fbca2de89a036def4a87370b7e156d763');
 });

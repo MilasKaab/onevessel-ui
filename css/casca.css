@@ -82,7 +82,9 @@
 .ov-seletor-embarcacao[data-fixo]:hover { background: transparent; }
 
 /* Conta: gatilho do menu da conta (tema, Sair), com o nome da pessoa.
-   No rodapé da lateral e na barra superior. */
+   Desde a v3.19 (C26, L8) mora só na barra superior, a partir de 768px; o
+   rodapé da lateral fica só com o Recolher. As regras da conta na lateral
+   ficam até os apps adotarem (a base é a mesma da barra superior). */
 .ov-conta { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; height: 32px; padding: 0 10px; border: 0; border-radius: var(--ov-raio-sm); background: transparent; color: var(--ov-texto-secundario); font: var(--ov-fonte-corpo-forte); text-align: left; cursor: pointer; white-space: nowrap; }
 .ov-conta svg { flex: 0 0 auto; }
 .ov-conta:hover { background: var(--ov-linha-hover); color: var(--ov-texto); }
@@ -156,6 +158,9 @@
 .ov-paleta-item { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--ov-raio-md); }
 .ov-paleta-item[aria-selected="true"] { background: var(--ov-acao-suave); }
 .ov-paleta-item .meta { font-size: 13px; color: var(--ov-texto-terciario); }
+/* No item realçado, o terciário sobre ov-acao-suave dá 4,22:1 no escuro; o
+   secundário, 5,33:1 (v3.19, VP2). */
+.ov-paleta-item[aria-selected="true"] .meta { color: var(--ov-texto-secundario); }
 /* Miolo (v3.11): a lista rolando por dentro (no celular a paleta é a tela
    inteira e rola ela mesma), o aviso de um grupo ("Sem conexão…") ou do
    vazio ("Nada encontrado."), e o item que é link (Ctrl/Cmd-clique abre
@@ -204,6 +209,31 @@ a.ov-paleta-item { color: inherit; text-decoration: none; }
 .ov-estado[data-tom="atencao"] { --estado-cor: var(--ov-atencao); }
 .ov-estado[data-tom="erro"] { --estado-cor: var(--ov-erro); }
 .ov-estado[data-tom="info"] { --estado-cor: var(--ov-info); }
+/* Em andamento (v3.19, livro v4): o amarelo nos dois temas, só no ponto; a
+   palavra continua em ov-texto-secundario (no claro, 1,5:1 sobre o branco:
+   exceção do livro, nunca texto). */
+.ov-estado[data-tom="andamento"] { --estado-cor: var(--ov-status-andamento); }
+/* Tag (v3.19, livro v4, L5): situação ou alerta do registro, em pastel, sem
+   ícone; sem data-tom, neutra. O texto de cada tom dá 6,1:1 ou mais sobre o
+   próprio fundo em toda superfície dos dois temas. O .ov-tag-ponto (6px) só
+   no cabeçalho do "Precisa de você", com a contagem em .ov-tnum:
+     <span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente <span class="ov-tnum">2</span></span>
+   A tag forte, data-tom="critico", é só o Crítico: fundo ov-critico, texto
+   ov-sobre-erro e o ícone (triangle-alert, 14px, currentColor). */
+.ov-tag { box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: var(--ov-raio-sm); background: var(--ov-tag-neutro-fundo); color: var(--ov-tag-neutro-texto); font: 500 12px/16px var(--font-sans); white-space: nowrap; }
+.ov-tag[data-tom="neutro"] { background: var(--ov-tag-neutro-fundo); color: var(--ov-tag-neutro-texto); }
+.ov-tag[data-tom="info"] { background: var(--ov-tag-info-fundo); color: var(--ov-tag-info-texto); }
+.ov-tag[data-tom="atencao"] { background: var(--ov-tag-atencao-fundo); color: var(--ov-tag-atencao-texto); }
+.ov-tag[data-tom="erro"] { background: var(--ov-tag-erro-fundo); color: var(--ov-tag-erro-texto); }
+.ov-tag[data-tom="sucesso"] { background: var(--ov-tag-sucesso-fundo); color: var(--ov-tag-sucesso-texto); }
+.ov-tag .ov-tnum { font-variant-numeric: tabular-nums; }
+.ov-tag-ponto { width: 6px; height: 6px; flex: none; border-radius: var(--ov-raio-pill); background: var(--ov-neutro); }
+.ov-tag[data-tom="info"] .ov-tag-ponto { background: var(--ov-info); }
+.ov-tag[data-tom="atencao"] .ov-tag-ponto { background: var(--ov-atencao); }
+.ov-tag[data-tom="erro"] .ov-tag-ponto { background: var(--ov-erro); }
+.ov-tag[data-tom="sucesso"] .ov-tag-ponto { background: var(--ov-sucesso); }
+.ov-tag[data-tom="critico"] { gap: 4px; background: var(--ov-critico); color: var(--ov-sobre-erro); }
+.ov-tag[data-tom="critico"] svg { width: 14px; height: 14px; flex: none; }
 .ov-faixa { display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 8px calc(32px + env(safe-area-inset-right, 0px)) 8px 32px; background: var(--ov-superficie); border-bottom: 1px solid var(--ov-borda); font-size: 13px; color: var(--ov-texto); }
 .ov-faixa svg { color: var(--ov-atencao); flex: 0 0 auto; }
 .ov-vazio { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; }
@@ -211,9 +241,22 @@ a.ov-paleta-item { color: inherit; text-decoration: none; }
 .ov-vazio p { margin: 0; max-width: 360px; color: var(--ov-texto-secundario); }
 .ov-somente-leitura { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--ov-raio-md); background: var(--ov-item-ativo); color: var(--ov-texto-secundario); font-size: 13px; }
 
+/* ---------- Pular para o conteúdo (v3.19, C25) ---------- */
+/* Primeiro elemento da página, um link para o h1 da tela (o alvo do foco ao
+   trocar de tela, C1). Fora da tela até o foco por teclado; aí aparece no
+   topo à esquerda, acima de tudo (barras, menus, diálogos e toasts), com o
+   anel do livro. 48px no toque.
+     <a class="ov-pular" href="#titulo-da-tela">Pular para o conteúdo</a> */
+.ov-pular { box-sizing: border-box; position: fixed; top: calc(8px + env(safe-area-inset-top, 0px)); left: calc(8px + env(safe-area-inset-left, 0px)); z-index: calc(var(--ov-z-toast) + 1); display: inline-flex; align-items: center; height: var(--ov-altura-controle); padding: 0 14px; border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-md); background: var(--ov-superficie-elevada); box-shadow: var(--ov-sombra-1); color: var(--ov-texto); font: 500 14px/20px var(--font-sans); text-decoration: none; white-space: nowrap; transform: translateY(calc(-100% - 16px - env(safe-area-inset-top, 0px))); }
+.ov-pular:focus-visible { transform: none; outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+
 /* ---------- Toque: alvos de 48px na lateral ---------- */
 @media (pointer: coarse) {
   .ov-nav, .ov-busca-gatilho, .ov-seletor-embarcacao, .ov-conta, .ov-lateral-alternar { height: var(--ov-altura-toque); }
+  /* A conta da barra superior também (v3.19, BX26: ficava em 36, a força
+     do .ov-superior .ov-conta vencia a de cima). */
+  .ov-superior .ov-conta { height: var(--ov-altura-toque); }
+  .ov-pular { height: var(--ov-altura-toque); }
 }
 
 /* ---------- Abaixo de 1024px: lateral recolhida, margem de 24px ---------- */

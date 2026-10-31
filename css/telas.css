@@ -41,8 +41,11 @@
 .ov-visao { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto-secundario); font: 500 14px/20px var(--font-sans); cursor: pointer; }
 /* Aba de rota (v3.11): a .ov-visao também é um link de navegação, com
    aria-current="page" na rota aberta, no mesmo desenho da selecionada. O
-   tablist (aria-selected) fica para a visão que filtra a mesma tela. */
-.ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-item-ativo); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-borda-forte); }
+   tablist (aria-selected) fica para a visão que filtra a mesma tela.
+   A selecionada com mais destaque (v3.19, livro v4): ov-acao-suave,
+   contorno de 1px ov-acao e o rótulo em ov-texto 600 (14,2:1 no claro e
+   12,0:1 no escuro; o ov-acao-texto daria 4,07:1 no claro). */
+.ov-visao[aria-selected="true"], .ov-visao[aria-current="page"] { background: var(--ov-acao-suave); color: var(--ov-texto); box-shadow: inset 0 0 0 1px var(--ov-acao); font-weight: 600; }
 a.ov-visao { text-decoration: none; }
 .ov-visao .ov-tnum { color: var(--ov-texto-terciario); }
 /* Toque: 48px de altura mínima (eram 32), o alvo do livro. Uma linha de
@@ -63,7 +66,9 @@ a.ov-visao { text-decoration: none; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao svg { flex: 0 0 auto; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao + .ov-visao { border-left: 1px solid var(--ov-borda); }
 .ov-visoes[data-tamanho="grande"] > .ov-visao:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
-.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) { background: var(--ov-acao-suave); color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); }
+/* O peso 500 (v3.19): a selecionada das visões normais passou a 600, e a
+   grande continua no 500 dela. */
+.ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) { background: var(--ov-acao-suave); color: var(--ov-texto); box-shadow: inset 0 -2px 0 var(--ov-acao); font-weight: 500; }
 .ov-visoes[data-tamanho="grande"] > .ov-visao:is([aria-selected="true"], [aria-current="page"]) svg { color: var(--ov-acao-texto); }
 .ov-visoes[data-tamanho="grande"] .ov-rotulo { flex: 0 0 100%; color: var(--ov-texto-secundario); }
 .ov-visoes[data-tamanho="grande"] .ov-tnum { display: none; color: var(--ov-texto-secundario); }
@@ -85,9 +90,17 @@ a.ov-visao { text-decoration: none; }
 .ov-chip-filtro { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--ov-raio-sm); border: 1px solid var(--ov-borda-forte); background: var(--ov-superficie-elevada); font-size: 13px; color: var(--ov-texto); }
 .ov-chip-filtro .campo { color: var(--ov-texto-terciario); }
 .ov-chip-filtro button { width: 22px; height: 22px; display: grid; place-items: center; border: 0; border-radius: 4px; background: transparent; color: var(--ov-texto-terciario); cursor: pointer; }
+/* Toque (v3.19, bloco A): o chip com 48 de altura mínima e o ✕ com alvo de
+   48×48 (era 22×22); o ícone continua o de 14px que o app põe. */
+@media (pointer: coarse) {
+  .ov-chip-filtro { min-height: var(--ov-altura-toque); }
+  .ov-chip-filtro button { width: var(--ov-altura-toque); height: var(--ov-altura-toque); }
+}
 
 /* ---------- Contador e progresso ---------- */
-.ov-contador-destaque { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--ov-raio-pill); background: var(--ov-destaque-suave); color: var(--ov-destaque); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* O texto em ov-destaque-texto (v3.19, VP1/BX14): no claro, 5,52:1 sobre o
+   próprio fundo (o ov-destaque dava 4,26); no escuro, o mesmo laranja. */
+.ov-contador-destaque { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--ov-raio-pill); background: var(--ov-destaque-suave); color: var(--ov-destaque-texto); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ov-progresso { height: 4px; border-radius: var(--ov-raio-pill); background: var(--ov-borda); overflow: hidden; }
 .ov-progresso > span { display: block; height: 100%; border-radius: inherit; background: var(--estado-cor, var(--ov-acao)); }
 
@@ -113,6 +126,15 @@ a.ov-visao { text-decoration: none; }
    v3.11 a borda ia a ov-borda-forte e escondia a borda de alerta). */
 a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), var(--ov-linha-hover)); color: inherit; }
 .ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); }
+/* Filete de status (v3.19, livro v4): 3px à esquerda, na cor do que o
+   indicador conta, por sombra interna, não por borda: a borda de alerta
+   (border-color, acima) convive com ele. Sem atributo, sem filete. */
+.ov-indicador[data-filete="neutro"] { box-shadow: inset 3px 0 0 var(--ov-neutro); }
+.ov-indicador[data-filete="info"] { box-shadow: inset 3px 0 0 var(--ov-info); }
+.ov-indicador[data-filete="andamento"] { box-shadow: inset 3px 0 0 var(--ov-status-andamento); }
+.ov-indicador[data-filete="atencao"] { box-shadow: inset 3px 0 0 var(--ov-atencao); }
+.ov-indicador[data-filete="erro"] { box-shadow: inset 3px 0 0 var(--ov-erro); }
+.ov-indicador[data-filete="sucesso"] { box-shadow: inset 3px 0 0 var(--ov-sucesso); }
 .ov-indicador-rotulo { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ov-texto-secundario); }
 .ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque); }
 .ov-indicador-valor { margin-top: 8px; font: 600 32px/40px var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
@@ -133,6 +155,10 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    ("Nada pendente com você."). O máximo de 5 é regra do app. */
 .ov-pendencias-cab { display: flex; align-items: center; gap: 8px; padding: 14px 16px; }
 .ov-pendencia { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; border-top: 1px solid var(--ov-borda); }
+/* O item sob a tag (v3.19, livro v4): filete reto de 2px à esquerda, na cor
+   da tag, por sombra interna (o item não tem raio). */
+.ov-pendencia[data-tom="erro"] { box-shadow: inset 2px 0 0 var(--ov-erro); }
+.ov-pendencia[data-tom="atencao"] { box-shadow: inset 2px 0 0 var(--ov-atencao); }
 .ov-pendencias { display: flex; flex-direction: column; overflow: hidden; color: var(--ov-texto); font: var(--ov-fonte-corpo); }
 .ov-pendencias-lista { margin: 0; padding: 0; list-style: none; }
 /* Item que é link: realce em ov-linha-hover, sem cor de link; o anel de
@@ -195,6 +221,20 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    que vence o hover:underline (0,2,0) de um Tailwind sem camada que entra
    depois do pacote (o 3 do Paradas); sem !important. */
 .ov-tabela td [data-abre-linha] { text-decoration: none; }
+/* Rolagem de lado (v3.19, C5): o contêiner da tabela que ainda transborda
+   no tablet. Sombra na borda do lado que tem conteúdo escondido, só com
+   CSS: as duas capas (attachment local) andam com o conteúdo e cobrem as
+   sombras (attachment scroll, presas na caixa) quando se chega à ponta.
+   A capa tem a cor da superfície (--rolagem-fundo, ov-superficie sem ele);
+   a sombra é o ov-veu, que já muda com o tema. As linhas da tabela não têm
+   fundo, e a sombra aparece por baixo delas.
+     <div class="ov-cartao ov-rolagem"><table class="ov-tabela">…</table></div> */
+.ov-rolagem { overflow-x: auto; background:
+    linear-gradient(to right, var(--rolagem-fundo, var(--ov-superficie)) 30%, transparent) left center / 40px 100% no-repeat local,
+    linear-gradient(to left, var(--rolagem-fundo, var(--ov-superficie)) 30%, transparent) right center / 40px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--ov-veu), transparent) left center / 14px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--ov-veu), transparent) right center / 14px 100% no-repeat scroll;
+  background-color: var(--rolagem-fundo, var(--ov-superficie)); }
 
 /* ---------- Barra de ações em massa ---------- */
 .ov-acoes-massa { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px 0 16px; border-radius: var(--ov-raio-lg); background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-1); }
@@ -226,6 +266,12 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
 /* ---------- 768 a 1023px: indicadores em 2 colunas ---------- */
 @media (max-width: 1023px) {
   .ov-indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* A coluna que sai no tablet (v3.19, C5): th e td com data-some-no-tablet.
+   O data-principal é do modo foco; abaixo de 768px a lista do celular
+   continua com as células todas. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ov-tabela :is(th, td)[data-some-no-tablet] { display: none; }
 }
 
 /* ---------- Abaixo de 768px: lista de linhas do celular ---------- */

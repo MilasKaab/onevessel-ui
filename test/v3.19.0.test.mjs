@@ -23,7 +23,6 @@ const ANTES = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(`test/f
 const tokensJson = JSON.parse(ler('tokens/tokens.json'));
 const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
-const pacote = JSON.parse(ler('package.json'));
 
 const TOQUE = '@media (pointer: coarse)';
 const TABLET = '@media (min-width: 768px) and (max-width: 1023px)';
@@ -359,9 +358,8 @@ test('exemplo: nenhuma lateral com a conta; o rodapé só com o filete e o Recol
   assert.match(exemplo, /<div class="ov-superior-direita">\n\s*<button class="ov-conta"/);
 });
 
-test('package.json 3.19.0; README com a tag, a lateral nova, a seção da versão e os contratos', () => {
-  assert.equal(pacote.version, '3.19.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.19\.0"/);
+// A versão e a tag ficam com o teste da versão mais nova (desde a v3.20.0).
+test('README com a lateral nova, a seção da versão e os contratos', () => {
   assert.match(leiame, /<span class="ov-lateral-marca-sub">Pessoas e acomodação<\/span>/);
   assert.doesNotMatch(leiame, /<button class="ov-conta" title="Ana Souza">/);
   assert.match(leiame, /### Livro v4 \(v3\.19\.0\)/);

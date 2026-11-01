@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.20.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.21.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -496,6 +496,47 @@ const { itens, aviso } = menuDoFiltro(['tipo', 'empresa', 'turno'], Object.keys(
 - **Por que a v3.20.0 é minor:** só arquivos novos em `js/` (seis `.js` com os seus `.d.ts`, todos em `exports`). Os CSS, o `tokens.json` e os `js/` de antes ficam com os bytes da v3.19.0 (o teste da versão cobra pelo sha256).
 - **O que muda na tela dos apps ao adotar:** nada, até o app trocar o código dele pelo núcleo. Ao trocar: datas e horas que hoje saem no fuso do aparelho (o `formatDiaHora` e o `formatDataHora` do Paradas) passam ao de Brasília; o "(s)" sai; o milhar ganha o ponto; as abas do `PainelDaTt` ganham Home e End; o "+ Filtro" da Bordo deixa de sumir e deixa de oferecer campo de uma opção só.
 
+### Tabela de registros e duração (v3.21.0)
+
+O que Pessoas (Bordo), Templates e o Histórico (Paradas) precisam da direção visual de 30/10 e do livro v4: coluna ordenável, célula de duas linhas, cursor de mão na linha que abre e os cantos do painel no modo foco; e a `duracao` em `js/datas.js`. As regras de uso estão no `componentes.md` (Tabela, Painel lateral, Estado), no `onevessel-docs`.
+
+```html
+<thead><tr>
+  <th aria-sort="ascending"><button class="ov-ordenar" type="button">Nome<svg …arrow-up…/></button></th>
+  <th aria-sort="none"><button class="ov-ordenar" type="button">Empresa<svg …arrow-up…/></button></th>
+  <th>Situação</th>
+  <th class="num" aria-sort="none"><button class="ov-ordenar" type="button">Dias a bordo<svg …arrow-up…/></button></th>
+</tr></thead>
+<tbody>
+  <tr>
+    <td class="nome"><button type="button" data-abre-linha>Ana Souza</button><span class="ov-celula-sub">Tripulante · Cozinheira</span></td>
+    <td>BRAM<span class="ov-celula-sub">12 x 12</span></td>
+    <td><span class="ov-tag" data-tom="info">A bordo</span></td>
+    <td class="num">14</td>
+  </tr>
+</tbody>
+```
+
+- **Coluna ordenável** (`telas.css`): o `th` leva `aria-sort` (`"ascending"`, `"descending"` ou `"none"`) e dentro um `button.ov-ordenar` que ocupa o `th` todo (o `th` perde o padding; o botão tem os 12px), sem borda nem fundo, com a fonte e a cor do cabeçalho, e a seta à direita do texto: um `svg` do app, o **`arrow-up`** do Lucide, a 14px, em `ov-texto-terciario`. **Sem ordem** (`"none"` ou sem `aria-sort`), a seta fica **fraca** (`opacity: .5`) e volta inteira no hover e no foco do botão — escolhida em vez de sumir, para a coluna ordenável se ver também no toque, onde não há hover. **Na coluna ordenada**, texto e seta em `ov-texto`; crescente, a seta para cima; decrescente, virada para baixo (`scaleY(-1)`). A `.num` alinha o botão à direita. Foco com o anel do livro (2px `ov-foco`, por dentro do `th`); 48 no toque. Um clique ordena, outro inverte, a ordem não vai à URL: isso é do app, que troca o `aria-sort` e as linhas.
+- **Segunda linha da célula** (`.ov-celula-sub`): bloco embaixo do texto principal, em `legenda` (13/18, peso 400) e `ov-texto-terciario`, cortado em reticências — Nome com tipo e função, Empresa com turno, Documentos empilhados. A linha de 44px cabe as duas (20 + 18). Na lista do celular (abaixo de 768) continua visível, embaixo do principal.
+- **Cursor da linha que abre**: a linha com `[data-abre-linha]` fica com `cursor: pointer`, e tudo dentro dela por herança; a própria ação também, porque um `button` volta à seta (o preflight do Tailwind 4, na Bordo). Campo, checkbox e outro botão da linha ficam com o cursor deles: o pacote os põe em `cursor: auto` por um seletor em `:where()`, sem força, e a classe do controle (o `pointer` do `.ov-btn`) vence. **Contrato:** um cursor próprio num controle da linha vem de classe do pacote ou de regra fora de camada; um utilitário do Tailwind 4 (em `@layer utilities`) perde para o pacote, que não tem camada. Linha sem `[data-abre-linha]` não muda.
+- **Painel no modo foco** (`janelas.css`): cantos `ov-raio-lg` nos quatro lados, a 8px do topo, da direita e do pé da área para o raio se ver (o `sticky` desce 8 e a altura perde 16). A largura segue a mesma conta (o que sobra, mínimo 520), agora ao lado da margem de 8: a 1440, a lista continua com 360 e o painel fica 8px mais estreito; a 1024 com a lateral aberta, o painel mantém 520 e a lista cede mais 8. A borda `ov-borda-forte` passa a dar a volta toda (só à esquerda, ela afinaria nas curvas), e o `.ov-painel-corpo` arredonda o pé para a barra de rolagem não passar por cima do canto. Abaixo de 1024 nada muda (Folha móvel).
+- **Duração** (`datas.js`): `duracao(ms)` é o tempo sem o "há", nas mesmas faixas e no mesmo formato do `decorrido`; negativo ou o que não é número, `""`. O `decorrido` passa a ser "agora" (menos de 1 min, ou negativo) ou "há " e a `duracao`, com as mesmas saídas de antes.
+
+```js
+import { decorrido, duracao } from 'onevessel-ui/js/datas.js'
+
+duracao(30 * 1000)               // "menos de 1 min"
+duracao(45 * 60 * 1000)          // "45 min"
+duracao(fim - Date.now())        // "3h" · "2h05" · "1 dia" · "2 dias"; negativo, ""
+`Parada ${decorrido(Date.now() - inicio)}`  // "Parada há 2h05"
+`Jornada: faltam ${duracao(fim - Date.now())}`  // "Jornada: faltam 2h05" (o "falta/faltam" é do app)
+```
+
+- **Alteradas pelo nome** (o teste da versão cobra; o resto das fixtures da v3.20.0 fica igual regra a regra): no `janelas.css`, `[data-painel="foco"]:has(> .ov-painel) > .ov-painel` (o `top`, a `height`, a `margin`, a borda em volta e o `border-radius`). No `telas.css` nenhuma regra muda: só nascem.
+- **Por que a v3.21.0 é minor:** classes, regras e uma função novas (`.ov-ordenar`, `.ov-celula-sub`, o cursor da linha, o pé arredondado do corpo no modo foco e a `duracao`), e a única regra que muda de valor está na lista acima.
+- **O que muda na tela dos apps ao adotar:** o painel no modo foco ganha os cantos e a margem de 8 (e fica 8px mais estreito); toda linha que já tem `[data-abre-linha]` passa a mostrar a mão em qualquer ponto, o nome inclusive. O resto só aparece onde o app puser a classe ou o `aria-sort`.
+
 ### Relatório (papel e impressão)
 
 Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no `relatorio.css`, com os mesmos valores, fora três regras: a `.rel-pagina` ganhou `page: relatorio`, o `.rel-tabela th` subiu de 11px para 8,5pt e a `.rel-barra` virou interface (fonte do sistema, `--ov-*`, sem o `max-width: 210mm`). O `impressao.css` foi reescrito sem seletor global. As regras do documento (Timbre, resumo, estados, nome do arquivo) estão em `relatorios-e-logos.md`, no `onevessel-docs`.
@@ -654,7 +695,7 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/teclas-da-tabela.js` | O teclado da linha da `.ov-tabela` (v3.8.0): ↑↓ só movem o foco entre linhas, Enter abre, X marca onde há seleção; o destino sem dar a volta e a linha que recebe o Tab |
 | `js/lateral-nucleo.js` | A lateral recolhida por escolha (v3.15.0): `CHAVE_LATERAL` (`ov-lateral`), `lerLateral`, `gravarLateral`, `alternarLateral`, `aplicarLateral` (o `data-lateral` da casca), `botaoDaLateral` (ícone, texto, rótulo e `aria-expanded`) e `ouvirLateral` (o evento `storage` de outra aba); armazenamento bloqueado não derruba nada (ver Casca) |
 | `js/texto.js` | Plural (v3.20.0, C8): `plural(n, um, varios)` ("3 pessoas", "1.234 pessoas") e `palavra(n, um, varios)` (só a palavra); nunca "(s)" |
-| `js/datas.js` | Data e hora no fuso de Brasília (v3.20.0, C18): `data`, `dataHora`, `dataHoraCurta`, `decorrido`, `diaRelativo`, `title` e `FUSO_DE_BRASILIA` |
+| `js/datas.js` | Data e hora no fuso de Brasília (v3.20.0, C18): `data`, `dataHora`, `dataHoraCurta`, `decorrido`, `diaRelativo`, `title` e `FUSO_DE_BRASILIA`; `duracao` desde a v3.21.0 |
 | `js/teclas-das-abas.js` | O teclado das visões e das abas internas (v3.20.0, C19): `abaDeDestino` (←→ com volta, Home, End) |
 | `js/teclas-da-lista.js` | O teclado da Lista de cards (v3.20.0, C10): `acaoDaTeclaNaLista` (↑↓ sem volta, Home, End, Enter, Esc de dentro do card) e `cardDoTab` |
 | `js/menu-nucleo.js` | O teclado do Menu (v3.20.0, bloco D): `acaoDaTeclaNoMenu` (↑↓ com volta, Home, End, Esc devolve ao gatilho, Tab fecha sem prender) |

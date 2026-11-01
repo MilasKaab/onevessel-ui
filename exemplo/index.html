@@ -77,6 +77,14 @@
      botão da célula sem a cara de botão, como nos apps. */
   .hover\:underline:hover { text-decoration-line: underline; }
   .acao-linha .ov-tabela button { padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  /* Tabela de registros (v3.21.0): o botão do nome sem a cara de botão e com
+     a seta do preflight do Tailwind 4 (cursor: default, numa camada), como
+     na Bordo: o pacote devolve a mão. */
+  .registros { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .registros > h2 { margin: 0 0 var(--ov-esp-4); }
+  .registros .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .registros .ov-tabela td button[data-abre-linha] { padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; }
+  @layer base { .registros button { cursor: default; } }
   /* v3.19.0: o botão com o motivo escrito embaixo (no toque), a barra de
      progresso em segmentos e a grade dos seis filetes. */
   .botao-com-motivo { display: inline-flex; flex-direction: column; align-items: flex-start; }
@@ -1343,6 +1351,37 @@
     </div>
 </section>
 
+<section class="registros">
+  <h2 class="ov-titulo-1">Tabela de registros</h2>
+  <p class="ov-legenda">Desde a v3.21.0: o cabeçalho ordenável é um <code class="ov-codigo">button.ov-ordenar</code> dentro do <code class="ov-codigo">th</code> com <code class="ov-codigo">aria-sort</code> (clique para ordenar e inverter; a ordem é do app); a segunda linha da célula é a <code class="ov-codigo">.ov-celula-sub</code>; a linha com <code class="ov-codigo">[data-abre-linha]</code> tem a mão em toda parte, menos no checkbox e no ⋮. Entre 768 e 1023px, Documentos sai (<code class="ov-codigo">data-some-no-tablet</code>); abaixo de 768px vira a lista do celular, com a segunda linha visível (o ⋮ fica fora dela, pelo app). Dados fictícios.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Tabela de registros · tema escuro · por Nome, crescente</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <table class="ov-tabela" aria-label="Pessoas">
+        <thead><tr><th aria-label="Seleção"></th><th aria-sort="ascending"><button class="ov-ordenar" type="button" data-chave="nome">Nome<i data-icone="arrow-up"></i></button></th><th aria-sort="none"><button class="ov-ordenar" type="button" data-chave="empresa">Empresa<i data-icone="arrow-up"></i></button></th><th>Situação</th><th data-some-no-tablet>Documentos</th><th class="num" aria-sort="none"><button class="ov-ordenar" type="button" data-chave="dias">Dias a bordo<i data-icone="arrow-up"></i></button></th><th aria-label="Ações"></th></tr></thead>
+        <tbody>
+          <tr data-nome="Ana Souza" data-empresa="BRAM" data-dias="14"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Souza"></td><td class="nome"><button type="button" data-abre-linha>Ana Souza</button><span class="ov-celula-sub">Tripulante · Cozinheira</span></td><td>BRAM<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000101<span class="ov-celula-sub">RG 00.000.101-1 · CIR 0000101</span></td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Ana Souza" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr data-nome="Bruno Teixeira Lima" data-empresa="Oceaneering" data-dias="0"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Bruno Teixeira Lima"></td><td class="nome"><button type="button" data-abre-linha>Bruno Teixeira Lima</button><span class="ov-celula-sub">Terceiro · Técnico de manutenção de guindaste offshore</span></td><td>Oceaneering<span class="ov-celula-sub">06 x 06</span></td><td><span class="ov-tag" data-tom="neutro">Em terra</span></td><td class="meta" data-some-no-tablet>Passaporte FX000102<span class="ov-celula-sub">RG 00.000.102-2 · CIR 0000102</span></td><td class="num">0<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Bruno Teixeira Lima" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr aria-selected="true" data-nome="Clara Mendes" data-empresa="BRAM" data-dias="21"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Clara Mendes"></td><td class="nome"><button type="button" data-abre-linha>Clara Mendes</button><span class="ov-celula-sub">Tripulante · Marinheira de convés</span></td><td>BRAM<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000103<span class="ov-celula-sub">RG 00.000.103-3 · CIR 0000103</span></td><td class="num">21<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Clara Mendes" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr data-nome="Diego Ramos" data-empresa="C-Innovation" data-dias="3"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Diego Ramos"></td><td class="nome"><button type="button" data-abre-linha>Diego Ramos</button><span class="ov-celula-sub">Terceiro · Inspetor</span></td><td>C-Innovation<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000104<span class="ov-celula-sub">RG 00.000.104-4 · CIR 0000104</span></td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Diego Ramos" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tabela de registros · tema claro · por Dias a bordo, decrescente</p>
+    <div class="controles-moldura" data-theme="claro">
+      <table class="ov-tabela" aria-label="Pessoas">
+        <thead><tr><th aria-label="Seleção"></th><th aria-sort="none"><button class="ov-ordenar" type="button" data-chave="nome">Nome<i data-icone="arrow-up"></i></button></th><th aria-sort="none"><button class="ov-ordenar" type="button" data-chave="empresa">Empresa<i data-icone="arrow-up"></i></button></th><th>Situação</th><th data-some-no-tablet>Documentos</th><th class="num" aria-sort="descending"><button class="ov-ordenar" type="button" data-chave="dias">Dias a bordo<i data-icone="arrow-up"></i></button></th><th aria-label="Ações"></th></tr></thead>
+        <tbody>
+          <tr aria-selected="true" data-nome="Clara Mendes" data-empresa="BRAM" data-dias="21"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Clara Mendes"></td><td class="nome"><button type="button" data-abre-linha>Clara Mendes</button><span class="ov-celula-sub">Tripulante · Marinheira de convés</span></td><td>BRAM<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000103<span class="ov-celula-sub">RG 00.000.103-3 · CIR 0000103</span></td><td class="num">21<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Clara Mendes" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr data-nome="Ana Souza" data-empresa="BRAM" data-dias="14"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Ana Souza"></td><td class="nome"><button type="button" data-abre-linha>Ana Souza</button><span class="ov-celula-sub">Tripulante · Cozinheira</span></td><td>BRAM<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000101<span class="ov-celula-sub">RG 00.000.101-1 · CIR 0000101</span></td><td class="num">14<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Ana Souza" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr data-nome="Diego Ramos" data-empresa="C-Innovation" data-dias="3"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Diego Ramos"></td><td class="nome"><button type="button" data-abre-linha>Diego Ramos</button><span class="ov-celula-sub">Terceiro · Inspetor</span></td><td>C-Innovation<span class="ov-celula-sub">12 x 12</span></td><td><span class="ov-tag" data-tom="info">A bordo</span></td><td class="meta" data-some-no-tablet>Passaporte FX000104<span class="ov-celula-sub">RG 00.000.104-4 · CIR 0000104</span></td><td class="num">3<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Diego Ramos" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+          <tr data-nome="Bruno Teixeira Lima" data-empresa="Oceaneering" data-dias="0"><td><input class="ov-check" type="checkbox" aria-label="Selecionar Bruno Teixeira Lima"></td><td class="nome"><button type="button" data-abre-linha>Bruno Teixeira Lima</button><span class="ov-celula-sub">Terceiro · Técnico de manutenção de guindaste offshore</span></td><td>Oceaneering<span class="ov-celula-sub">06 x 06</span></td><td><span class="ov-tag" data-tom="neutro">Em terra</span></td><td class="meta" data-some-no-tablet>Passaporte FX000102<span class="ov-celula-sub">RG 00.000.102-2 · CIR 0000102</span></td><td class="num">0<span class="ov-so-no-celular"> dias a bordo</span></td><td class="ov-fora-do-celular"><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Ações de Bruno Teixeira Lima" title="Ações"><i data-icone="more-vertical"></i></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+</section>
+
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo
   // é o do Paradas, com a geometria do livro da marca.
@@ -1365,6 +1404,7 @@
     history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
     'bar-chart-3': '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
     settings: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    'arrow-up': '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
     'more-vertical': '<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>',
     'more-horizontal': '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
     send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
@@ -1386,6 +1426,28 @@
     svg.innerHTML = ICONES[el.dataset.icone] ?? ''
     if (el.className) svg.setAttribute('class', el.className)
     el.replaceWith(svg)
+  }
+
+  // Ordenação da Tabela de registros (v3.21.0): o que o app faz. Um clique
+  // ordena (crescente), outro inverte; as outras colunas voltam a "none".
+  for (const tabela of document.querySelectorAll('.registros .ov-tabela')) {
+    tabela.addEventListener('click', (e) => {
+      const botao = e.target.closest('.ov-ordenar')
+      if (!botao) return
+      const th = botao.closest('th')
+      const sentido = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending'
+      for (const outro of tabela.querySelectorAll('th[aria-sort]')) outro.setAttribute('aria-sort', 'none')
+      th.setAttribute('aria-sort', sentido)
+      const chave = botao.dataset.chave
+      const valor = (tr) => (chave === 'dias' ? Number(tr.dataset.dias) : tr.dataset[chave])
+      const corpo = tabela.tBodies[0]
+      const linhas = [...corpo.rows].sort((a, b) => {
+        const x = valor(a), y = valor(b)
+        const c = typeof x === 'number' ? x - y : x.localeCompare(y, 'pt-BR')
+        return sentido === 'ascending' ? c : -c
+      })
+      corpo.append(...linhas)
+    })
   }
 
   // Lateral recolhida por escolha (v3.15.0): o núcleo guarda a escolha no

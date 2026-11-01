@@ -7,7 +7,7 @@ process.env.TZ = "UTC";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { FUSO_DE_BRASILIA, data, dataHora, dataHoraCurta, decorrido, diaRelativo, title } from "../js/datas.js";
+import { FUSO_DE_BRASILIA, data, dataHora, dataHoraCurta, decorrido, diaRelativo, duracao, title } from "../js/datas.js";
 
 const MIN = 60 * 1000;
 const HORA = 60 * MIN;
@@ -84,6 +84,27 @@ test("decorrido: cada faixa", () => {
   assert.equal(decorrido(2 * DIA + 5 * HORA), "há 2 dias");
   assert.equal(decorrido(1234 * DIA), "há 1.234 dias");
   for (const vazio of [null, undefined, Number.NaN, Infinity]) assert.equal(decorrido(vazio), "", String(vazio));
+});
+
+test("duracao (v3.21.0): as faixas do decorrido, sem o \"há\"", () => {
+  assert.equal(duracao(0), "menos de 1 min");
+  assert.equal(duracao(59 * 1000), "menos de 1 min");
+  assert.equal(duracao(MIN), "1 min");
+  assert.equal(duracao(45 * MIN), "45 min");
+  assert.equal(duracao(59 * MIN + 59 * 1000), "59 min");
+  assert.equal(duracao(HORA), "1h");
+  assert.equal(duracao(3 * HORA), "3h");
+  assert.equal(duracao(2 * HORA + 5 * MIN), "2h05");
+  assert.equal(duracao(3 * HORA + 45 * MIN), "3h45");
+  assert.equal(duracao(23 * HORA + 59 * MIN), "23h59");
+  assert.equal(duracao(DIA), "1 dia");
+  assert.equal(duracao(2 * DIA + 5 * HORA), "2 dias");
+  assert.equal(duracao(1234 * DIA), "1.234 dias");
+  for (const vazio of [-1, -5 * MIN, null, undefined, Number.NaN, Infinity, "3600000"]) assert.equal(duracao(vazio), "", String(vazio));
+});
+
+test("decorrido é \"agora\" ou \"há \" e a duracao", () => {
+  for (const ms of [MIN, 45 * MIN, HORA, 2 * HORA + 5 * MIN, DIA, 2 * DIA, 1234 * DIA]) assert.equal(decorrido(ms), `há ${duracao(ms)}`);
 });
 
 test("diaRelativo: hoje, ontem ou a data, pelo dia de Brasília", () => {

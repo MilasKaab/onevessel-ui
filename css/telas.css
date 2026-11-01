@@ -244,7 +244,7 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    ocupa o th todo, com o texto do cabeçalho e, à direita, o svg do app
    (arrow-up, 14px). Sem ordem, a seta fica fraca e volta ao terciário no
    hover e no foco; na coluna ordenada, texto e seta em ov-texto, a seta
-   para cima (crescente) ou girada para baixo (decrescente). A .num alinha
+   para cima (crescente) ou virada para baixo (decrescente). A .num alinha
    o botão à direita. A ordem não vai à URL (é do app).
      <th aria-sort="ascending"><button class="ov-ordenar" type="button">Nome <svg aria-hidden="true">…</svg></button></th> */
 .ov-tabela th:has(> .ov-ordenar) { padding: 0; }

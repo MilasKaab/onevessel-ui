@@ -224,6 +224,40 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    que vence o hover:underline (0,2,0) de um Tailwind sem camada que entra
    depois do pacote (o 3 do Paradas); sem !important. */
 .ov-tabela td [data-abre-linha] { text-decoration: none; }
+/* Cursor de mão na linha que abre (v3.21, Pessoas de 30/10): a linha com
+   uma ação [data-abre-linha] e tudo dentro dela, por herança; a própria
+   ação também, porque um button volta à seta (o preflight do Tailwind 4).
+   Campo, checkbox e outro botão da linha ficam com o cursor deles: o reset
+   vai em :where(), sem força, e a classe do controle (.ov-btn) vence. Linha
+   sem [data-abre-linha] não muda. */
+.ov-tabela tbody tr:has([data-abre-linha]) { cursor: pointer; }
+.ov-tabela tbody tr:has([data-abre-linha]) [data-abre-linha] { cursor: pointer; }
+:where(.ov-tabela tbody tr:has([data-abre-linha]) :is(input, select, textarea, button):not([data-abre-linha])) { cursor: auto; }
+/* Segunda linha da célula (v3.21, células de duas linhas): o secundário
+   embaixo do principal, em legenda e ov-texto-terciario, cortado em
+   reticências — Nome com tipo e função, Empresa com turno, Documentos
+   empilhados. Na lista do celular continua visível.
+     <td class="nome">Ana Souza<span class="ov-celula-sub">Tripulante · Cozinheira</span></td> */
+.ov-celula-sub { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--ov-fonte-legenda); color: var(--ov-texto-terciario); }
+/* Coluna ordenável (v3.21, regra da suíte de 30/10): o th leva aria-sort
+   ("ascending", "descending" ou "none") e dentro um button.ov-ordenar que
+   ocupa o th todo, com o texto do cabeçalho e, à direita, o svg do app
+   (arrow-up, 14px). Sem ordem, a seta fica fraca e volta ao terciário no
+   hover e no foco; na coluna ordenada, texto e seta em ov-texto, a seta
+   para cima (crescente) ou girada para baixo (decrescente). A .num alinha
+   o botão à direita. A ordem não vai à URL (é do app).
+     <th aria-sort="ascending"><button class="ov-ordenar" type="button">Nome <svg aria-hidden="true">…</svg></button></th> */
+.ov-tabela th:has(> .ov-ordenar) { padding: 0; }
+.ov-ordenar { display: flex; align-items: center; justify-content: flex-start; gap: 4px; width: 100%; min-height: 36px; padding: 0 12px; border: 0; background: transparent; font: inherit; color: inherit; text-align: inherit; white-space: nowrap; cursor: pointer; }
+.ov-tabela th.num .ov-ordenar { justify-content: flex-end; }
+.ov-ordenar svg { flex: 0 0 auto; width: 14px; height: 14px; color: var(--ov-texto-terciario); opacity: .5; }
+.ov-ordenar:hover svg, .ov-ordenar:focus-visible svg { opacity: 1; }
+.ov-ordenar:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: -2px; }
+.ov-tabela th:is([aria-sort="ascending"], [aria-sort="descending"]) .ov-ordenar { color: var(--ov-texto); }
+.ov-tabela th:is([aria-sort="ascending"], [aria-sort="descending"]) .ov-ordenar svg { color: var(--ov-texto); opacity: 1; }
+.ov-tabela th[aria-sort="descending"] .ov-ordenar svg { transform: scaleY(-1); }
+/* Toque: o botão com 48, e o th cresce junto. */
+@media (pointer: coarse) { .ov-ordenar { min-height: var(--ov-altura-toque); } }
 /* Rolagem de lado (v3.19, C5): o contêiner da tabela que ainda transborda
    no tablet. Sombra na borda do lado que tem conteúdo escondido, só com
    CSS: as duas capas (attachment local) andam com o conteúdo e cobrem as

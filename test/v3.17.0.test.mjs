@@ -13,7 +13,8 @@
 // com o teste da versão mais nova. Desde a v3.18.1, as janelas daqui são a
 // fixture da v3.18.0 (os bytes da v3.17.0, que a v3.18.0 não mudou), e a cor
 // do segundo plano nas medidas fica com o teste da v3.18.1 (aqui, só que
-// difere do texto normal).
+// difere do texto normal). Desde a v3.21.0, o painel fica a 8px do topo, da
+// direita e do pé da área (MARGEM, abaixo); os cantos, no teste dela.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -33,6 +34,7 @@ const exemplo = ler('exemplo/index.html');
 const leiame = ler('README.md');
 
 const COMPUTADOR = '@media (min-width: 1024px)';
+const MARGEM = 8;
 const FOCO = '[data-painel="foco"]:has(> .ov-painel)';
 const LISTA = `${FOCO} > :not(.ov-painel):has(.ov-tabela)`;
 const OCULTA = `${FOCO} .ov-tabela :is(th, td):not([data-principal])`;
@@ -231,7 +233,7 @@ test('medida: a 1440, lista de 360 com Nome e Estado, painel com o resto, Detalh
     assert.equal(m.lista, 360);
     assert.deepEqual(m.colunas, ['Nome', 'Estado']);
     assert.ok(m.nomeCorta, 'algum nome longo corta em reticências');
-    assert.equal(m.painel.largura, m.area - 360);
+    assert.equal(m.painel.largura, m.area - 360 - MARGEM);
     assert.ok(m.painel.largura >= 520);
     assert.equal(m.painel.posicao, 'sticky');
     assert.ok(m.painel.sombra !== 'none');
@@ -304,15 +306,15 @@ test('medida: o painel fica sob a barra superior com a altura toda ao rolar a li
     return { topoPainel: pn.top, baseBarra: b.bottom, altura: pn.height, janela: innerHeight, barra: b.height, rolou: conteudo.scrollTop };
   }));
   assert.ok(r.rolou > 0);
-  assert.equal(r.topoPainel, r.baseBarra);
-  assert.equal(r.altura, r.janela - r.barra);
+  assert.equal(r.topoPainel, r.baseBarra + MARGEM);
+  assert.equal(r.altura, r.janela - r.barra - 2 * MARGEM);
 });
 
 test('medida: a 1024 com a lateral aberta, o painel mantém 520 e a lista cede, sem transbordar', { skip: chromium ? false : motivo }, async () => {
   const ms = await abrir(1024, (p) => p.evaluate(medidas));
   for (const m of ms.slice(0, 2)) {
     assert.equal(m.painel.largura, 520);
-    assert.equal(m.lista, m.area - 520);
+    assert.equal(m.lista, m.area - 520 - MARGEM);
     assert.ok(m.lista < 360);
   }
 });

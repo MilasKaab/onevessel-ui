@@ -122,9 +122,15 @@
      ficam como estão. */
   [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) { color: var(--ov-texto-terciario); font-weight: 400; }
   [data-painel="foco"]:has(> .ov-painel) .ov-tabela tbody tr:not([aria-selected="true"], :hover, :focus-visible, :has(:focus-visible)) .nome { font-weight: 400; }
-  /* O painel em primeiro plano: o que sobra (mínimo 520px), a altura toda
-     abaixo da barra superior, o corpo rolando por dentro. */
-  [data-painel="foco"]:has(> .ov-painel) > .ov-painel { position: sticky; top: var(--ov-barra-superior); flex: 1 1 0; width: auto; min-width: 520px; height: calc(100vh - var(--ov-barra-superior)); height: calc(100dvh - var(--ov-barra-superior)); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); }
+  /* O painel em primeiro plano: o que sobra (mínimo 520px), o corpo rolando
+     por dentro. Cantos ov-raio-lg nos quatro lados (v3.21, Pessoas de
+     30/10), a 8px do topo, da direita e do pé da área para o raio se ver: o
+     sticky desce 8 e a altura perde 16. A largura segue a mesma conta, ao
+     lado da margem. A borda dá a volta toda (só à esquerda, afinaria nas
+     curvas); o corpo arredonda o pé, para a barra de rolagem não passar por
+     cima do canto. */
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel { position: sticky; top: calc(var(--ov-barra-superior) + 8px); flex: 1 1 0; width: auto; min-width: 520px; height: calc(100vh - var(--ov-barra-superior) - 16px); height: calc(100dvh - var(--ov-barra-superior) - 16px); margin: 8px 8px 8px 0; background: var(--ov-superficie-elevada); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); box-shadow: var(--ov-sombra-2); }
+  [data-painel="foco"]:has(> .ov-painel) > .ov-painel .ov-painel-corpo { border-radius: 0 0 var(--ov-raio-lg) var(--ov-raio-lg); }
   /* Detalhes em colunas de no mínimo 280px: os pares da .ov-dados
      embrulhados em div, e os .ov-campo-grupo do formulário; o resto do
      formulário (botões, avisos) ocupa a linha inteira. */

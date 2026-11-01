@@ -2,7 +2,9 @@
 // data e hora, teclado das abas, teclado da Lista de cards, núcleo do Menu e
 // núcleo do "+ Filtro". Minor: só arquivos novos em js/; nenhum CSS, token
 // ou js de antes muda (os bytes da v3.19.0, abaixo). O comportamento de cada
-// núcleo está no teste dele (`test/<núcleo>.test.mjs`).
+// núcleo está no teste dele (`test/<núcleo>.test.mjs`). Desde a v3.21.0, as
+// janelas e as telas daqui são as fixtures da v3.20.0 (fixture com fixture),
+// e a versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -31,7 +33,8 @@ test('os CSS, o tokens.json e os js de antes com os bytes da v3.19.0', () => {
     tokens: 'd15afe46e2ed18570720fe09b63af5eca75a9d266103619833d2547f44c7cd92',
   };
   assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), Object.keys(CSS).map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
-  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  const V3200 = ['janelas', 'telas'];
+  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(V3200.includes(nome) ? `test/fixtures/${nome}-v3.20.0.css` : `css/${nome}.css`), sha, nome);
   const JS = {
     'alteracoes-nucleo': '3275de25a16812f027b05c60b8de52ea78eb9bce2143166437241c4a5b62cc71',
     camada: '45a04d3a63f1ccf2910e6cc347ebc01efe64182bcf30489921f4fb93e8a66c69',
@@ -59,9 +62,7 @@ for (const nome of NOVOS) {
   });
 }
 
-test('package.json 3.20.0; README com a tag, a seção da versão e um exemplo de cada núcleo', () => {
-  assert.equal(pacote.version, '3.20.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.20\.0"/);
+test('README com a seção da versão e um exemplo de cada núcleo', () => {
   assert.match(leiame, /### Texto, datas e teclado \(v3\.20\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.20\.0 é minor:\*\*/);
   for (const nome of NOVOS) {

@@ -3,8 +3,8 @@
  * 24 h, sem segundos, sem "h" na hora. Data `26/10/2026`; completa
  * `26/10/2026 09:00` (registro histórico); curta `27/10, 20:00` (ano
  * corrente, operação do dia); relativa `há 3h · hoje · ontem` (decorrido e
- * status), sempre com a completa no `title`. Vírgula na etiqueta; o "às" da
- * frase é do app.
+ * status), sempre com a completa no `title`; duração `2h05` (o que falta,
+ * v3.21.0). Vírgula na etiqueta; o "às" da frase é do app.
  *
  * **Sempre no fuso de Brasília** (`America/Sao_Paulo`, V2 de 31/10), nunca no
  * do aparelho nem no do processo: igual à Bordo (`FUSO_DE_BRASILIA`, A2 da
@@ -105,24 +105,39 @@ export function dataHoraCurta(instante, agora = new Date()) {
 }
 
 /**
- * O tempo decorrido, em milissegundos: "agora" (menos de 1 min), "há 45 min"
- * (menos de 60 min), "há 3h" ou "há 3h05" (menos de 24 h; os minutos com dois
- * dígitos, só quando não são zero), "há 1 dia", "há 2 dias". Negativo (o
- * relógio do aparelho adiantado) é "agora"; o que não é número, `""`.
+ * O tempo, em milissegundos, sem o "há": "menos de 1 min", "45 min" (menos de
+ * 60 min), "3h" ou "3h05" (menos de 24 h; os minutos com dois dígitos, só
+ * quando não são zero), "1 dia", "2 dias". Negativo ou o que não é número,
+ * `""`. Serve ao que falta ("Jornada: faltam 2h05"; o "falta/faltam" é do
+ * app). Desde a v3.21.0.
+ * @param {number | null | undefined} ms
+ * @returns {string}
+ */
+export function duracao(ms) {
+  if (typeof ms !== 'number' || !Number.isFinite(ms) || ms < 0) return ''
+  const minutos = Math.floor(ms / 60000)
+  if (minutos < 1) return 'menos de 1 min'
+  if (minutos < 60) return `${minutos} min`
+  const horas = Math.floor(minutos / 60)
+  if (horas < 24) {
+    const resto = minutos % 60
+    return resto === 0 ? `${horas}h` : `${horas}h${String(resto).padStart(2, '0')}`
+  }
+  return plural(Math.floor(horas / 24), 'dia', 'dias')
+}
+
+/**
+ * O tempo decorrido, em milissegundos: "agora" (menos de 1 min) ou "há " e a
+ * `duracao` — "há 45 min", "há 3h", "há 3h05", "há 1 dia", "há 2 dias".
+ * Negativo (o relógio do aparelho adiantado) é "agora"; o que não é número,
+ * `""`.
  * @param {number | null | undefined} ms
  * @returns {string}
  */
 export function decorrido(ms) {
   if (typeof ms !== 'number' || !Number.isFinite(ms)) return ''
-  const minutos = Math.floor(ms / 60000)
-  if (minutos < 1) return 'agora'
-  if (minutos < 60) return `há ${minutos} min`
-  const horas = Math.floor(minutos / 60)
-  if (horas < 24) {
-    const resto = minutos % 60
-    return resto === 0 ? `há ${horas}h` : `há ${horas}h${String(resto).padStart(2, '0')}`
-  }
-  return `há ${plural(Math.floor(horas / 24), 'dia', 'dias')}`
+  if (ms < 60000) return 'agora'
+  return `há ${duracao(ms)}`
 }
 
 /**

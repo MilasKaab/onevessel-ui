@@ -43,7 +43,7 @@ const ALTERADAS = {
 };
 
 const NOVAS = {
-  casca: [`|${DESABILITADO}`, `|${DESABILITADO}:hover:not(:focus-visible)`, `|${DESABILITADO} + .ov-motivo`, `${TOQUE}|${DESABILITADO} + .ov-motivo`],
+  casca: [`|${DESABILITADO}`, `|${DESABILITADO} svg`, `|${DESABILITADO}:hover:not(:focus-visible)`, `|${DESABILITADO} + .ov-motivo`, `${TOQUE}|${DESABILITADO} + .ov-motivo`],
   telas: [`|${NOTA_COM_ALERTA}`, '|.ov-indicador-nota > .ov-indicador-alerta'],
 };
 
@@ -125,15 +125,19 @@ test('"Atenção" na nota: flex, alinhado à última linha (flex-end antes, de r
   assert.deepEqual(declaracoesEm(t, '', '.ov-indicador[data-alerta="true"]'), ['border-color: var(--ov-destaque)', 'box-shadow: inset 3px 0 0 var(--ov-destaque)']);
 });
 
-test('item de menu desabilitado: 0,6, not-allowed, sem realce no hover (o foco fica); o motivo só no toque, com o recuo do texto', () => {
+test('item de menu desabilitado: terciário sem opacidade (U7), not-allowed, sem realce no hover; o motivo só no toque, com o recuo do texto', () => {
   const c = ATUAL.casca;
-  assert.deepEqual(declaracoesEm(c, '', DESABILITADO), ['opacity: .6', 'cursor: not-allowed']);
+  assert.deepEqual(declaracoesEm(c, '', DESABILITADO), ['color: var(--ov-texto-terciario)', 'cursor: not-allowed']);
+  assert.deepEqual(declaracoesEm(c, '', `${DESABILITADO} svg`), ['color: var(--ov-texto-terciario)']);
+  // Depois da regra do perigo, com a mesma força: o vermelho sai.
+  const ordem = regras(c).flatMap((r) => r.seletores);
+  assert.ok(ordem.indexOf(DESABILITADO) > ordem.indexOf('.ov-menu-item[data-tom="perigo"]'));
+  assert.ok(ordem.indexOf(`${DESABILITADO} svg`) > ordem.indexOf('.ov-menu-item[data-tom="perigo"] svg'));
+  assert.doesNotMatch(c, /aria-disabled="true"\][^{]*\{[^}]*opacity/);
   assert.deepEqual(declaracoesEm(c, '', `${DESABILITADO}:hover:not(:focus-visible)`), ['background: transparent']);
   const motivo = declaracoesEm(c, '', `${DESABILITADO} + .ov-motivo`);
   for (const d of ['display: none', 'padding: 0 10px 6px 36px', 'font: 400 12px/16px var(--font-sans)', 'color: var(--ov-texto-terciario)']) assert.ok(motivo.includes(d), d);
   assert.deepEqual(declaracoesEm(c, TOQUE, `${DESABILITADO} + .ov-motivo`), ['display: block']);
-  // Nenhuma cor nova no desabilitado: o perigo continua por baixo da opacidade.
-  assert.ok(!declaracoesEm(c, '', DESABILITADO).some((d) => d.startsWith('color')));
 });
 
 test('menu-nucleo: Enter e Espaço não são do núcleo em item nenhum (o desabilitado não executa por ele)', () => {
@@ -153,6 +157,7 @@ test('package.json 3.22.0; README com a tag, a seção da versão, a alterada, o
   assert.match(leiame, /<p class="ov-motivo" id="motivo-excluir">/);
   assert.match(leiame, /6,50:1/);
   assert.match(leiame, /7,75:1/);
+  assert.match(leiame, /anel[^\n]*7,20:1[^\n]*8,74:1[^\n]*6,46:1[^\n]*7,79:1/);
 });
 
 test('exemplo: a seção nos dois temas, alerta com nota de uma e de três linhas e sem nota, desabilitado normal e de perigo', () => {
@@ -265,26 +270,29 @@ const menus = () => [...document.querySelectorAll('.atencao-menu .ov-menu')].map
     const m = i.nextElementSibling?.classList.contains('ov-motivo') ? i.nextElementSibling : null;
     return {
       desabilitado: i.getAttribute('aria-disabled') === 'true', perigo: i.dataset.tom === 'perigo',
-      opacidade: e.opacity, cursor: e.cursor, cor: e.color, erro: getComputedStyle(menu).getPropertyValue('--ov-erro').trim(),
+      opacidade: e.opacity, cursor: e.cursor, cor: e.color, svg: i.querySelector('svg') ? getComputedStyle(i.querySelector('svg')).color : null,
+      terciario: getComputedStyle(menu).getPropertyValue('--ov-texto-terciario').trim(), erro: getComputedStyle(menu).getPropertyValue('--ov-erro').trim(),
       motivo: m && { display: getComputedStyle(m).display, recuo: (() => { const g = document.createRange(); g.selectNodeContents(m); return g.getBoundingClientRect().left - i.getBoundingClientRect().left; })(), texto: i.querySelector('svg') ? i.querySelector('svg').getBoundingClientRect().right + 10 - i.getBoundingClientRect().left : null, descrito: i.getAttribute('aria-describedby') === m.id, title: i.title === m.textContent },
     };
   });
 });
 const hex = (c) => `#${c.match(/\d+/g).slice(0, 3).map((v) => Number(v).toString(16).padStart(2, '0')).join('')}`;
 
-test('medida: no mouse, o desabilitado a 0,6 com not-allowed, o perigo em ov-erro por baixo, o motivo escondido', { skip: chromium ? false : motivo }, async () => {
+test('medida: no mouse, o desabilitado sem opacidade, texto e ícone em terciário (o perigo também), not-allowed, o motivo escondido', { skip: chromium ? false : motivo }, async () => {
   const ms = await abrir(1280, (p) => p.evaluate(menus));
   assert.equal(ms.length, 2);
   for (const itens of ms) {
     assert.deepEqual(itens.map((i) => i.desabilitado), [false, true, true]);
     for (const i of itens.filter((x) => x.desabilitado)) {
-      assert.equal(i.opacidade, '0.6');
+      assert.equal(i.opacidade, '1');
+      assert.equal(hex(i.cor), i.terciario);
+      assert.equal(hex(i.svg), i.terciario);
       assert.equal(i.cursor, 'not-allowed');
       assert.equal(i.motivo.display, 'none');
       assert.ok(i.motivo.descrito && i.motivo.title);
     }
-    assert.equal(itens[0].opacidade, '1');
-    assert.equal(hex(itens[2].cor), itens[2].erro);
+    assert.notEqual(hex(itens[0].cor), itens[0].terciario);
+    assert.notEqual(hex(itens[2].cor), itens[2].erro, 'o vermelho sai no desabilitado');
   }
 });
 
@@ -299,34 +307,63 @@ test('medida: no toque, o motivo escrito abaixo, com o recuo do texto do item', 
   }
 });
 
-test('medida: hover sem realce no desabilitado (o habilitado ganha); foco pelo teclado com fundo e anel; Enter não fecha nem executa', { skip: chromium ? false : motivo }, async () => {
-  const r = await abrir(1280, async (p) => {
-    const menu = p.locator('.atencao-menu .controles-moldura[data-theme="claro"] .ov-menu');
-    const fundo = (item) => item.evaluate((el) => getComputedStyle(el).backgroundColor);
-    const editar = menu.locator('.ov-menu-item').first();
-    const arquivar = menu.locator('[aria-disabled="true"]').first();
-    // O onevessel.css põe 0,01 ms de transição em tudo no movimento reduzido:
-    // um quadro de espera antes de ler a cor.
-    await editar.hover();
-    await p.waitForTimeout(50);
-    const habilitado = await fundo(editar);
-    await arquivar.hover();
-    await p.waitForTimeout(50);
-    const desabilitado = await fundo(arquivar);
-    await p.mouse.move(0, 0);
-    await p.keyboard.press('Tab');
-    await menu.locator('[aria-disabled="true"]').first().focus();
-    await p.waitForTimeout(50);
-    const foco = await menu.locator('[aria-disabled="true"]').first().evaluate((el) => ({ fundo: getComputedStyle(el).backgroundColor, anel: getComputedStyle(el).outlineStyle, visivel: el.matches(':focus-visible') }));
-    // Sem onClick (o contrato do app): Enter no item não tira o foco dele.
-    await p.keyboard.press('Enter');
-    const continua = await menu.locator('[aria-disabled="true"]').first().evaluate((el) => document.activeElement === el);
-    return { habilitado, desabilitado, foco, continua };
+// Cor rgba() composta sobre uma opaca.
+const sobre = (c, fundo) => {
+  const [r, g, b, a = 1] = c.match(/[\d.]+/g).map(Number);
+  const [R, G, B] = fundo.match(/\d+/g).map(Number);
+  return `rgb(${Math.round(r * a + R * (1 - a))}, ${Math.round(g * a + G * (1 - a))}, ${Math.round(b * a + B * (1 - a))})`;
+};
+
+test('medida: hover sem realce no desabilitado (o habilitado ganha); foco pelo teclado com fundo e anel inteiros, de 3:1 ou mais; Enter não tira o foco', { skip: chromium ? false : motivo }, async () => {
+  const temas = await abrir(1280, async (p) => {
+    const saida = {};
+    for (const tema of ['escuro', 'claro']) {
+      const menu = p.locator(`.atencao-menu .controles-moldura[data-theme="${tema}"] .ov-menu`);
+      const fundo = (item) => item.evaluate((el) => getComputedStyle(el).backgroundColor);
+      // O onevessel.css põe 0,01 ms de transição em tudo no movimento reduzido:
+      // um quadro de espera antes de ler a cor.
+      const editar = menu.locator('.ov-menu-item').first();
+      await editar.hover();
+      await p.waitForTimeout(50);
+      const habilitado = await fundo(editar);
+      const itens = [];
+      for (const item of await menu.locator('[aria-disabled="true"]').all()) {
+        await item.hover();
+        await p.waitForTimeout(50);
+        const hover = await fundo(item);
+        await p.mouse.move(0, 0);
+        await p.keyboard.press('Shift');
+        await item.focus();
+        await p.waitForTimeout(50);
+        const foco = await item.evaluate((el) => {
+          const e = getComputedStyle(el);
+          return { fundo: e.backgroundColor, anel: e.outlineStyle, largura: e.outlineWidth, corAnel: e.outlineColor, opacidade: e.opacity, visivel: el.matches(':focus-visible'), menu: getComputedStyle(el.closest('.ov-menu')).backgroundColor };
+        });
+        await p.keyboard.press('Enter');
+        const continua = await item.evaluate((el) => document.activeElement === el);
+        itens.push({ hover, foco, continua });
+      }
+      saida[tema] = { habilitado, itens };
+    }
+    return saida;
   });
-  assert.notEqual(r.habilitado, 'rgba(0, 0, 0, 0)');
-  assert.equal(r.desabilitado, 'rgba(0, 0, 0, 0)');
-  assert.ok(r.foco.visivel);
-  assert.equal(r.foco.anel, 'solid');
-  assert.notEqual(r.foco.fundo, 'rgba(0, 0, 0, 0)');
-  assert.ok(r.continua);
+  const anel = {};
+  for (const [tema, r] of Object.entries(temas)) {
+    assert.notEqual(r.habilitado, 'rgba(0, 0, 0, 0)');
+    assert.equal(r.itens.length, 2, 'o normal e o de perigo');
+    for (const i of r.itens) {
+      assert.equal(i.hover, 'rgba(0, 0, 0, 0)');
+      assert.ok(i.foco.visivel);
+      assert.deepEqual([i.foco.anel, i.foco.largura, i.foco.opacidade], ['solid', '2px', '1']);
+      assert.notEqual(i.foco.fundo, 'rgba(0, 0, 0, 0)');
+      // O anel por dentro (recuo -2): de um lado o fundo do menu, do outro o do item em foco.
+      const contraMenu = contraste(i.foco.corAnel, i.foco.menu);
+      const contraItem = contraste(i.foco.corAnel, sobre(i.foco.fundo, i.foco.menu));
+      assert.ok(contraMenu >= 3 && contraItem >= 3, `${tema}: ${contraMenu} ${contraItem}`);
+      anel[tema] = [contraMenu.toFixed(2), contraItem.toFixed(2)];
+      assert.ok(i.continua);
+    }
+  }
+  // Os valores do README.
+  assert.deepEqual(anel, { escuro: ['8.74', '7.79'], claro: ['7.20', '6.46'] });
 });

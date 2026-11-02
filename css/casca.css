@@ -137,13 +137,16 @@
 .ov-menu-item .ov-tecla { margin-left: auto; }
 .ov-menu-item[data-tom="perigo"], .ov-menu-item[data-tom="perigo"] svg { color: var(--ov-erro); }
 /* Item desabilitado por regra momentânea (v3.22; componentes.md, Menu):
-   continua no menu e focável (as setas passam por ele), a 0,6 como o botão
-   desabilitado, sem o realce do hover; o anel e o fundo do :focus-visible
-   ficam. Com data-tom="perigo", a cor do perigo continua por baixo. Não
-   executar nem fechar é do app. O motivo vem logo depois, num .ov-motivo
-   (id próprio, aria-describedby no item, o mesmo texto no title), escrito
-   só no toque, com o recuo do texto do item (10 + ícone de 16 + 10). */
-.ov-menu-item[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
+   continua no menu e focável (as setas passam por ele), com texto e ícone em
+   ov-texto-terciario, sem o realce do hover. Sem opacidade (U7, 02/11): a
+   0,6 o anel ficava a 2,92:1 no claro; assim o fundo e o anel do
+   :focus-visible ficam inteiros. Com data-tom="perigo", o vermelho sai (vem
+   depois da regra do perigo, mesma força). Não executar nem fechar é do
+   app. O motivo vem logo depois, num .ov-motivo (id próprio,
+   aria-describedby no item, o mesmo texto no title), escrito só no toque,
+   com o recuo do texto do item (10 + ícone de 16 + 10). */
+.ov-menu-item[aria-disabled="true"] { color: var(--ov-texto-terciario); cursor: not-allowed; }
+.ov-menu-item[aria-disabled="true"] svg { color: var(--ov-texto-terciario); }
 .ov-menu-item[aria-disabled="true"]:hover:not(:focus-visible) { background: transparent; }
 .ov-menu-item[aria-disabled="true"] + .ov-motivo { display: none; margin: 0; padding: 0 10px 6px 36px; font: 400 12px/16px var(--font-sans); color: var(--ov-texto-terciario); }
 /* Item da seção aberta (v3.11; no "Mais", a seção que mora nele): o mesmo

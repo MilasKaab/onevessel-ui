@@ -19,9 +19,12 @@ const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const NOMES = ['casca', 'controles', 'janelas', 'telas'];
 // Desde a v3.21.0, as janelas e as telas daqui são as fixtures da v3.20.0 (os
-// bytes da v3.19.0, que a v3.20.0 não mudou): fixture com fixture.
+// bytes da v3.19.0, que a v3.20.0 não mudou): fixture com fixture. Desde a
+// v3.22.0, a casca também, pela fixture da v3.21.0 (os bytes da v3.19.0).
 const V3200 = ['janelas', 'telas'];
-const ATUAL = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(V3200.includes(n) ? `test/fixtures/${n}-v3.20.0.css` : `css/${n}.css`)]));
+const V3210 = ['casca'];
+const fonte = (n) => (V3200.includes(n) ? `test/fixtures/${n}-v3.20.0.css` : V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : `css/${n}.css`);
+const ATUAL = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(`test/fixtures/${n}-v3.18.2.css`)]));
 const tokensJson = JSON.parse(ler('tokens/tokens.json'));
 const exemplo = ler('exemplo/index.html');

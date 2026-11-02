@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.21.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.22.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -469,7 +469,7 @@ function aoTeclar(evento) {                    // na lista
 }
 ```
 
-**Teclado do Menu** (`menu-nucleo.js`, bloco D): o ⋮, o "+ Filtro", o "Exibir", o seletor de embarcação e o menu da conta. ↑↓ com volta, Home, End; Esc fecha e devolve o foco ao gatilho; Tab (e Shift Tab) fecha **sem** `preventDefault`, e o foco segue; Enter e Espaço são do próprio item (botão ou link de verdade). `acaoDaTeclaNoMenu(tecla, atual, total)` devolve `{ foco: i }`, `{ fechar: true, devolverFoco }` ou `null`. Abrir, posicionar, focar o primeiro item, fechar no clique fora, na rolagem e no redimensionar ficam no app; o Esc o app ouve no `document`, para fechar mesmo com o foco fora do menu. O aviso do "+ Filtro" conta como item (focável, `aria-disabled`).
+**Teclado do Menu** (`menu-nucleo.js`, bloco D): o ⋮, o "+ Filtro", o "Exibir", o seletor de embarcação e o menu da conta. ↑↓ com volta, Home, End; Esc fecha e devolve o foco ao gatilho; Tab (e Shift Tab) fecha **sem** `preventDefault`, e o foco segue; Enter e Espaço são do próprio item (botão ou link de verdade). `acaoDaTeclaNoMenu(tecla, atual, total)` devolve `{ foco: i }`, `{ fechar: true, devolverFoco }` ou `null`. Abrir, posicionar, focar o primeiro item, fechar no clique fora, na rolagem e no redimensionar ficam no app; o Esc o app ouve no `document`, para fechar mesmo com o foco fora do menu. O aviso do "+ Filtro" conta como item (focável, `aria-disabled`). Desde a v3.22.0, o item desabilitado do menu tem estilo no pacote (`.ov-menu-item[aria-disabled="true"]`, na seção da versão).
 
 ```js
 import { acaoDaTeclaNoMenu } from 'onevessel-ui/js/menu-nucleo.js'
@@ -536,6 +536,41 @@ duracao(fim - Date.now())        // "3h" · "2h05" · "1 dia" · "2 dias"; negat
 - **Alteradas pelo nome** (o teste da versão cobra; o resto das fixtures da v3.20.0 fica igual regra a regra): no `janelas.css`, `[data-painel="foco"]:has(> .ov-painel) > .ov-painel` (o `top`, a `height`, a `margin`, a borda em volta e o `border-radius`). No `telas.css` nenhuma regra muda: só nascem.
 - **Por que a v3.21.0 é minor:** classes, regras e uma função novas (`.ov-ordenar`, `.ov-celula-sub`, o cursor da linha, o pé arredondado do corpo no modo foco e a `duracao`), e a única regra que muda de valor está na lista acima.
 - **O que muda na tela dos apps ao adotar:** o painel no modo foco ganha os cantos e a margem de 8 (e fica 8px mais estreito); toda linha que já tem `[data-abre-linha]` passa a mostrar a mão em qualquer ponto, o nome inclusive. O resto só aparece onde o app puser a classe ou o `aria-sort`.
+
+### "Atenção" na nota e item de menu desabilitado (v3.22.0)
+
+A U5 e o pendente do Menu, decididos em 02/11: no indicador em alerta, o "Atenção" vai para a linha da nota; e o item de menu desabilitado por regra momentânea, que a Bordo tinha com estilo local. As regras de uso estão no `componentes.md` (Indicador, Menu), no `onevessel-docs`.
+
+```html
+<!-- Com nota: o alerta dentro dela, no fim. -->
+<a class="ov-cartao ov-indicador" href="…" data-filete="neutro" data-alerta="true">
+  <div class="ov-indicador-rotulo">Aguardando chegada</div>
+  <div class="ov-indicador-valor">3</div>
+  <div class="ov-indicador-nota"><span>3 atividades</span><span class="ov-indicador-alerta">Atenção</span></div>
+</a>
+<!-- Sem nota: no rótulo, como antes. -->
+<a class="ov-cartao ov-indicador" href="…" data-alerta="true">
+  <div class="ov-indicador-rotulo">Embarcados sem leito<span class="ov-indicador-alerta">Atenção</span></div>
+  <div class="ov-indicador-valor">2</div>
+</a>
+```
+
+- **"Atenção" na linha da nota** (`telas.css`): com o `.ov-indicador-alerta` dentro da `.ov-indicador-nota`, a nota vira flex: o texto (num `span`) quebra à esquerda, e o "Atenção" fica à direita (o `margin-left: auto` de sempre, sem encolher), alinhado à **última linha** da nota (`align-items: last baseline`; quem não tem, `flex-end`), com 8px de folga. Cartão sem nota: o "Atenção" continua no rótulo, pela regra de antes. Cartão sem alerta não muda.
+- **Cor do "Atenção":** `ov-destaque-texto` (claro `#9a4508`, escuro `#fb923c`), 12px. Sobre o `.ov-cartao` (`ov-superficie`), medido no navegador: **6,50:1 no claro** e **7,75:1 no escuro** (mínimo 4,5:1). A borda e o filete do alerta continuam em `ov-destaque`.
+
+```html
+<div class="ov-menu" role="menu" aria-label="Ações de Ana Souza">
+  <button class="ov-menu-item" role="menuitem" type="button"><svg …pencil…/>Editar</button>
+  <div class="ov-menu-sep" role="separator"></div>
+  <button class="ov-menu-item" role="menuitem" type="button" data-tom="perigo" aria-disabled="true" aria-describedby="motivo-excluir" title="Tem embarques ou alocações no histórico."><svg …trash-2…/>Excluir…</button>
+  <p class="ov-motivo" id="motivo-excluir">Tem embarques ou alocações no histórico.</p>
+</div>
+```
+
+- **Item de menu desabilitado** (`casca.css`): `.ov-menu-item[aria-disabled="true"]` a `opacity: .6` (como o botão desabilitado), `cursor: not-allowed`, sem o realce do hover; o `:focus-visible` mantém o fundo e o anel. Com `data-tom="perigo"`, a cor do perigo continua por baixo da opacidade. **Contrato:** `aria-disabled="true"`, nunca o atributo `disabled` (que tira o item do foco: as setas do menu têm de passar por ele, e o leitor de tela o lê com o motivo); o app não liga a ação ao item e não fecha o menu no clique nem no Enter dele (o `menu-nucleo.js` não executa item nenhum: Enter e Espaço são do próprio item). O motivo vai num `.ov-motivo` logo depois do item, dentro do menu, com `id` próprio apontado pelo `aria-describedby` do item, e o mesmo texto no `title` (o computador mostra no mouse). Escrito só no toque (`pointer: coarse`), em 12/16 `ov-texto-terciario`, com o recuo do texto do item (36px: 10 de padding, 16 do ícone, 10 de espaço).
+- **Alteradas pelo nome** (o teste da versão cobra; o resto das fixtures da v3.21.0 fica igual regra a regra): no `telas.css`, `.ov-indicador-alerta` (a cor, de `ov-destaque` para `ov-destaque-texto`). No `casca.css` nenhuma regra muda: só nascem.
+- **Por que a v3.22.0 é minor:** regras novas (a nota com o alerta, o item desabilitado e o motivo dele), e a única regra que muda de valor está na lista acima. Nenhum `js/` muda.
+- **O que muda na tela dos apps ao adotar:** o "Atenção" que já está no rótulo fica um pouco mais escuro no claro (`#b45309` → `#9a4508`; no escuro o valor é o mesmo). Ir para a nota e o item desabilitado só aparecem onde o app mudar o HTML; a Bordo tira o `opacity-60` e o `cursor` local do Excluir (o `px-2.5` do motivo também: o pacote recua 36).
 
 ### Relatório (papel e impressão)
 

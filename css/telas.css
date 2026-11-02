@@ -139,9 +139,16 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
    data-filete. Mesma força dos filetes e depois deles: vence pela ordem. */
 .ov-indicador[data-alerta="true"] { border-color: var(--ov-destaque); box-shadow: inset 3px 0 0 var(--ov-destaque); }
 .ov-indicador-rotulo { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--ov-texto-secundario); }
-.ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque); }
+.ov-indicador-alerta { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ov-destaque-texto); }
 .ov-indicador-valor { margin-top: 8px; font: 600 32px/40px var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .ov-indicador-nota { margin-top: 2px; font-size: 13px; color: var(--ov-texto-terciario); font-variant-numeric: tabular-nums; }
+/* "Atenção" na linha da nota (v3.22, U5 de 02/11): o alerta vem dentro da
+   nota, no fim, e a nota vira flex: o texto quebra à esquerda e o "Atenção"
+   fica à direita, alinhado à última linha. Sem nota, ele continua no rótulo
+   (regra de cima). O flex-end é o recuo de quem não tem last baseline.
+     <div class="ov-indicador-nota"><span>3 atividades</span><span class="ov-indicador-alerta">Atenção</span></div> */
+.ov-indicador-nota:has(> .ov-indicador-alerta) { display: flex; align-items: flex-end; align-items: last baseline; gap: 8px; }
+.ov-indicador-nota > .ov-indicador-alerta { flex-shrink: 0; }
 /* Grade: 4 colunas no computador, 2 de 768 a 1023px, 1 no celular (abaixo).
    Até 4 indicadores por tela é regra do app. Serve em div ou ul. */
 .ov-indicadores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ov-esp-4); margin: 0; padding: 0; list-style: none; }

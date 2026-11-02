@@ -91,6 +91,11 @@
   .progresso-segmentos { display: flex; }
   .progresso-segmentos > span { border-radius: 0; }
   .estados-moldura .ov-indicadores { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  /* "Atenção" na nota e item de menu desabilitado (v3.22.0). */
+  .atencao-menu { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .atencao-menu > h2 { margin: 0 0 var(--ov-esp-4); }
+  .atencao-menu .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .atencao-menu .ov-menu { max-width: 100%; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1382,6 +1387,47 @@
     </div>
 </section>
 
+<section class="atencao-menu">
+  <h2 class="ov-titulo-1">"Atenção" na nota e item de menu desabilitado</h2>
+  <p class="ov-legenda">Desde a v3.22.0: no indicador em alerta com nota, o <code class="ov-codigo">.ov-indicador-alerta</code> vai dentro da <code class="ov-codigo">.ov-indicador-nota</code>, no fim; a nota vira flex, o texto quebra à esquerda e o "Atenção" fica à direita, na última linha (uma linha, três linhas). Sem nota, ele continua no rótulo. O "Atenção" é <code class="ov-codigo">ov-destaque-texto</code>. No menu, o item <code class="ov-codigo">aria-disabled="true"</code> (normal e de perigo) em terciário, sem opacidade e sem o vermelho do perigo, sem o realce do hover, com o anel inteiro no foco, focável pelas setas, com o motivo no <code class="ov-codigo">title</code> e, no toque, escrito abaixo (<code class="ov-codigo">.ov-motivo</code>). Dados fictícios.</p>
+
+    <p class="ov-rotulo moldura-rotulo">"Atenção" na nota e item de menu desabilitado · tema escuro</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <div class="ov-indicadores">
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro" data-alerta="true"><div class="ov-indicador-rotulo">Aguardando chegada</div><div class="ov-indicador-valor">3</div><div class="ov-indicador-nota"><span>3 atividades</span><span class="ov-indicador-alerta">Atenção</span></div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito</div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota"><span>2 pessoas embarcadas hoje, uma desde as 08:10 e outra desde as 11:40, sem leito</span><span class="ov-indicador-alerta">Atenção</span></div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito<span class="ov-indicador-alerta">Atenção</span></div><div class="ov-indicador-valor">2</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="sucesso"><div class="ov-indicador-rotulo">Executadas</div><div class="ov-indicador-valor">12</div><div class="ov-indicador-nota">12 atividades</div></a>
+      </div>
+      <div class="ov-menu" role="menu" aria-label="Ações de Ana Souza" style="width: 280px">
+        <button class="ov-menu-item" role="menuitem" type="button"><i data-icone="pencil"></i>Editar</button>
+        <button class="ov-menu-item" role="menuitem" type="button" aria-disabled="true" aria-describedby="motivo-arquivar-escuro" title="Está a bordo. Desembarque antes de arquivar."><i data-icone="archive"></i>Arquivar</button>
+        <p class="ov-motivo" id="motivo-arquivar-escuro">Está a bordo. Desembarque antes de arquivar.</p>
+        <div class="ov-menu-sep" role="separator"></div>
+        <button class="ov-menu-item" role="menuitem" type="button" data-tom="perigo" aria-disabled="true" aria-describedby="motivo-excluir-escuro" title="Tem embarques ou alocações no histórico."><i data-icone="trash-2"></i>Excluir…</button>
+        <p class="ov-motivo" id="motivo-excluir-escuro">Tem embarques ou alocações no histórico.</p>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">"Atenção" na nota e item de menu desabilitado · tema claro</p>
+    <div class="controles-moldura" data-theme="claro">
+      <div class="ov-indicadores">
+        <a class="ov-cartao ov-indicador" href="#" data-filete="neutro" data-alerta="true"><div class="ov-indicador-rotulo">Aguardando chegada</div><div class="ov-indicador-valor">3</div><div class="ov-indicador-nota"><span>3 atividades</span><span class="ov-indicador-alerta">Atenção</span></div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito</div><div class="ov-indicador-valor">2</div><div class="ov-indicador-nota"><span>2 pessoas embarcadas hoje, uma desde as 08:10 e outra desde as 11:40, sem leito</span><span class="ov-indicador-alerta">Atenção</span></div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-alerta="true"><div class="ov-indicador-rotulo">Embarcados sem leito<span class="ov-indicador-alerta">Atenção</span></div><div class="ov-indicador-valor">2</div></a>
+        <a class="ov-cartao ov-indicador" href="#" data-filete="sucesso"><div class="ov-indicador-rotulo">Executadas</div><div class="ov-indicador-valor">12</div><div class="ov-indicador-nota">12 atividades</div></a>
+      </div>
+      <div class="ov-menu" role="menu" aria-label="Ações de Ana Souza" style="width: 280px">
+        <button class="ov-menu-item" role="menuitem" type="button"><i data-icone="pencil"></i>Editar</button>
+        <button class="ov-menu-item" role="menuitem" type="button" aria-disabled="true" aria-describedby="motivo-arquivar-claro" title="Está a bordo. Desembarque antes de arquivar."><i data-icone="archive"></i>Arquivar</button>
+        <p class="ov-motivo" id="motivo-arquivar-claro">Está a bordo. Desembarque antes de arquivar.</p>
+        <div class="ov-menu-sep" role="separator"></div>
+        <button class="ov-menu-item" role="menuitem" type="button" data-tom="perigo" aria-disabled="true" aria-describedby="motivo-excluir-claro" title="Tem embarques ou alocações no histórico."><i data-icone="trash-2"></i>Excluir…</button>
+        <p class="ov-motivo" id="motivo-excluir-claro">Tem embarques ou alocações no histórico.</p>
+      </div>
+    </div>
+</section>
+
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo
   // é o do Paradas, com a geometria do livro da marca.
@@ -1405,6 +1451,9 @@
     'bar-chart-3': '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
     settings: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
     'arrow-up': '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
+    pencil: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
+    archive: '<rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/>',
+    'trash-2': '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
     'more-vertical': '<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>',
     'more-horizontal': '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
     send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',

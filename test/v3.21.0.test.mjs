@@ -15,7 +15,11 @@ const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const NOMES = ['janelas', 'telas'];
-const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(`css/${n}.css`)]));
+// Desde a v3.22.0, as telas daqui são a fixture da v3.21.0 (fixture com
+// fixture), e a casca, idem; a versão e a tag ficam com o teste da mais nova.
+const V3210 = ['casca', 'telas'];
+const fonte = (n) => (V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : `css/${n}.css`);
+const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries(NOMES.map((n) => [n, ler(`test/fixtures/${n}-v3.20.0.css`)]));
 const pacote = JSON.parse(ler('package.json'));
 const leiame = ler('README.md');
@@ -96,7 +100,7 @@ test('os outros CSS e os js de antes com os bytes da v3.20.0; as fixtures da tag
     tokens: 'd15afe46e2ed18570720fe09b63af5eca75a9d266103619833d2547f44c7cd92',
   };
   assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), [...Object.keys(CSS), ...NOMES].map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
-  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(fonte(nome)), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.20.0.css'), '5ffa2125214366a593af8ee7c05be11aee555981b99f35c25f106b0413c44622');
   assert.equal(sha256('test/fixtures/telas-v3.20.0.css'), 'b511610c2f0995607ae0aba8cbbd26f5ebe3e75489e58b245a9561c4b817f4ba');
   const JS = {
@@ -161,9 +165,7 @@ test('js/datas.js exporta exatamente o que o .d.ts declara, com a duracao', asyn
 
 // ---------- Versão, README e exemplo ----------
 
-test('package.json 3.21.0; README com a tag, a seção da versão, a alterada e o exemplo da duracao', () => {
-  assert.equal(pacote.version, '3.21.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.21\.0"/);
+test('README com a seção da versão, a alterada e o exemplo da duracao', () => {
   assert.match(leiame, /### Tabela de registros e duração \(v3\.21\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.21\.0 é minor:\*\*/);
   assert.match(leiame, /\*\*Alteradas pelo nome\*\*[^\n]*`\[data-painel="foco"\]:has\(> \.ov-painel\) > \.ov-painel`/);

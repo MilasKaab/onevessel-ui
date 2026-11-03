@@ -48,7 +48,10 @@ test('os CSS, o tokens.json e os js de antes com os bytes da v3.19.0', () => {
     'teclas-do-painel': '890e36d9f5d26cdb9f6af6d16961bccc1b53ad4b910aea1536d63f9e71714c6d',
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
-  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
+  // Desde a v3.23.0, o lateral-nucleo daqui é a fixture da v3.22.0 (os bytes
+  // de antes, que a v3.23.0 só acrescenta no fim): fixture com fixture.
+  const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : `js/${nome}.js`);
+  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
   const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, [...Object.keys(JS), ...NOVOS].sort(), 'os js são os de antes e os seis novos');
 });

@@ -118,7 +118,10 @@ test('os outros CSS e os js de antes com os bytes da v3.20.0; as fixtures da tag
     texto: '95f98b2d6ba6e3215deb415ceaf8d22b65a7126b45ded877d3b7028dc3e2205d',
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
-  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
+  // Desde a v3.23.0, o lateral-nucleo daqui é a fixture da v3.22.0 (os bytes
+  // de antes, que a v3.23.0 só acrescenta no fim): fixture com fixture.
+  const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : `js/${nome}.js`);
+  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
   const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, [...Object.keys(JS), 'datas'].sort(), 'nenhum js nasce nem some; só o datas muda');
 });

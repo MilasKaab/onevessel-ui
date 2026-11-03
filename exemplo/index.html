@@ -944,6 +944,7 @@
 <section class="foco">
   <h2 class="ov-titulo-1">Modo foco</h2>
   <p class="ov-legenda">A partir de 1024px, com <code class="ov-codigo">data-painel="foco"</code> no contêiner da lista e do painel, e só enquanto o painel está aberto: a lista fica numa coluna de 360px com as colunas marcadas com <code class="ov-codigo">data-principal</code> (aqui Nome e Estado), o texto das linhas que não estão abertas em <code class="ov-codigo">--ov-texto-secundario</code> (volta com o mouse e o foco), e o painel em primeiro plano com a largura que sobra (mínimo 520px), a altura toda abaixo da barra superior e os Detalhes em colunas de no mínimo 280px. Sem véu. Abaixo de 1024px nada muda: o painel é a Folha móvel. Dados fictícios (v3.17.0).</p>
+  <p class="ov-legenda">Entre 1024 e 1279px de janela, abrir o painel recolhe a lateral sozinha e fechar volta ao estado de antes; se a lateral for reaberta com o painel aberto, fica aberta até fechar. A partir de 1280px nada muda. Nas duas primeiras molduras, o x fecha o painel, uma linha o abre e as setas trocam de registro (<code class="ov-codigo">lateralNoFoco</code>, v3.23.0).</p>
 
     <p class="ov-rotulo moldura-rotulo">Modo foco · tema escuro · painel aberto</p>
     <div class="moldura" data-theme="escuro">
@@ -1504,12 +1505,26 @@
   // aria-label, title e aria-expanded. As duas cascas da página andam
   // juntas, como os módulos na mesma origem. Import dinâmico: aberto sem
   // servidor (file://), o resto da página não cai junto.
-  import('../js/lateral-nucleo.js').then(({ lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral }) => {
+  //
+  // Com o painel aberto no modo foco (v3.23.0, AJ8): entre 1024 e 1279px a
+  // casca daquele painel recolhe a lateral sozinha (lateralNoFoco), sem
+  // gravar nada; se a pessoa alternar com o painel aberto, vale a escolha
+  // dela até fechar. Nas molduras do modo foco, o x fecha o painel, a linha o
+  // abre e as setas trocam de registro.
+  import('../js/lateral-nucleo.js').then(({ lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral, lateralNoFoco }) => {
     const armazenamento = (() => { try { return window.localStorage } catch { return null } })()
-    const mostrar = (estado) => {
-      for (const casca of document.querySelectorAll('.ov-casca')) aplicarLateral(casca, estado)
-      const { icone, texto, rotulo, expandido } = botaoDaLateral(estado)
-      for (const botao of document.querySelectorAll('.ov-lateral-alternar')) {
+    let daPessoa = lerLateral(armazenamento)
+    const mexeu = new WeakSet()
+    const painelAberto = (casca) => casca.querySelector('[data-painel="foco"] > .ov-painel') !== null
+    // Com escolha, ela mudou (o clique ou outra aba).
+    const mostrar = (escolha) => {
+      if (escolha) daPessoa = escolha
+      for (const casca of document.querySelectorAll('.ov-casca')) {
+        const estado = lateralNoFoco({ largura: window.innerWidth, painelAberto: painelAberto(casca), lateralDaPessoa: daPessoa, mexeuComPainelAberto: mexeu.has(casca) })
+        aplicarLateral(casca, estado)
+        const botao = casca.querySelector('.ov-lateral-alternar')
+        if (!botao) continue
+        const { icone, texto, rotulo, expandido } = botaoDaLateral(estado)
         botao.setAttribute('aria-expanded', String(expandido))
         botao.setAttribute('aria-label', rotulo)
         botao.title = rotulo
@@ -1517,14 +1532,53 @@
         botao.querySelector('.ov-lateral-texto').textContent = texto
       }
     }
-    mostrar(lerLateral(armazenamento))
+    mostrar(daPessoa)
     for (const botao of document.querySelectorAll('.ov-lateral-alternar')) {
       botao.addEventListener('click', () => {
-        const atual = botao.closest('.ov-casca').dataset.lateral
+        const casca = botao.closest('.ov-casca')
+        // Alterna a partir do que está na tela, não do guardado.
+        const atual = casca.dataset.lateral
+        if (painelAberto(casca)) mexeu.add(casca)
         mostrar(alternarLateral(armazenamento, atual))
       })
     }
     ouvirLateral(window, mostrar)
+    window.addEventListener('resize', () => mostrar())
+
+    for (const area of document.querySelectorAll('.foco .foco-area')) {
+      const painel = area.querySelector(':scope > .ov-painel')
+      if (!painel) continue
+      const casca = area.closest('.ov-casca')
+      const linhas = () => [...area.querySelectorAll('tbody tr')]
+      const selecionar = (linha) => {
+        for (const l of linhas()) {
+          if (l === linha) l.setAttribute('aria-selected', 'true')
+          else l.removeAttribute('aria-selected')
+          l.tabIndex = l === linha ? 0 : -1
+        }
+        const nome = linha.querySelector('.nome').textContent
+        painel.querySelector('.ov-titulo-3').textContent = nome
+        painel.setAttribute('aria-label', `Pessoa: ${nome}`)
+        if (!painelAberto(casca)) area.append(painel)
+        mostrar()
+      }
+      area.addEventListener('click', (e) => {
+        const linha = e.target.closest('tbody tr')
+        if (linha) return selecionar(linha)
+        const rotulo = e.target.closest('.ov-painel-cab button')?.getAttribute('aria-label')
+        if (rotulo === 'Fechar') {
+          painel.remove()
+          for (const l of linhas()) l.removeAttribute('aria-selected')
+          mexeu.delete(casca)
+          mostrar()
+        } else if (rotulo === 'Pessoa anterior' || rotulo === 'Próxima pessoa') {
+          const todas = linhas()
+          const i = todas.findIndex((l) => l.getAttribute('aria-selected') === 'true')
+          const destino = todas[i + (rotulo === 'Próxima pessoa' ? 1 : -1)]
+          if (destino) selecionar(destino)
+        }
+      })
+    }
   })
 
   // Visões e abas internas pelo núcleo das abas (v3.20.0, C19): ←→ com

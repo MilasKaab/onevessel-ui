@@ -143,3 +143,45 @@ export function ouvirLateral(janela, callback) {
   janela.addEventListener("storage", ouvinte);
   return () => janela.removeEventListener("storage", ouvinte);
 }
+
+/**
+ * A lateral com o painel aberto no modo foco (`componentes.md`, Painel
+ * lateral, AJ8; v3.23.0). Entre 1024 e 1279px de janela, abrir o painel de
+ * um `[data-painel="foco"]` recolhe a lateral sozinha e fechar volta ao
+ * estado de antes; se a pessoa mexer na lateral com o painel aberto, vale a
+ * escolha dela até fechar. Abaixo de 1024 (Folha) e a partir de 1280, nada
+ * muda. A função só diz o que mostrar: não lê nem grava o armazenamento, e
+ * o recolhimento automático nunca chega ao `ov-lateral`.
+ *
+ * O app guarda duas coisas: a escolha da pessoa (`lateralDaPessoa`, a de
+ * `lerLateral`, `alternarLateral` e `ouvirLateral`) e se ela mexeu na
+ * lateral com o painel aberto (`mexeuComPainelAberto`, que volta a `false`
+ * ao fechar o painel; trocar de registro não fecha). O `data-lateral` e o
+ * botão seguem o que a função devolve; o clique alterna a partir do que está
+ * na tela.
+ */
+
+/** A partir daqui o painel deixa de ser a Folha (o modo foco do `janelas.css`). */
+export const FOCO_DE = 1024;
+/** A partir daqui a lateral fica como a pessoa escolheu, com o painel aberto ou não. */
+export const FOCO_ATE = 1280;
+
+/**
+ * @typedef {object} LateralNoFoco
+ * @property {number} largura a da janela (`innerWidth`), em px, a mesma das `@media`.
+ * @property {boolean} painelAberto o painel de um `[data-painel="foco"]` está na tela.
+ * @property {EstadoDaLateral} lateralDaPessoa a escolha da pessoa.
+ * @property {boolean} [mexeuComPainelAberto] a pessoa alternou a lateral desde que o painel abriu.
+ */
+
+/**
+ * O estado da lateral para pôr na casca e no botão.
+ * @param {LateralNoFoco} situacao
+ * @returns {EstadoDaLateral}
+ */
+export function lateralNoFoco({ largura, painelAberto, lateralDaPessoa, mexeuComPainelAberto = false }) {
+  const daPessoa = estadoDe(lateralDaPessoa);
+  const naFaixa = largura >= FOCO_DE && largura < FOCO_ATE;
+  if (!naFaixa || !painelAberto || mexeuComPainelAberto) return daPessoa;
+  return "recolhida";
+}

@@ -52,3 +52,24 @@ export interface JanelaDaLateral {
  * outras abas da mesma origem). Devolve quem para de ouvir.
  */
 export declare function ouvirLateral(janela: JanelaDaLateral | null | undefined, callback: (estado: EstadoDaLateral) => void): () => void;
+/** A partir daqui o painel deixa de ser a Folha (o modo foco do `janelas.css`; v3.23.0). */
+export declare const FOCO_DE = 1024;
+/** A partir daqui a lateral fica como a pessoa escolheu, com o painel aberto ou não (v3.23.0). */
+export declare const FOCO_ATE = 1280;
+/** A situação da tela que decide a lateral no modo foco (v3.23.0). */
+export interface LateralNoFoco {
+    /** A da janela (`innerWidth`), em px, a mesma das `@media`. */
+    largura: number;
+    /** O painel de um `[data-painel="foco"]` está na tela. */
+    painelAberto: boolean;
+    /** A escolha da pessoa. */
+    lateralDaPessoa: EstadoDaLateral;
+    /** A pessoa alternou a lateral desde que o painel abriu; volta a `false` ao fechar. */
+    mexeuComPainelAberto?: boolean;
+}
+/**
+ * A lateral com o painel aberto no modo foco (AJ8, v3.23.0): entre 1024 e
+ * 1279px, painel aberto e a pessoa sem mexer, `"recolhida"`; fora disso, a
+ * escolha da pessoa. Não lê nem grava o armazenamento.
+ */
+export declare function lateralNoFoco(situacao: LateralNoFoco): EstadoDaLateral;

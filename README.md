@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.22.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.23.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -572,6 +572,38 @@ A U5 e o pendente do Menu, decididos em 02/11: no indicador em alerta, o "Atenç
 - **Por que a v3.22.0 é minor:** regras novas (a nota com o alerta, o item desabilitado e o motivo dele), e a única regra que muda de valor está na lista acima. Nenhum `js/` muda.
 - **O que muda na tela dos apps ao adotar:** o "Atenção" que já está no rótulo fica um pouco mais escuro no claro (`#b45309` → `#9a4508`; no escuro o valor é o mesmo). Ir para a nota e o item desabilitado só aparecem onde o app mudar o HTML; a Bordo tira o `opacity-60` e o `cursor` local do Excluir (o `px-2.5` do motivo também: o pacote recua 36), e o Excluir desabilitado deixa de ser vermelho.
 
+### Lateral com o painel no modo foco (v3.23.0)
+
+O AJ8, opção (a), decidido em 03/11: entre 1024 e 1279px de janela, abrir o painel no modo foco recolhe a barra lateral sozinha, e a lista ganha uns 184px. As regras de uso estão no `componentes.md` (Painel lateral, Modo foco), no `onevessel-docs`.
+
+- **A regra:** com o painel de um `[data-painel="foco"]` aberto e a janela entre 1024 e 1279px, a lateral se recolhe; ao fechar o painel, volta ao estado de antes. Se a pessoa alternar a lateral com o painel aberto, vale a escolha dela até fechar o painel: trocar de registro (as setas, outra linha) não recolhe de novo. Abaixo de 1024 (o painel é a Folha) e a partir de 1280, o painel não mexe na lateral.
+- **A escolha guardada não muda:** `lateralNoFoco` só diz o que mostrar; não lê nem grava o `ov-lateral`. Quem grava continua sendo o clique, pelo `alternarLateral`, e o clique é escolha da pessoa: com o painel aberto ele também grava (reabrir grava `"aberta"`, o mesmo que já estava; recolher de novo grava `"recolhida"`, que vale depois de fechar).
+- **Por que JS e não só CSS:** um bloco `@media (min-width: 1024px) and (max-width: 1279px)` com `.ov-casca:has([data-painel="foco"] > .ov-painel)` recolheria sem tocar no armazenamento, mas não deixaria a pessoa reabrir (o CSS venceria o clique) e o botão mostraria "Recolher" com a lateral recolhida. A função é a menor peça que cumpre as duas coisas, e o `data-lateral` continua sendo o único estado que o CSS lê.
+
+```js
+import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral, lateralNoFoco } from 'onevessel-ui/js/lateral-nucleo.js'
+
+// O app guarda a escolha da pessoa e se ela mexeu com o painel aberto.
+let lateralDaPessoa = lerLateral(localStorage)
+let mexeuComPainelAberto = false
+
+const mostrar = () => {
+  const estado = lateralNoFoco({ largura: window.innerWidth, painelAberto, lateralDaPessoa, mexeuComPainelAberto })
+  aplicarLateral(casca, estado)
+  const { icone, texto, rotulo, expandido } = botaoDaLateral(estado)  // o botão segue a tela
+}
+// Clique no botão: alterna a partir do que está na tela.
+lateralDaPessoa = alternarLateral(localStorage, casca.dataset.lateral)
+if (painelAberto) mexeuComPainelAberto = true
+// Fechar o painel: mexeuComPainelAberto = false. Trocar de registro: nada.
+// Também chamam mostrar(): abrir e fechar o painel, o resize da janela e o ouvirLateral.
+```
+
+- **O contrato** (`js/lateral-nucleo.js`): `lateralNoFoco({ largura, painelAberto, lateralDaPessoa, mexeuComPainelAberto })` devolve `"recolhida"` só com `FOCO_DE <= largura < FOCO_ATE` (1024 e 1280, exportadas), o painel aberto e `mexeuComPainelAberto` falso; senão, a `lateralDaPessoa` (inválida vale `"aberta"`, como no `lerLateral`). `largura` é a da janela, `innerWidth`, a mesma das `@media`; com zoom, 1279,5 ainda está na faixa. `mexeuComPainelAberto` é opcional (falso).
+- **No primeiro desenho:** o script de antes da pintura continua pondo a escolha guardada; quem abre a tela com o painel já aberto (um registro na URL) chama a função ao montar, e a lateral se recolhe nesse momento.
+- **Por que a v3.23.0 é minor:** uma função e duas constantes novas, acrescentadas no fim do `lateral-nucleo.js` (o que já estava fica com os bytes da v3.22.0, que o teste da versão cobra pela fixture). Nenhum CSS nem token muda; nenhum `exports` novo.
+- **O que muda na tela dos apps ao adotar:** nada até o app chamar `lateralNoFoco` na casca. Com ela, em toda tela com modo foco (o Histórico do Paradas; Pessoas, Convites e Templates da Bordo), de 1024 a 1279px, a lateral fica com 56px enquanto o painel está aberto.
+
 ### Relatório (papel e impressão)
 
 Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no `relatorio.css`, com os mesmos valores, fora três regras: a `.rel-pagina` ganhou `page: relatorio`, o `.rel-tabela th` subiu de 11px para 8,5pt e a `.rel-barra` virou interface (fonte do sistema, `--ov-*`, sem o `max-width: 210mm`). O `impressao.css` foi reescrito sem seletor global. As regras do documento (Timbre, resumo, estados, nome do arquivo) estão em `relatorios-e-logos.md`, no `onevessel-docs`.
@@ -728,7 +760,7 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/camada.js` | A pilha de camadas modais (v3.6.0): quem está no topo e a trava de rolagem do `<html>` |
 | `js/alteracoes-nucleo.js` | "Há alterações nesta tela" (v3.6.0): o registro em árvore e o texto único do "Descartar alterações?" |
 | `js/teclas-da-tabela.js` | O teclado da linha da `.ov-tabela` (v3.8.0): ↑↓ só movem o foco entre linhas, Enter abre, X marca onde há seleção; o destino sem dar a volta e a linha que recebe o Tab |
-| `js/lateral-nucleo.js` | A lateral recolhida por escolha (v3.15.0): `CHAVE_LATERAL` (`ov-lateral`), `lerLateral`, `gravarLateral`, `alternarLateral`, `aplicarLateral` (o `data-lateral` da casca), `botaoDaLateral` (ícone, texto, rótulo e `aria-expanded`) e `ouvirLateral` (o evento `storage` de outra aba); armazenamento bloqueado não derruba nada (ver Casca) |
+| `js/lateral-nucleo.js` | A lateral recolhida por escolha (v3.15.0): `CHAVE_LATERAL` (`ov-lateral`), `lerLateral`, `gravarLateral`, `alternarLateral`, `aplicarLateral` (o `data-lateral` da casca), `botaoDaLateral` (ícone, texto, rótulo e `aria-expanded`) e `ouvirLateral` (o evento `storage` de outra aba); armazenamento bloqueado não derruba nada (ver Casca); `lateralNoFoco` desde a v3.23.0 (a lateral com o painel aberto no modo foco) |
 | `js/texto.js` | Plural (v3.20.0, C8): `plural(n, um, varios)` ("3 pessoas", "1.234 pessoas") e `palavra(n, um, varios)` (só a palavra); nunca "(s)" |
 | `js/datas.js` | Data e hora no fuso de Brasília (v3.20.0, C18): `data`, `dataHora`, `dataHoraCurta`, `decorrido`, `diaRelativo`, `title` e `FUSO_DE_BRASILIA`; `duracao` desde a v3.21.0 |
 | `js/teclas-das-abas.js` | O teclado das visões e das abas internas (v3.20.0, C19): `abaDeDestino` (←→ com volta, Home, End) |
@@ -744,7 +776,7 @@ import { acaoDaTecla, ondeEstaOFoco, vizinho } from 'onevessel-ui/js/teclas-do-p
 import { abrirCamada, camadasAbertas } from 'onevessel-ui/js/camada.js'
 import { criarRegistroDeAlteracoes, DESCARTAR } from 'onevessel-ui/js/alteracoes-nucleo.js'
 import { acaoDaTeclaNaLinha, linhaDeDestino, linhaDoTab } from 'onevessel-ui/js/teclas-da-tabela.js'
-import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral } from 'onevessel-ui/js/lateral-nucleo.js'
+import { lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral, lateralNoFoco } from 'onevessel-ui/js/lateral-nucleo.js'
 import { plural, palavra } from 'onevessel-ui/js/texto.js'
 import { data, dataHora, dataHoraCurta, decorrido, diaRelativo, title } from 'onevessel-ui/js/datas.js'
 import { abaDeDestino } from 'onevessel-ui/js/teclas-das-abas.js'

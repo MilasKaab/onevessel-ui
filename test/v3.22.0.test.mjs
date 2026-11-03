@@ -4,7 +4,9 @@
 // .ov-motivo no toque). Minor: as fixtures da v3.21.0
 // (`test/fixtures/*-v3.21.0.css`, da tag, fixas) ficam iguais regra a regra,
 // fora a alterada pelo nome. Nenhum js muda: o núcleo do Menu não executa
-// item nenhum (Enter e Espaço são do item; o clique, do app).
+// item nenhum (Enter e Espaço são do item; o clique, do app). Desde a v3.23.0,
+// o lateral-nucleo daqui é a fixture da v3.22.0 (fixture com fixture), e a
+// versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -110,7 +112,10 @@ test('os outros CSS e os js com os bytes da v3.21.0; as fixtures da tag', () => 
     texto: '95f98b2d6ba6e3215deb415ceaf8d22b65a7126b45ded877d3b7028dc3e2205d',
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
-  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
+  // Desde a v3.23.0, o lateral-nucleo daqui é a fixture da v3.22.0 (os bytes
+  // de antes, que a v3.23.0 só acrescenta no fim): fixture com fixture.
+  const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : `js/${nome}.js`);
+  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
   const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, Object.keys(JS).sort(), 'nenhum js nasce, some ou muda');
 });
@@ -146,9 +151,7 @@ test('menu-nucleo: Enter e Espaço não são do núcleo em item nenhum (o desabi
 
 // ---------- Versão, README e exemplo ----------
 
-test('package.json 3.22.0; README com a tag, a seção da versão, a alterada, o contraste e os dois contratos', () => {
-  assert.equal(pacote.version, '3.22.0');
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.22\.0"/);
+test('README com a seção da versão, a alterada, o contraste e os dois contratos', () => {
   assert.match(leiame, /### "Atenção" na nota e item de menu desabilitado \(v3\.22\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.22\.0 é minor:\*\*/);
   assert.match(leiame, /\*\*Alteradas pelo nome\*\*[^\n]*`\.ov-indicador-alerta`/);

@@ -4,7 +4,10 @@
 // novas no fim do js/lateral-nucleo.js (lateralNoFoco, FOCO_DE, FOCO_ATE);
 // o que já estava no arquivo fica com os bytes da v3.22.0 (a fixture, da
 // tag). Nenhum CSS nem token muda. O comportamento da função está no
-// test/lateral-nucleo.test.mjs; aqui, os bytes, o README e o exemplo.
+// test/lateral-nucleo.test.mjs; aqui, os bytes, o README e o exemplo. Desde
+// a v3.24.0, os controles, as janelas e o datas.js daqui são as fixtures da
+// v3.23.0 (fixture com fixture), e a versão e a tag ficam com o teste da
+// versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -36,7 +39,8 @@ test('os CSS, o tokens.json e os outros js com os bytes da v3.22.0', () => {
     tokens: 'd15afe46e2ed18570720fe09b63af5eca75a9d266103619833d2547f44c7cd92',
   };
   assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), Object.keys(CSS).map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
-  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  const fonteCss = (nome) => (['controles', 'janelas'].includes(nome) ? `test/fixtures/${nome}-v3.23.0.css` : `css/${nome}.css`);
+  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(fonteCss(nome)), sha, nome);
   assert.equal(sha256('tokens/tokens.json'), '00e88f37d561d821f96fa505b1cd794326d70bb5df6453a531e24cf667463b1d');
   const JS = {
     'alteracoes-nucleo': '3275de25a16812f027b05c60b8de52ea78eb9bce2143166437241c4a5b62cc71',
@@ -53,7 +57,8 @@ test('os CSS, o tokens.json e os outros js com os bytes da v3.22.0', () => {
     texto: '95f98b2d6ba6e3215deb415ceaf8d22b65a7126b45ded877d3b7028dc3e2205d',
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
-  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
+  const fonteJs = (nome) => (nome === 'datas' ? `test/fixtures/${nome}-v3.23.0.js` : `js/${nome}.js`);
+  for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
   const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, [...Object.keys(JS), 'lateral-nucleo'].sort(), 'nenhum js nasce nem some; só o lateral-nucleo muda');
 });
@@ -86,10 +91,8 @@ test('lateral-nucleo exporta exatamente o que o .d.ts declara, com lateralNoFoco
 
 // ---------- Versão, README e exemplo ----------
 
-test('package.json 3.23.0, sem export novo; README com a tag, a seção da versão e o contrato', () => {
-  assert.equal(pacote.version, '3.23.0');
+test('package.json sem export novo; README com a seção da versão e o contrato', () => {
   assert.deepEqual(pacote.exports['./js/lateral-nucleo.js'], { types: './js/lateral-nucleo.d.ts', default: './js/lateral-nucleo.js' });
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.23\.0"/);
   assert.match(leiame, /### Lateral com o painel no modo foco \(v3\.23\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.23\.0 é minor:\*\*/);
   assert.match(leiame, /import \{ lerLateral, alternarLateral, aplicarLateral, botaoDaLateral, ouvirLateral, lateralNoFoco \} from 'onevessel-ui\/js\/lateral-nucleo\.js'/);

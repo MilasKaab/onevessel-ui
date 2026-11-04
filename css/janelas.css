@@ -20,6 +20,10 @@
 
 /* ---------- Botão de perigo ---------- */
 .ov-btn-perigo { background: var(--ov-erro); color: var(--ov-sobre-erro); }
+/* Salvando (v3.24, TP4): como as variantes do controles.css, o fundo vai ao
+   ::before, a .6, e o anel do foco fica inteiro. */
+.ov-btn-perigo[aria-busy="true"]:not(:disabled) { background: transparent; }
+.ov-btn-perigo[aria-busy="true"]:not(:disabled)::before { background: var(--ov-erro); }
 
 /* ---------- Diálogo (véu em casca.css) ---------- */
 /* data-tamanho="confirmacao" (ou sem atributo): 440px. "formulario": 640px,

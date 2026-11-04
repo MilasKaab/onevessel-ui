@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.23.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -412,14 +412,14 @@ import { data, dataHora, dataHoraCurta, decorrido, diaRelativo, title } from 'on
 
 data(i)                          // "26/10/2026"
 dataHora(i)                      // "26/10/2026 09:00" (registro histórico)
-dataHoraCurta(i)                 // "27/10, 20:00" no ano corrente; de outro ano, a dataHora
+dataHoraCurta(i)                 // "27/10 20:00" no ano corrente (sem vírgula desde a v3.24.0); de outro ano, a dataHora
 decorrido(Date.now() - inicio)   // "agora" · "há 45 min" · "há 3h" · "há 3h05" · "há 2 dias"
 diaRelativo(i)                   // "hoje" · "ontem" · "24/10/2026"
 title(i)                         // a dataHora, para o title de toda forma curta ou relativa
 ```
 
 ```html
-<time datetime="2026-10-27T23:00:00Z" title="27/10/2026 20:00">27/10, 20:00</time>
+<time datetime="2026-10-27T23:00:00Z" title="27/10/2026 20:00">27/10 20:00</time>
 <span class="ov-estado" data-tom="andamento" title="31/10/2026 06:55">Em andamento há 3h05</span>
 ```
 
@@ -603,6 +603,62 @@ if (painelAberto) mexeuComPainelAberto = true
 - **No primeiro desenho:** o script de antes da pintura continua pondo a escolha guardada; quem abre a tela com o painel já aberto (um registro na URL) chama a função ao montar, e a lateral se recolhe nesse momento.
 - **Por que a v3.23.0 é minor:** uma função e duas constantes novas, acrescentadas no fim do `lateral-nucleo.js` (o que já estava fica com os bytes da v3.22.0, que o teste da versão cobra pela fixture). Nenhum CSS nem token muda; nenhum `exports` novo.
 - **O que muda na tela dos apps ao adotar:** nada até o app chamar `lateralNoFoco` na casca. Com ela, em toda tela com modo foco (o Histórico do Paradas; Pessoas, Convites e Templates da Bordo), de 1024 a 1279px, a lateral fica com 56px enquanto o painel está aberto.
+
+### Data sem vírgula, botão na linha de campos e Salvando esmaecido (v3.24.0)
+
+O CV6 e o TP4, decididos pelo Salim em 04/11: a data curta perde a vírgula; o botão ao lado de um campo ganha a altura do campo (revê a regra de 03/11, que só centralizava e mantinha 36px); e o "Salvando…" fica esmaecido sem `disabled` (revê a C13 nesse ponto). As regras de uso estão no `livro-da-marca.md` (Tom e escrita, Data e hora) e no `componentes.md` (Botão), no `onevessel-docs`.
+
+**Data curta sem vírgula** (`js/datas.js`): `dataHoraCurta` devolve `"27/10 20:00"` no ano corrente (era `"27/10, 20:00"`), a mesma forma da `dataHora` sem o ano; de outro ano, continua a `dataHora` (`"27/10/2025 20:00"`). O "às" fica só na frase, montado pelo app ("até 05/11 às 14:05"). Nenhuma outra função do `js/` produz ou espera a vírgula (o teste da versão confere).
+
+```js
+dataHoraCurta('2026-10-27T23:00:00Z')  // "27/10 20:00" (em 2026); "27/10/2026 20:00" de outro ano
+```
+
+**Botão na linha de campos** (`controles.css`): o `.ov-campo-com-botao` é a linha com o campo e o botão, dentro do `.ov-campo-grupo`, entre o rótulo e a ajuda ou o erro.
+
+```html
+<div class="ov-campo-grupo">
+  <label class="ov-label" for="nome-template">Nome do template</label>
+  <div class="ov-campo-com-botao">
+    <input class="ov-campo" id="nome-template" aria-invalid="true" aria-describedby="nome-template-erro">
+    <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+  </div>
+  <span class="ov-erro-campo" id="nome-template-erro"><svg aria-hidden="true">…CircleAlert…</svg>Informe um nome para o template.</span>
+</div>
+
+<!-- Botão só de ícone: quadrado da altura do campo (44×44) -->
+<div class="ov-campo-com-botao">
+  <select class="ov-campo" id="parada">…</select>
+  <button class="ov-btn ov-btn-secundario ov-btn-icone" type="button" aria-label="Ajuda" title="Ajuda"><svg …circle-help…/></button>
+</div>
+
+<!-- Campo de linha (dentro da tabela): 36px -->
+<td><div class="ov-campo-com-botao"><input class="ov-campo" data-densidade="linha" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button></div></td>
+```
+
+- **Altura:** o `.ov-btn` filho direto do contêiner tem a altura do campo — **44px** ao lado do `.ov-campo`, **36px** ao lado do `.ov-campo[data-densidade="linha"]`, **48px no toque** (`pointer: coarse`) nos dois. O `.ov-btn-icone` vira quadrado da mesma altura (44×44, 36×36, 48×48). O `.ov-btn-sm` também sobe à altura do campo. Fora do contêiner, o `.ov-btn` não muda (36px no computador).
+- **Alinhamento:** topo com topo (`align-items: flex-start`) e a altura do botão é a do campo, então topo e base ficam juntos com o `input` e o `select`; **ao lado do `textarea`** (mais de uma linha), o botão fica no topo do campo, na altura da primeira linha. 8px entre o campo e o botão (o das ações do Diálogo). O campo ocupa o resto (`flex: 1`, `min-width: 0`).
+- **Por que resiste ao rótulo de duas linhas, ao erro e ao textarea:** o contêiner só tem o campo e o botão. O rótulo fica acima dele, no `.ov-campo-grupo`: se quebra em duas linhas, a linha inteira desce junto, e o botão continua ao lado do campo, nunca do rótulo. A ajuda e o erro ficam abaixo dele: quando o erro aparece, o grupo cresce para baixo e a linha não se move (o botão não está centrado na altura do grupo, nem alinhado pela base). Nenhuma margem presa à altura do rótulo: o botão nunca sabe se há rótulo. No `textarea`, o botão não estica (a altura é a do campo, não a da linha), e por isso fica no topo.
+- **Contrato do app:** o campo e o botão (ou os botões) são **filhos diretos** do `.ov-campo-com-botao`; o rótulo antes do contêiner e a ajuda e o erro depois dele, no `.ov-campo-grupo`. O `.ov-motivo` de um botão desabilitado não vai dentro do contêiner (o TP4 não desabilita o botão de salvar template). O 36px ao lado do campo de linha usa `:has()`, o mesmo das camadas do `janelas.css`.
+
+**Salvando esmaecido** (`controles.css`; o perigo no `janelas.css`): com `aria-busy="true"`, o botão fica com a aparência do desabilitado a 0,6, **sem `disabled`**: continua focável, o foco fica nele, e o app continua ignorando clique e Enter até a resposta (o contrato da v3.19.0). As `.ov-reticencias` continuam como estavam (acendem em sequência; paradas com movimento reduzido), e o `cursor: progress` também.
+
+- **A técnica:** `opacity: .6` no próprio botão esmaeceria também o anel do `:focus-visible` (o outline é do botão): no claro ele cairia a 2,77:1 sobre `ov-fundo` (2,92:1 sobre `ov-superficie-elevada`, a U7). Em vez disso, o .6 vai em duas camadas que o anel não atravessa: o **conteúdo** (os filhos do botão: o `span` do rótulo, o ícone) e um **`::before`** com o fundo e a borda da variante, atrás do conteúdo (`isolation: isolate` no botão). O botão fica sem fundo e sem borda próprios, e o anel continua dele, inteiro. Sem `color-mix`, que tablet antigo não tem. Sob o mouse, nada muda (como no desabilitado). Primário, secundário e fantasma no `controles.css`; o perigo no `janelas.css`.
+- **Medido no navegador** (Chromium, sobre `ov-fundo`, o fundo do exemplo; o anel por pixel, o texto pela composição das camadas):
+
+  | | Anel (`:focus-visible`) | Texto do Salvando | Texto do desabilitado (referência) |
+  |---|---|---|---|
+  | Primário, escuro | **10,99:1** (a .6 no botão: 4,44:1) | 4,47:1 | 3,45:1 |
+  | Primário, claro | **6,40:1** (a .6 no botão: 2,77:1) | 1,88:1 | 2,58:1 |
+  | Secundário, escuro | **10,99:1** | 6,04:1 | 5,61:1 |
+  | Secundário, claro | **6,40:1** | 4,39:1 | 4,60:1 |
+
+  O fundo esmaecido sai igual ao do desabilitado, pixel a pixel. O texto não sai igual: no desabilitado ele se mistura com a superfície embaixo do botão; aqui, com o fundo esmaecido da variante, que o anel obriga a ser outra camada. No secundário a diferença some (o fundo dele é quase a superfície); no primário o texto fica mais claro que o do desabilitado no escuro e mais apagado no claro (1,88:1, contra 2,58:1). A WCAG isenta o controle inativo, como no desabilitado; o "Salvando…" é o estado que se lê.
+- **Contrato do app:** o rótulo vai num elemento (o `span` de sempre, com as reticências dentro): texto solto no botão não esmaece. `disabled` e `aria-busy` juntos (o "Carregando…" do seletor de Parada) ficam só com o .6 do `disabled`, sem esmaecer de novo.
+
+- **Alterada pelo nome** (o teste da versão cobra; o resto das fixtures da v3.23.0 fica igual): no `js/datas.js`, `dataHoraCurta` (`"27/10, 20:00"` → `"27/10 20:00"`). No `controles.css` e no `janelas.css` nenhuma regra muda: só nascem (o `.ov-btn[aria-busy="true"]` de antes fica com o `cursor: progress`).
+- **Por que a v3.24.0 é minor:** classe nova (`.ov-campo-com-botao`) e regras novas (o esmaecido do `aria-busy`); a única mudança de valor, a da `dataHoraCurta`, está na lista acima. Nenhum token muda; nenhum `exports` novo.
+- **O que muda na tela dos apps ao adotar:** sem mudar código, (1) toda data curta perde a vírgula (no Paradas, a chegada e o desembarque da equipe no card: "03/11 09:40"; o `naFrase` dele já aceita sem vírgula); (2) todo `.ov-btn` com `aria-busy="true"` e sem `disabled` fica esmaecido (no Paradas, o "Enviando…" do relatório no card; na plataforma e na Bordo, onde houver). A altura do botão ao lado do campo só muda onde o app puser o `.ov-campo-com-botao` (Paradas: o "+ Criar" e a ajuda da Administração; Bordo: Templates e os outros casos).
 
 ### Relatório (papel e impressão)
 

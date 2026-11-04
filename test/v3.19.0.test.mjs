@@ -23,7 +23,10 @@ const NOMES = ['casca', 'controles', 'janelas', 'telas'];
 // v3.22.0, a casca também, pela fixture da v3.21.0 (os bytes da v3.19.0).
 const V3200 = ['janelas', 'telas'];
 const V3210 = ['casca'];
-const fonte = (n) => (V3200.includes(n) ? `test/fixtures/${n}-v3.20.0.css` : V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : `css/${n}.css`);
+// Desde a v3.24.0, os controles também, pela fixture da v3.23.0 (os bytes da
+// v3.19.0, que nenhuma versão até a v3.23.0 mudou).
+const V3230 = ['controles'];
+const fonte = (n) => (V3200.includes(n) ? `test/fixtures/${n}-v3.20.0.css` : V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : V3230.includes(n) ? `test/fixtures/${n}-v3.23.0.css` : `css/${n}.css`);
 const ATUAL = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries([...NOMES, 'tokens'].map((n) => [n, ler(`test/fixtures/${n}-v3.18.2.css`)]));
 const tokensJson = JSON.parse(ler('tokens/tokens.json'));
@@ -344,7 +347,11 @@ test('exemplo: motivo, Salvando… e o Precisa de você com tags e filetes, nos 
     assert.match(exemplo, new RegExp(`disabled title="Preencha a embarcação" aria-describedby="motivo-aprovar-${tema}">Aprovar</button><span class="ov-motivo" id="motivo-aprovar-${tema}">Preencha a embarcação</span>`));
     assert.match(exemplo, new RegExp(`id="pv-${tema}">Precisa de você</h2>\\n {10}<span class="ov-tag" data-tom="erro"><span class="ov-tag-ponto"></span>Urgente`));
   }
-  assert.equal((exemplo.match(/aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>\.<\/span><span>\.<\/span><span>\.<\/span><\/span><\/span><\/button>/g) ?? []).length, 4);
+  // Os quatro da seção Botões e campos (desde a v3.24.0 há outros, na seção
+  // da linha de campos, que o teste dela conta).
+  const ini = exemplo.indexOf('<h2 class="ov-titulo-1">Botões e campos</h2>');
+  const botoesECampos = exemplo.slice(ini, exemplo.indexOf('</section>', ini));
+  assert.equal((botoesECampos.match(/aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>\.<\/span><span>\.<\/span><span>\.<\/span><\/span><\/span><\/button>/g) ?? []).length, 4);
   assert.equal((exemplo.match(/<a class="ov-pendencia" href="#" data-tom="(erro|atencao)">/g) ?? []).length, 4);
   assert.match(exemplo, /<body>\n<a class="ov-pular" href="#exemplo-inicio">Pular para o conteúdo<\/a>/);
   assert.match(exemplo, /<a class="ov-pular" href="#tela-conveses-escuro">/);

@@ -1,5 +1,5 @@
 /**
- * Os tipos de data e hora (`datas.js`, v3.20.0; `duracao` na v3.21.0), para os apps em TypeScript.
+ * Os tipos de data e hora (`datas.js`, v3.20.0; `duracao` na v3.21.0; curta sem vírgula na v3.24.0), para os apps em TypeScript.
  * Tudo no fuso de Brasília; vazio ou inválido devolve "".
  */
 export declare const FUSO_DE_BRASILIA: "America/Sao_Paulo";
@@ -9,7 +9,7 @@ export type Instante = Date | string | number | null | undefined;
 export declare function data(instante: Instante): string;
 /** "26/10/2026 09:00" — o registro histórico. */
 export declare function dataHora(instante: Instante): string;
-/** "27/10, 20:00" no ano de `agora`; de outro ano, a `dataHora`. */
+/** "27/10 20:00" no ano de `agora` (sem vírgula desde a v3.24.0); de outro ano, a `dataHora`. */
 export declare function dataHoraCurta(instante: Instante, agora?: Instante): string;
 /** "menos de 1 min", "45 min", "3h", "3h05", "1 dia", "2 dias"; negativo ou não-número, "" (v3.21.0). */
 export declare function duracao(ms: number | null | undefined): string;

@@ -18,7 +18,10 @@ const NOMES = ['janelas', 'telas'];
 // Desde a v3.22.0, as telas daqui são a fixture da v3.21.0 (fixture com
 // fixture), e a casca, idem; a versão e a tag ficam com o teste da mais nova.
 const V3210 = ['casca', 'telas'];
-const fonte = (n) => (V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : `css/${n}.css`);
+// Desde a v3.24.0, as janelas e os controles daqui são as fixtures da
+// v3.23.0 (os bytes da v3.21.0): fixture com fixture.
+const V3230 = ['janelas', 'controles'];
+const fonte = (n) => (V3210.includes(n) ? `test/fixtures/${n}-v3.21.0.css` : V3230.includes(n) ? `test/fixtures/${n}-v3.23.0.css` : `css/${n}.css`);
 const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries(NOMES.map((n) => [n, ler(`test/fixtures/${n}-v3.20.0.css`)]));
 const pacote = JSON.parse(ler('package.json'));

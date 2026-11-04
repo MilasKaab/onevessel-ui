@@ -37,13 +37,14 @@ test("virada do ano em Brasília: 01/01 02:59Z ainda é 31/12", () => {
   assert.equal(dataHora("2027-01-01T02:59:00Z"), "31/12/2026 23:59");
   assert.equal(dataHora("2027-01-01T03:00:00Z"), "01/01/2027 00:00");
   // A curta olha o ano de Brasília, não o de UTC.
-  assert.equal(dataHoraCurta("2026-12-31T20:00:00Z", "2027-01-01T02:00:00Z"), "31/12, 17:00");
+  assert.equal(dataHoraCurta("2026-12-31T20:00:00Z", "2027-01-01T02:00:00Z"), "31/12 17:00");
   assert.equal(dataHoraCurta("2026-12-31T20:00:00Z", "2027-01-01T03:00:00Z"), "31/12/2026 17:00");
 });
 
-test("dataHoraCurta: vírgula no ano corrente; de outro ano, a completa", () => {
+test("dataHoraCurta: sem vírgula no ano corrente (v3.24.0, CV6); de outro ano, a completa", () => {
   const agora = new Date("2026-10-31T15:00:00Z");
-  assert.equal(dataHoraCurta("2026-10-27T23:00:00Z", agora), "27/10, 20:00");
+  assert.equal(dataHoraCurta("2026-10-27T23:00:00Z", agora), "27/10 20:00");
+  assert.doesNotMatch(dataHoraCurta("2026-10-27T23:00:00Z", agora), /,/);
   assert.equal(dataHoraCurta("2025-10-27T23:00:00Z", agora), "27/10/2025 20:00");
   assert.equal(dataHoraCurta("2027-03-01T12:00:00Z", agora), "01/03/2027 09:00");
 });

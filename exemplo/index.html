@@ -96,6 +96,15 @@
   .atencao-menu > h2 { margin: 0 0 var(--ov-esp-4); }
   .atencao-menu .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .atencao-menu .ov-menu { max-width: 100%; }
+  /* Botão na linha de campos e Salvando esmaecido (v3.24.0). */
+  .linha-campos { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .linha-campos > h2 { margin: 0 0 var(--ov-esp-4); }
+  .linha-campos .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .linha-campos .grade-linha { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--ov-esp-5); align-items: start; }
+  .linha-campos .estreito { max-width: 260px; }
+  /* A 390px a tabela vira a lista do celular (td.nome); a célula com o
+     campo e os botões ocupa a linha de baixo inteira. */
+  @media (max-width: 767px) { .linha-campos .ov-tabela td:has(> .ov-campo-com-botao) { flex: 1 1 100%; min-width: 0; margin-top: 6px; } }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1429,6 +1438,141 @@
     </div>
 </section>
 
+<section class="linha-campos">
+  <h2 class="ov-titulo-1">Botão na linha de campos e Salvando esmaecido</h2>
+  <p class="ov-legenda">Desde a v3.24.0 (TP4): o <code class="ov-codigo">.ov-campo-com-botao</code> põe o botão ao lado do campo com a altura dele (44 ao lado do campo, 36 ao lado do campo de linha, 48 no toque; o botão de ícone quadrado), topo com topo; o rótulo fica acima e o erro abaixo, fora da linha, e não movem o botão; ao lado do textarea, o botão fica no topo. O "Salvando…" (<code class="ov-codigo">aria-busy="true"</code>) fica esmaecido como o desabilitado (0,6), sem <code class="ov-codigo">disabled</code>: continua focável e o anel do foco fica inteiro (Tab até ele). Na última linha, o Salvando das três variantes e, ao lado, o desabilitado, para comparar. Dados fictícios.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Botão na linha de campos e Salvando · tema escuro</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <div class="grade-linha">
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-template-escuro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-template-escuro" type="text" placeholder="Embarque de agosto de 2026">
+            <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-parada-escuro">Parada</label>
+          <div class="ov-campo-com-botao">
+            <select class="ov-campo" id="lc-parada-escuro"><option>TT 14/10</option><option>TT 15/10</option></select>
+            <button class="ov-btn ov-btn-secundario ov-btn-icone" type="button" aria-label="Ajuda" title="Ajuda"><i data-icone="circle-help"></i></button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-erro-escuro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-erro-escuro" type="text" value="" aria-invalid="true" aria-describedby="lc-erro-escuro-msg">
+            <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+          </div>
+          <span class="ov-erro-campo" id="lc-erro-escuro-msg"><i data-icone="circle-alert"></i>Informe um nome para o template.</span>
+        </div>
+        <div class="ov-campo-grupo estreito">
+          <label class="ov-label" for="lc-longo-escuro">Empresa responsável pela equipe de mergulho <small>(opcional)</small></label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-longo-escuro" type="text" aria-describedby="lc-longo-escuro-ajuda">
+            <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="plus"></i>Criar</button>
+          </div>
+          <span class="ov-ajuda" id="lc-longo-escuro-ajuda">Rótulo de duas linhas: a linha desce inteira.</span>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-obs-escuro">Observação</label>
+          <div class="ov-campo-com-botao">
+            <textarea class="ov-campo" id="lc-obs-escuro" rows="3">Troca de turma antecipada pela parada técnica.</textarea>
+            <button class="ov-btn ov-btn-secundario" type="button">Enviar</button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-salvando-escuro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-salvando-escuro" type="text" value="Embarque de agosto de 2026">
+            <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+          </div>
+        </div>
+      </div>
+      <div class="ov-cartao tabela-rolagem">
+        <table class="ov-tabela" aria-label="Campo de linha com botão">
+          <thead><tr><th>Nome</th><th>Camarote</th></tr></thead>
+          <tbody>
+            <tr><td class="nome">João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="linha">
+        <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-secundario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-fantasma" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha o nome">Salvar</button>
+        <button class="ov-btn ov-btn-secundario" type="button" disabled title="Preencha o nome">Cancelar</button>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Botão na linha de campos e Salvando · tema claro</p>
+    <div class="controles-moldura" data-theme="claro">
+      <div class="grade-linha">
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-template-claro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-template-claro" type="text" placeholder="Embarque de agosto de 2026">
+            <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-parada-claro">Parada</label>
+          <div class="ov-campo-com-botao">
+            <select class="ov-campo" id="lc-parada-claro"><option>TT 14/10</option><option>TT 15/10</option></select>
+            <button class="ov-btn ov-btn-secundario ov-btn-icone" type="button" aria-label="Ajuda" title="Ajuda"><i data-icone="circle-help"></i></button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-erro-claro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-erro-claro" type="text" value="" aria-invalid="true" aria-describedby="lc-erro-claro-msg">
+            <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+          </div>
+          <span class="ov-erro-campo" id="lc-erro-claro-msg"><i data-icone="circle-alert"></i>Informe um nome para o template.</span>
+        </div>
+        <div class="ov-campo-grupo estreito">
+          <label class="ov-label" for="lc-longo-claro">Empresa responsável pela equipe de mergulho <small>(opcional)</small></label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-longo-claro" type="text" aria-describedby="lc-longo-claro-ajuda">
+            <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="plus"></i>Criar</button>
+          </div>
+          <span class="ov-ajuda" id="lc-longo-claro-ajuda">Rótulo de duas linhas: a linha desce inteira.</span>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-obs-claro">Observação</label>
+          <div class="ov-campo-com-botao">
+            <textarea class="ov-campo" id="lc-obs-claro" rows="3">Troca de turma antecipada pela parada técnica.</textarea>
+            <button class="ov-btn ov-btn-secundario" type="button">Enviar</button>
+          </div>
+        </div>
+        <div class="ov-campo-grupo">
+          <label class="ov-label" for="lc-salvando-claro">Nome do template</label>
+          <div class="ov-campo-com-botao">
+            <input class="ov-campo" id="lc-salvando-claro" type="text" value="Embarque de agosto de 2026">
+            <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+          </div>
+        </div>
+      </div>
+      <div class="ov-cartao tabela-rolagem">
+        <table class="ov-tabela" aria-label="Campo de linha com botão">
+          <thead><tr><th>Nome</th><th>Camarote</th></tr></thead>
+          <tbody>
+            <tr><td class="nome">João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="linha">
+        <button class="ov-btn ov-btn-primario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-secundario" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-fantasma" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
+        <button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha o nome">Salvar</button>
+        <button class="ov-btn ov-btn-secundario" type="button" disabled title="Preencha o nome">Cancelar</button>
+      </div>
+    </div>
+</section>
+
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo
   // é o do Paradas, com a geometria do livro da marca.
@@ -1469,6 +1613,8 @@
     lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     'panel-left-close': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/>',
     'panel-left-open': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/>',
+    'circle-help': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
   }
   for (const el of document.querySelectorAll('i[data-icone]')) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')

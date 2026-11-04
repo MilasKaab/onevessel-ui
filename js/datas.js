@@ -1,10 +1,12 @@
 /**
  * Data e hora na tela (`livro-da-marca.md` · Tom e escrita; C18 de 31/10):
  * 24 h, sem segundos, sem "h" na hora. Data `26/10/2026`; completa
- * `26/10/2026 09:00` (registro histórico); curta `27/10, 20:00` (ano
- * corrente, operação do dia); relativa `há 3h · hoje · ontem` (decorrido e
- * status), sempre com a completa no `title`; duração `2h05` (o que falta,
- * v3.21.0). Vírgula na etiqueta; o "às" da frase é do app.
+ * `26/10/2026 09:00` (registro histórico); curta `27/10 20:00` (ano
+ * corrente, operação do dia; a completa sem o ano); relativa `há 3h · hoje ·
+ * ontem` (decorrido e status), sempre com a completa no `title`; duração
+ * `2h05` (o que falta, v3.21.0). Sem vírgula entre data e hora (desde a
+ * v3.24.0, CV6 de 04/11; antes `27/10, 20:00`); o "às" fica só na frase, e
+ * quem monta a frase é o app.
  *
  * **Sempre no fuso de Brasília** (`America/Sao_Paulo`, V2 de 31/10), nunca no
  * do aparelho nem no do processo: igual à Bordo (`FUSO_DE_BRASILIA`, A2 da
@@ -90,8 +92,9 @@ export function dataHora(instante) {
 }
 
 /**
- * "27/10, 20:00" quando o ano (em Brasília) é o de `agora`; de outro ano, a
- * `dataHora`.
+ * "27/10 20:00" quando o ano (em Brasília) é o de `agora`: a `dataHora` sem o
+ * ano, sem vírgula (desde a v3.24.0, CV6; era "27/10, 20:00"). De outro ano,
+ * a `dataHora`.
  * @param {Instante} instante
  * @param {Instante} [agora]
  * @returns {string}
@@ -101,7 +104,7 @@ export function dataHoraCurta(instante, agora = new Date()) {
   if (!p) return ''
   const a = emBrasilia(agora)
   if (!a || a.ano !== p.ano) return dataHora(instante)
-  return `${p.dia}/${p.mes}, ${p.hora}:${p.minuto}`
+  return `${p.dia}/${p.mes} ${p.hora}:${p.minuto}`
 }
 
 /**

@@ -93,7 +93,10 @@ test('os outros CSS e os js com os bytes da v3.21.0; as fixtures da tag', () => 
     tokens: 'd15afe46e2ed18570720fe09b63af5eca75a9d266103619833d2547f44c7cd92',
   };
   assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), [...Object.keys(CSS), ...NOMES].map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
-  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
+  // Desde a v3.24.0, os controles e as janelas daqui são as fixtures da
+  // v3.23.0 (os bytes da v3.21.0): fixture com fixture.
+  const fonteCss = (nome) => (['controles', 'janelas'].includes(nome) ? `test/fixtures/${nome}-v3.23.0.css` : `css/${nome}.css`);
+  for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(fonteCss(nome)), sha, nome);
   assert.equal(sha256('test/fixtures/casca-v3.21.0.css'), 'ff7ed72dda28e8729a7151b0cbdc7a7cea8f63453528f5852c0b4cfc8a54f1dd');
   assert.equal(sha256('test/fixtures/telas-v3.21.0.css'), '5ea97289a8903b01a764ec06043d3fcd7068a7da8e354b336661289dc54451e4');
   const JS = {
@@ -114,7 +117,8 @@ test('os outros CSS e os js com os bytes da v3.21.0; as fixtures da tag', () => 
   };
   // Desde a v3.23.0, o lateral-nucleo daqui é a fixture da v3.22.0 (os bytes
   // de antes, que a v3.23.0 só acrescenta no fim): fixture com fixture.
-  const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : `js/${nome}.js`);
+  // Desde a v3.24.0, o datas daqui é a fixture da v3.23.0.
+  const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : nome === 'datas' ? `test/fixtures/${nome}-v3.23.0.js` : `js/${nome}.js`);
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
   const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, Object.keys(JS).sort(), 'nenhum js nasce, some ou muda');

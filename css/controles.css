@@ -17,7 +17,9 @@
    a borda: o halo era sombra, e sombra some nas cores forçadas.
    Desde a v3.13: o textarea.ov-campo (altura pelo rows, mínimo de 44) e o
    campo de linha, .ov-campo[data-densidade="linha"] (36px e 14px no
-   computador, a exceção do livro para a célula editada na linha). */
+   computador, a exceção do livro para a célula editada na linha).
+   Desde a v3.24: o .ov-campo-com-botao (o botão na linha de campos, com a
+   altura do campo) e o "Salvando" esmaecido sem disabled (TP4, 04/11). */
 
 :where(.ov-btn, .ov-campo-grupo, .ov-campo) { box-sizing: border-box; }
 
@@ -28,8 +30,21 @@
 .ov-btn:disabled { opacity: .6; cursor: not-allowed; }
 /* Salvando (v3.19, C13): o botão não fica desabilitado nem muda de
    variante; o app põe aria-busy="true", troca o rótulo pelo gerúndio com as
-   .ov-reticencias e ignora o clique até a resposta (contrato no README). */
+   .ov-reticencias e ignora o clique até a resposta (contrato no README).
+   Esmaecido desde a v3.24 (TP4, 04/11; revê a C13 nesse ponto): o fundo e
+   a borda da variante a .6, sem opacity no botão, que esmaeceria também o
+   anel do :focus-visible (2,9:1 no claro, a U7). O .6 vai num ::before com
+   o fundo e a borda, atrás do conteúdo (isolation: o z-index -1 fica dentro
+   do botão); o rótulo, o ícone e as reticências ficam inteiros (esmaecidos
+   sobre o fundo esmaecido, o texto do primário claro caía a 1,88:1). O
+   botão fica sem fundo e sem borda próprios, e o outline continua dele,
+   inteiro. Sem color-mix,
+   que tablet antigo não tem. O botão disabled e aria-busy ao mesmo tempo
+   (o "Carregando…" do seletor de Parada) fica só com o .6 do disabled:
+   esmaecer de novo daria .36. */
 .ov-btn[aria-busy="true"] { cursor: progress; }
+.ov-btn[aria-busy="true"]:not(:disabled) { position: relative; isolation: isolate; }
+.ov-btn[aria-busy="true"]:not(:disabled)::before { content: ""; position: absolute; inset: -1px; z-index: -1; border: 1px solid transparent; border-radius: inherit; opacity: .6; pointer-events: none; }
 /* Três pontos que acendem em sequência, só por opacidade (a largura não
    muda), 1,2 s por ciclo; parados e visíveis com movimento reduzido.
      <button class="ov-btn ov-btn-primario" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
@@ -56,6 +71,14 @@
 .ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
 .ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
+/* Salvando, por variante (v3.24): o fundo e a borda passam ao ::before; sob
+   o mouse, nada muda (como no desabilitado): o :hover daqui é mais forte
+   que o das variantes. O do perigo mora no janelas.css. */
+.ov-btn-primario[aria-busy="true"]:not(:disabled), .ov-btn-primario[aria-busy="true"]:not(:disabled):hover { background: transparent; color: var(--ov-sobre-acao); }
+.ov-btn-primario[aria-busy="true"]:not(:disabled)::before { background: var(--ov-acao); }
+.ov-btn-secundario[aria-busy="true"]:not(:disabled), .ov-btn-secundario[aria-busy="true"]:not(:disabled):hover { background: transparent; border-color: transparent; }
+.ov-btn-secundario[aria-busy="true"]:not(:disabled)::before { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); }
+.ov-btn-fantasma[aria-busy="true"]:not(:disabled):hover { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
 /* O ícone do botão só de ícone é do pacote (v3.19, C17): 18px; o app não
    passa size. Ao lado de texto, os 16 de sempre. */
@@ -102,6 +125,37 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
 /* O ícone do erro (v3.13): o CircleAlert de 16px, aria-hidden, centrado na
    primeira linha de 18px e sem encolher quando o texto quebra. */
 .ov-erro-campo > svg { flex: none; width: 16px; height: 16px; margin-top: 1px; }
+
+/* ---------- Botão na linha de campos (v3.24, TP4) ---------- */
+/* O botão ao lado de um campo, na mesma linha, tem a altura do campo e fica
+   alinhado a ele, topo e base juntos: 44px ao lado do .ov-campo, 36 ao lado
+   do campo de linha, 48 no toque; o .ov-btn-icone vira quadrado da mesma
+   altura. Fora daqui o .ov-btn não muda.
+     <div class="ov-campo-grupo">
+       <label class="ov-label" for="nome">Nome</label>
+       <div class="ov-campo-com-botao">
+         <input class="ov-campo" id="nome" aria-describedby="nome-erro">
+         <button class="ov-btn ov-btn-primario" type="button">Salvar</button>
+       </div>
+       <span class="ov-erro-campo" id="nome-erro">…</span>
+     </div>
+   O contêiner tem só o campo e o botão: o rótulo fica acima dele e a ajuda
+   e o erro abaixo, no .ov-campo-grupo. Assim o rótulo de duas linhas desce
+   a linha inteira junto, e o erro que aparece embaixo não entra nela;
+   nenhuma margem presa à altura do rótulo. Topo com topo (flex-start) e a
+   altura do botão é a do campo, não a da linha: ao lado do textarea (mais
+   de uma linha), o botão fica no topo, na altura da primeira linha. 8px
+   entre os dois, o das ações do Diálogo. */
+.ov-campo-com-botao { display: flex; align-items: flex-start; gap: 8px; }
+.ov-campo-com-botao > .ov-campo { flex: 1 1 auto; min-width: 0; }
+.ov-campo-com-botao > .ov-btn { flex: none; height: var(--ov-altura-campo); }
+.ov-campo-com-botao > .ov-btn-icone { width: var(--ov-altura-campo); }
+.ov-campo-com-botao:has(> .ov-campo[data-densidade="linha"]) > .ov-btn { height: var(--ov-altura-controle); }
+.ov-campo-com-botao:has(> .ov-campo[data-densidade="linha"]) > .ov-btn-icone { width: var(--ov-altura-controle); }
+@media (pointer: coarse) {
+  .ov-campo-com-botao > .ov-btn, .ov-campo-com-botao:has(> .ov-campo[data-densidade="linha"]) > .ov-btn { height: var(--ov-altura-toque); }
+  .ov-campo-com-botao > .ov-btn-icone, .ov-campo-com-botao:has(> .ov-campo[data-densidade="linha"]) > .ov-btn-icone { width: var(--ov-altura-toque); }
+}
 
 /* ---------- Movimento reduzido ---------- */
 /* As reticências param, os três pontos visíveis. */

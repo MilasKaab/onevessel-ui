@@ -36,7 +36,9 @@ test('os CSS, o tokens.json e os js de antes com os bytes da v3.19.0', () => {
   assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), Object.keys(CSS).map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
   const V3200 = ['janelas', 'telas'];
   const V3210 = ['casca'];
-  const fonte = (nome) => (V3200.includes(nome) ? `test/fixtures/${nome}-v3.20.0.css` : V3210.includes(nome) ? `test/fixtures/${nome}-v3.21.0.css` : `css/${nome}.css`);
+  // Desde a v3.24.0, os controles daqui são a fixture da v3.23.0 (os bytes
+  // da v3.19.0): fixture com fixture.
+  const fonte = (nome) => (V3200.includes(nome) ? `test/fixtures/${nome}-v3.20.0.css` : V3210.includes(nome) ? `test/fixtures/${nome}-v3.21.0.css` : nome === 'controles' ? `test/fixtures/${nome}-v3.23.0.css` : `css/${nome}.css`);
   for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(fonte(nome)), sha, nome);
   const JS = {
     'alteracoes-nucleo': '3275de25a16812f027b05c60b8de52ea78eb9bce2143166437241c4a5b62cc71',

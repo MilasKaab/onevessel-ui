@@ -52,7 +52,7 @@ const ALTERADAS_JS = { datas: ['dataHoraCurta'] };
 
 const NOVAS = {
   controles: [
-    `|.ov-btn${BUSY}`, `|.ov-btn${BUSY} > *`, `|.ov-btn${BUSY}::before`,
+    `|.ov-btn${BUSY}`, `|.ov-btn${BUSY}::before`,
     `|.ov-btn-primario${BUSY}`, `|.ov-btn-primario${BUSY}:hover`, `|.ov-btn-primario${BUSY}::before`,
     `|.ov-btn-secundario${BUSY}`, `|.ov-btn-secundario${BUSY}:hover`, `|.ov-btn-secundario${BUSY}::before`,
     `|.ov-btn-fantasma${BUSY}:hover`,
@@ -136,11 +136,10 @@ test('controles.css e janelas.css continuam importáveis sozinhos, sem outline: 
 
 // ---------- Salvando esmaecido ----------
 
-test('Salvando: .6 no conteúdo e num ::before com o fundo da variante; o botão sem opacity; o disabled fica de fora', () => {
+test('Salvando: .6 só num ::before com o fundo e a borda da variante; o botão e o conteúdo sem opacity; o disabled fica de fora', () => {
   const c = ATUAL.controles;
   assert.deepEqual(declaracoesEm(c, '', '.ov-btn[aria-busy="true"]'), ['cursor: progress']);
   assert.deepEqual(declaracoesEm(c, '', `.ov-btn${BUSY}`), ['position: relative', 'isolation: isolate']);
-  assert.deepEqual(declaracoesEm(c, '', `.ov-btn${BUSY} > *`), ['opacity: .6']);
   assert.deepEqual(declaracoesEm(c, '', `.ov-btn${BUSY}::before`), ['content: ""', 'position: absolute', 'inset: -1px', 'z-index: -1', 'border: 1px solid transparent', 'border-radius: inherit', 'opacity: .6', 'pointer-events: none']);
   assert.deepEqual(declaracoesEm(c, '', `.ov-btn-primario${BUSY}:hover`), ['background: transparent', 'color: var(--ov-sobre-acao)']);
   assert.deepEqual(declaracoesEm(c, '', `.ov-btn-primario${BUSY}::before`), ['background: var(--ov-acao)']);
@@ -149,13 +148,14 @@ test('Salvando: .6 no conteúdo e num ::before com o fundo da variante; o botão
   assert.deepEqual(declaracoesEm(c, '', `.ov-btn-fantasma${BUSY}:hover`), ['background: transparent', 'color: var(--ov-texto-secundario)']);
   assert.deepEqual(declaracoesEm(ATUAL.janelas, '', `.ov-btn-perigo${BUSY}`), ['background: transparent']);
   assert.deepEqual(declaracoesEm(ATUAL.janelas, '', `.ov-btn-perigo${BUSY}::before`), ['background: var(--ov-erro)']);
-  // Nenhuma regra do aria-busy põe opacity no próprio botão (o anel cairia
-  // junto), e nenhuma mexe em largura, altura ou padding.
+  // Só o ::before tem opacity: nem o botão (o anel cairia junto) nem o
+  // conteúdo (o texto esmaeceria duas vezes); nenhuma mexe em largura,
+  // altura ou padding.
   for (const nome of NOMES) {
     for (const r of regras(ATUAL[nome])) for (const s of r.seletores) {
       if (!s.includes('aria-busy')) continue;
       const corpo = declaracoes(r.corpo);
-      if (!s.endsWith('> *') && !s.endsWith('::before')) assert.ok(!corpo.some((d) => d.startsWith('opacity')), s);
+      if (!s.endsWith('::before')) assert.ok(!corpo.some((d) => d.startsWith('opacity')), s);
       assert.ok(!corpo.some((d) => /^(width|height|padding|min-width)\b/.test(d)), s);
     }
   }
@@ -344,6 +344,12 @@ test('medida, no toque (pointer: coarse): 48 ao lado de todo campo, o de ícone 
   await abrir({ viewport: { width: 390, height: 900 }, hasTouch: true, isMobile: true }, async (p) => {
     assert.equal(await p.evaluate(() => matchMedia('(pointer: coarse)').matches), true);
     conferirLinhas(await linhas(p), 48, 48);
+    // A tabela do exemplo vira a lista do celular: nada vaza do cartão.
+    const vaza = await p.evaluate(() => [...document.querySelectorAll('.linha-campos .tabela-rolagem')].map((c) => {
+      const r = c.getBoundingClientRect();
+      return { rola: c.scrollWidth > c.clientWidth, fora: [...c.querySelectorAll('.ov-campo, .ov-btn')].some((e) => e.getBoundingClientRect().right > r.right) };
+    }));
+    assert.deepEqual(vaza, [{ rola: false, fora: false }, { rola: false, fora: false }]);
   });
 });
 
@@ -370,7 +376,7 @@ test('medida: o erro que aparece embaixo e o rótulo de duas linhas não movem o
 const luminancia = ([r, g, b]) => { const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
 const contraste = (a, b) => { const [x, y] = [luminancia(a), luminancia(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
 
-test('medida: Salvando focado pelo teclado nos dois temas, com o botão a 1, o conteúdo e o fundo a .6 e o anel inteiro (≥ 3:1)', { skip: chromium ? false : motivo }, async () => {
+test('medida: Salvando focado pelo teclado nos dois temas, com o botão e o conteúdo a 1, só o fundo a .6 e o anel inteiro (≥ 3:1)', { skip: chromium ? false : motivo }, async () => {
   await abrir({}, async (p) => {
     for (const tema of ['escuro', 'claro']) {
       for (const variante of ['primario', 'secundario']) {
@@ -381,7 +387,7 @@ test('medida: Salvando focado pelo teclado nos dois temas, com o botão a 1, o c
           const cs = getComputedStyle(b), antes = getComputedStyle(b, '::before'), r = b.getBoundingClientRect();
           return { focado: document.activeElement === b, visivel: b.matches(':focus-visible'), disabled: b.disabled, opacidade: cs.opacity, conteudo: getComputedStyle(b.firstElementChild).opacity, fundo: antes.opacity, outline: cs.outlineStyle, x: r.left + 12, y: r.top };
         });
-        assert.deepEqual([info.focado, info.visivel, info.disabled, info.opacidade, info.conteudo, info.fundo, info.outline], [true, true, false, '1', '0.6', '0.6', 'solid'], `${tema} ${variante}`);
+        assert.deepEqual([info.focado, info.visivel, info.disabled, info.opacidade, info.conteudo, info.fundo, info.outline], [true, true, false, '1', '1', '0.6', 'solid'], `${tema} ${variante}`);
         // Uma coluna de pixels acima do botão: o anel (2px, a 2px da borda) e a superfície.
         const png = await p.screenshot({ clip: { x: info.x, y: info.y - 10, width: 1, height: 10 } });
         const px = await p.evaluate(async (b64) => { const img = new Image(); img.src = `data:image/png;base64,${b64}`; await img.decode(); const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d'); x.drawImage(img, 0, 0); return [...x.getImageData(0, 0, 1, img.height).data]; }, png.toString('base64'));

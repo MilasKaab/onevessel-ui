@@ -31,19 +31,19 @@
 /* Salvando (v3.19, C13): o botão não fica desabilitado nem muda de
    variante; o app põe aria-busy="true", troca o rótulo pelo gerúndio com as
    .ov-reticencias e ignora o clique até a resposta (contrato no README).
-   Esmaecido desde a v3.24 (TP4, 04/11; revê a C13 nesse ponto): a aparência
-   do desabilitado a .6, mas sem opacity no botão, que esmaeceria também o
-   anel do :focus-visible (2,9:1 no claro, a U7). O .6 vai em duas camadas
-   que o anel não atravessa: o conteúdo (os filhos: o span do rótulo, o
-   ícone) e um ::before com o fundo e a borda da variante, atrás dele
-   (isolation: o z-index -1 fica dentro do botão). O botão fica sem fundo e
-   sem borda próprios, e o outline continua dele, inteiro. Sem color-mix,
+   Esmaecido desde a v3.24 (TP4, 04/11; revê a C13 nesse ponto): o fundo e
+   a borda da variante a .6, sem opacity no botão, que esmaeceria também o
+   anel do :focus-visible (2,9:1 no claro, a U7). O .6 vai num ::before com
+   o fundo e a borda, atrás do conteúdo (isolation: o z-index -1 fica dentro
+   do botão); o rótulo, o ícone e as reticências ficam inteiros (esmaecidos
+   sobre o fundo esmaecido, o texto do primário claro caía a 1,88:1). O
+   botão fica sem fundo e sem borda próprios, e o outline continua dele,
+   inteiro. Sem color-mix,
    que tablet antigo não tem. O botão disabled e aria-busy ao mesmo tempo
    (o "Carregando…" do seletor de Parada) fica só com o .6 do disabled:
    esmaecer de novo daria .36. */
 .ov-btn[aria-busy="true"] { cursor: progress; }
 .ov-btn[aria-busy="true"]:not(:disabled) { position: relative; isolation: isolate; }
-.ov-btn[aria-busy="true"]:not(:disabled) > * { opacity: .6; }
 .ov-btn[aria-busy="true"]:not(:disabled)::before { content: ""; position: absolute; inset: -1px; z-index: -1; border: 1px solid transparent; border-radius: inherit; opacity: .6; pointer-events: none; }
 /* Três pontos que acendem em sequência, só por opacidade (a largura não
    muda), 1,2 s por ciclo; parados e visíveis com movimento reduzido.

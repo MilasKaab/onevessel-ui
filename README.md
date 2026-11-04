@@ -643,18 +643,18 @@ dataHoraCurta('2026-10-27T23:00:00Z')  // "27/10 20:00" (em 2026); "27/10/2026 2
 
 **Salvando esmaecido** (`controles.css`; o perigo no `janelas.css`): com `aria-busy="true"`, o botão fica com a aparência do desabilitado a 0,6, **sem `disabled`**: continua focável, o foco fica nele, e o app continua ignorando clique e Enter até a resposta (o contrato da v3.19.0). As `.ov-reticencias` continuam como estavam (acendem em sequência; paradas com movimento reduzido), e o `cursor: progress` também.
 
-- **A técnica:** `opacity: .6` no próprio botão esmaeceria também o anel do `:focus-visible` (o outline é do botão): no claro ele cairia a 2,77:1 sobre `ov-fundo` (2,92:1 sobre `ov-superficie-elevada`, a U7). Em vez disso, o .6 vai em duas camadas que o anel não atravessa: o **conteúdo** (os filhos do botão: o `span` do rótulo, o ícone) e um **`::before`** com o fundo e a borda da variante, atrás do conteúdo (`isolation: isolate` no botão). O botão fica sem fundo e sem borda próprios, e o anel continua dele, inteiro. Sem `color-mix`, que tablet antigo não tem. Sob o mouse, nada muda (como no desabilitado). Primário, secundário e fantasma no `controles.css`; o perigo no `janelas.css`.
-- **Medido no navegador** (Chromium, sobre `ov-fundo`, o fundo do exemplo; o anel por pixel, o texto pela composição das camadas):
+- **A técnica:** `opacity: .6` no próprio botão esmaeceria também o anel do `:focus-visible` (o outline é do botão): no claro ele cairia a 2,77:1 sobre `ov-fundo` (2,92:1 sobre `ov-superficie-elevada`, a U7). Em vez disso, **só o fundo e a borda da variante esmaecem**: vão a um `::before` a .6, atrás do conteúdo (`isolation: isolate` no botão), e o botão fica sem fundo e sem borda próprios. **O rótulo, o ícone e as reticências ficam inteiros**, e o anel continua do botão, inteiro. Sem `color-mix`, que tablet antigo não tem. Sob o mouse, nada muda (como no desabilitado). Primário, secundário e fantasma no `controles.css`; o perigo no `janelas.css`.
+- **Medido no navegador** (Chromium, sobre `ov-fundo`, o fundo do exemplo; o anel por pixel, o texto sobre o fundo esmaecido, que sai igual ao do desabilitado pixel a pixel):
 
   | | Anel (`:focus-visible`) | Texto do Salvando | Texto do desabilitado (referência) |
   |---|---|---|---|
-  | Primário, escuro | **10,99:1** (a .6 no botão: 4,44:1) | 4,47:1 | 3,45:1 |
-  | Primário, claro | **6,40:1** (a .6 no botão: 2,77:1) | 1,88:1 | 2,58:1 |
-  | Secundário, escuro | **10,99:1** | 6,04:1 | 5,61:1 |
-  | Secundário, claro | **6,40:1** | 4,39:1 | 4,60:1 |
+  | Primário, escuro | **10,99:1** (a .6 no botão: 4,44:1) | 9,33:1 | 3,45:1 |
+  | Primário, claro | **6,40:1** (a .6 no botão: 2,77:1) | 2,70:1 | 2,58:1 |
+  | Secundário, escuro | **10,99:1** | 14,90:1 | 5,61:1 |
+  | Secundário, claro | **6,40:1** | 15,98:1 | 4,60:1 |
 
-  O fundo esmaecido sai igual ao do desabilitado, pixel a pixel. O texto não sai igual: no desabilitado ele se mistura com a superfície embaixo do botão; aqui, com o fundo esmaecido da variante, que o anel obriga a ser outra camada. No secundário a diferença some (o fundo dele é quase a superfície); no primário o texto fica mais claro que o do desabilitado no escuro e mais apagado no claro (1,88:1, contra 2,58:1). A WCAG isenta o controle inativo, como no desabilitado; o "Salvando…" é o estado que se lê.
-- **Contrato do app:** o rótulo vai num elemento (o `span` de sempre, com as reticências dentro): texto solto no botão não esmaece. `disabled` e `aria-busy` juntos (o "Carregando…" do seletor de Parada) ficam só com o .6 do `disabled`, sem esmaecer de novo.
+  Com o texto inteiro, o que diz "ocupado" é o fundo esmaecido, o gerúndio e as reticências. No secundário o fundo dele é quase a superfície, e o esmaecido quase não aparece; no fantasma (sem fundo) não aparece. A WCAG isenta o controle inativo, como no desabilitado.
+- **Contrato do app:** `disabled` e `aria-busy` juntos (o "Carregando…" do seletor de Parada) ficam só com o .6 do `disabled`, sem esmaecer de novo.
 
 - **Alterada pelo nome** (o teste da versão cobra; o resto das fixtures da v3.23.0 fica igual): no `js/datas.js`, `dataHoraCurta` (`"27/10, 20:00"` → `"27/10 20:00"`). No `controles.css` e no `janelas.css` nenhuma regra muda: só nascem (o `.ov-btn[aria-busy="true"]` de antes fica com o `cursor: progress`).
 - **Por que a v3.24.0 é minor:** classe nova (`.ov-campo-com-botao`) e regras novas (o esmaecido do `aria-busy`); a única mudança de valor, a da `dataHoraCurta`, está na lista acima. Nenhum token muda; nenhum `exports` novo.

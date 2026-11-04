@@ -102,6 +102,9 @@
   .linha-campos .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .linha-campos .grade-linha { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--ov-esp-5); align-items: start; }
   .linha-campos .estreito { max-width: 260px; }
+  /* A 390px a tabela vira a lista do celular (td.nome); a célula com o
+     campo e os botões ocupa a linha de baixo inteira. */
+  @media (max-width: 767px) { .linha-campos .ov-tabela td:has(> .ov-campo-com-botao) { flex: 1 1 100%; min-width: 0; margin-top: 6px; } }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1491,7 +1494,7 @@
         <table class="ov-tabela" aria-label="Campo de linha com botão">
           <thead><tr><th>Nome</th><th>Camarote</th></tr></thead>
           <tbody>
-            <tr><td>João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
+            <tr><td class="nome">João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -1556,7 +1559,7 @@
         <table class="ov-tabela" aria-label="Campo de linha com botão">
           <thead><tr><th>Nome</th><th>Camarote</th></tr></thead>
           <tbody>
-            <tr><td>João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
+            <tr><td class="nome">João Pereira</td><td><div class="ov-campo-com-botao"><input class="ov-campo ov-tnum" data-densidade="linha" type="text" value="204" aria-label="Camarote de João Pereira"><button class="ov-btn ov-btn-secundario" type="button">Trocar</button><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Desfazer" title="Desfazer"><i data-icone="x"></i></button></div></td></tr>
           </tbody>
         </table>
       </div>

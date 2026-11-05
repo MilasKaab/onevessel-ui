@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.1"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -659,6 +659,15 @@ dataHoraCurta('2026-10-27T23:00:00Z')  // "27/10 20:00" (em 2026); "27/10/2026 2
 - **Alterada pelo nome** (o teste da versão cobra; o resto das fixtures da v3.23.0 fica igual): no `js/datas.js`, `dataHoraCurta` (`"27/10, 20:00"` → `"27/10 20:00"`). No `controles.css` e no `janelas.css` nenhuma regra muda: só nascem (o `.ov-btn[aria-busy="true"]` de antes fica com o `cursor: progress`).
 - **Por que a v3.24.0 é minor:** classe nova (`.ov-campo-com-botao`) e regras novas (o esmaecido do `aria-busy`); a única mudança de valor, a da `dataHoraCurta`, está na lista acima. Nenhum token muda; nenhum `exports` novo.
 - **O que muda na tela dos apps ao adotar:** sem mudar código, (1) toda data curta perde a vírgula (no Paradas, a chegada e o desembarque da equipe no card: "03/11 09:40"; o `naFrase` dele já aceita sem vírgula); (2) todo `.ov-btn` com `aria-busy="true"` e sem `disabled` fica esmaecido (no Paradas, o "Enviando…" do relatório no card; na plataforma e na Bordo, onde houver). A altura do botão ao lado do campo só muda onde o app puser o `.ov-campo-com-botao` (Paradas: o "+ Criar" e a ajuda da Administração; Bordo: Templates e os outros casos).
+
+### Painel do modo foco alinhado ao topo da lista (v3.24.1)
+
+Achado do Salim nas capturas da Bordo, decidido em 04/11: no modo foco, com a página parada, o painel começava 8px abaixo do topo da lista, pela margem de cima da v3.21.0. A folga de cima só serve quando o painel gruda sob a barra ao rolar, e essa o `top: calc(var(--ov-barra-superior) + 8px)` do `sticky` já dá. A regra está no `componentes.md` (Painel lateral, Modo foco), no `onevessel-docs`.
+
+- **Alterada pelo nome** (o teste da versão cobra; o resto da fixture da v3.24.0 fica igual): no `janelas.css`, `[data-painel="foco"]:has(> .ov-painel) > .ov-painel` (no `@media (min-width: 1024px)`), `margin: 8px 8px 8px 0` → `margin: 0 8px 8px 0`. O `top` e a altura (`calc(100dvh - var(--ov-barra-superior) - 16px)`) não mudam: grudado, o painel fica a 8px da barra e acaba a 8px do pé da janela.
+- **Medido no exemplo** (1024 e 1440, nos dois temas, com a lista alongada para o painel grudar): parado, topo do painel − topo da lista = 0 (era 8); rolado, painel − barra superior = 8 (igual).
+- **Por que a v3.24.1 é patch:** correção de valor numa regra que já existia, sem seletor novo; nenhum token, JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** em todo modo foco — Pessoas, Convites e Templates da Bordo, Histórico do Paradas —, o painel parado alinha ao topo da lista. Rolando, nada muda.
 
 ### Relatório (papel e impressão)
 

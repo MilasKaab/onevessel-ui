@@ -297,7 +297,9 @@ test('medida: a 1440, o painel no modo foco com os cantos de 12, a 8 da direita,
   assert.equal(ps.length, 2);
   for (const p of ps) {
     assert.equal(p.raio, '12px');
-    assert.equal(p.margem, '8px 8px 8px 0px');
+    // Desde a v3.24.1, sem a margem de cima (alterada pelo nome no teste
+    // da v3.24.1); a direita e o pé continuam com 8.
+    assert.equal(p.margem, '0px 8px 8px 0px');
     assert.deepEqual(p.borda, ['1px', '1px', '1px', '1px']);
     assert.equal(p.direita, 8);
     assert.equal(p.corpo, '0px 0px 12px 12px');

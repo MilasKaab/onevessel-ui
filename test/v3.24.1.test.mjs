@@ -3,6 +3,8 @@
 // ao rolar fica a 8px da barra superior (o top do sticky). Patch: a fixture
 // da v3.24.0 (`test/fixtures/janelas-v3.24.0.css`, da tag, fixa) fica igual
 // regra a regra, fora a alterada pelo nome (a margem do painel do modo foco).
+// Desde a v3.24.2, o controles daqui é a fixture da v3.24.1 (conferida pelo
+// hash), e a versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -72,7 +74,6 @@ test('janelas.css continua importável sozinho, sem outline: none nem !important
 test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da tag', () => {
   const CSS = {
     casca: 'dec8032af2c2ca28e82bdfe576d867610c546bb768a9fdc0a1728e24ae0be338',
-    controles: '0ae47b7685f1f6be95e2836f917e0b35692fded9908a21b9016880b8d855b12b',
     fontes: '0732cb23d0c11661eebf32380715f9cde350a05bb57104393ccd735fa5332e8d',
     impressao: 'd04910a7dfce1d4689cfbccc59f607affb928c48c549a8c1ff59e316591c3a68',
     onevessel: 'e95d5e92d34181ed2f907b755c46cfc958c417960512adda386138d50eb728d4',
@@ -81,7 +82,7 @@ test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da
     telas: '1c98875ecc5f9cab5a28332d87b9089153465b9c74884f8f505fdae09c0c83c4',
     tokens: 'd15afe46e2ed18570720fe09b63af5eca75a9d266103619833d2547f44c7cd92',
   };
-  assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), [...Object.keys(CSS), 'janelas'].map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
+  assert.deepEqual(readdirSync(url('css')).filter((n) => n.endsWith('.css')).sort(), [...Object.keys(CSS), 'controles', 'janelas'].map((n) => `${n}.css`).sort(), 'nenhum CSS nasce nem some');
   for (const [nome, sha] of Object.entries(CSS)) assert.equal(sha256(`css/${nome}.css`), sha, nome);
   assert.equal(sha256('tokens/tokens.json'), '00e88f37d561d821f96fa505b1cd794326d70bb5df6453a531e24cf667463b1d');
   const JS = {
@@ -103,14 +104,13 @@ test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da
   assert.deepEqual(readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort(), Object.keys(JS).sort(), 'nenhum js nasce nem some');
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.24.0.css'), 'ca9b305c456142c5fbca4c9d6d04f44d38ebcdb116251f99d7f1593ef5acc8e3');
+  assert.equal(sha256('test/fixtures/controles-v3.24.1.css'), '0ae47b7685f1f6be95e2836f917e0b35692fded9908a21b9016880b8d855b12b');
 });
 
 // ---------- Versão e README ----------
 
-test('package.json 3.24.1, sem export novo; README com a tag, a seção, a alterada pelo nome e o que muda na tela', () => {
-  assert.equal(pacote.version, '3.24.1');
+test('package.json sem export novo; README com a seção, a alterada pelo nome e o que muda na tela', () => {
   assert.equal(Object.keys(pacote.exports).length, 29);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.24\.1"/);
   assert.match(leiame, /### Painel do modo foco alinhado ao topo da lista \(v3\.24\.1\)/);
   assert.match(leiame, /\*\*Alterada pelo nome\*\*[^\n]*`margin: 8px 8px 8px 0` → `margin: 0 8px 8px 0`/);
   assert.match(leiame, /\*\*Por que a v3\.24\.1 é patch:\*\*/);

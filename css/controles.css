@@ -67,7 +67,9 @@
    mouse, sobre ov-fundo, e um tom escuro o bastante para o texto claro (o
    petrol da ação dá 5,10:1 com ele) fica em 3,71:1 ali. */
 .ov-btn-primario:hover:not(:disabled) { background: var(--ov-acao-hover); color: var(--ov-fundo); }
-.ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); color: var(--ov-texto); }
+/* A borda do secundário é a dos campos (v3.24.2): a ov-borda-forte,
+   decorativa, sumia na barra (1,17:1 no claro, 1,50:1 no escuro). */
+.ov-btn-secundario { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-controle); color: var(--ov-texto); }
 .ov-btn-secundario:hover:not(:disabled) { background: var(--ov-linha-hover); }
 .ov-btn-fantasma { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-fantasma:hover:not(:disabled) { background: var(--ov-linha-hover); color: var(--ov-texto); }
@@ -77,7 +79,7 @@
 .ov-btn-primario[aria-busy="true"]:not(:disabled), .ov-btn-primario[aria-busy="true"]:not(:disabled):hover { background: transparent; color: var(--ov-sobre-acao); }
 .ov-btn-primario[aria-busy="true"]:not(:disabled)::before { background: var(--ov-acao); }
 .ov-btn-secundario[aria-busy="true"]:not(:disabled), .ov-btn-secundario[aria-busy="true"]:not(:disabled):hover { background: transparent; border-color: transparent; }
-.ov-btn-secundario[aria-busy="true"]:not(:disabled)::before { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-forte); }
+.ov-btn-secundario[aria-busy="true"]:not(:disabled)::before { background: var(--ov-superficie-elevada); border-color: var(--ov-borda-controle); }
 .ov-btn-fantasma[aria-busy="true"]:not(:disabled):hover { background: transparent; color: var(--ov-texto-secundario); }
 .ov-btn-icone { width: var(--ov-altura-controle); padding: 0; }
 /* O ícone do botão só de ícone é do pacote (v3.19, C17): 18px; o app não

@@ -5,7 +5,8 @@
 // (`test/fixtures/*-v3.23.0.*`, da tag, fixas) ficam iguais regra a regra,
 // fora a alterada pelo nome (a dataHoraCurta, que muda de valor). Desde a
 // v3.24.1, as janelas daqui são a fixture da v3.24.0 (fixture com fixture),
-// e a versão e a tag ficam com o teste da versão mais nova.
+// e a versão e a tag ficam com o teste da versão mais nova. Desde a v3.24.2,
+// o controles daqui é a fixture da v3.24.1 (os mesmos bytes da v3.24.0).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -29,7 +30,7 @@ const exemplo = ler('exemplo/index.html');
 const datasAntes = await import(`data:text/javascript,${encodeURIComponent(ler('test/fixtures/datas-v3.23.0.js').replace("from './texto.js'", `from '${url('js/texto.js').href}'`))}`);
 
 const NOMES = ['controles', 'janelas'];
-const fonte = (n) => (n === 'janelas' ? 'test/fixtures/janelas-v3.24.0.css' : `css/${n}.css`);
+const fonte = (n) => (n === 'janelas' ? 'test/fixtures/janelas-v3.24.0.css' : 'test/fixtures/controles-v3.24.1.css');
 const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries(NOMES.map((n) => [n, ler(`test/fixtures/${n}-v3.23.0.css`)]));
 

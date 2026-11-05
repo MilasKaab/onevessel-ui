@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.1"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.2"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -668,6 +668,15 @@ Achado do Salim nas capturas da Bordo, decidido em 04/11: no modo foco, com a p�
 - **Medido no exemplo** (1024 e 1440, nos dois temas, com a lista alongada para o painel grudar): parado, topo do painel − topo da lista = 0 (era 8); rolado, painel − barra superior = 8 (igual).
 - **Por que a v3.24.1 é patch:** correção de valor numa regra que já existia, sem seletor novo; nenhum token, JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** em todo modo foco — Pessoas, Convites e Templates da Bordo, Histórico do Paradas —, o painel parado alinha ao topo da lista. Rolando, nada muda.
+
+### Botão secundário com a borda dos campos (v3.24.2)
+
+Achado do Salim na barra de Pessoas da Bordo, decidido em 05/11: o "Convidar" (secundário) parecia menor que o "Nova pessoa" (primário) ao lado, com a mesma altura (36px os dois, medido em produção). A borda era a `ov-borda-forte`, decorativa, e o contorno sumia. Passa a `ov-borda-controle`, a dos campos. A regra está no `livro-da-marca.md` (Cor) e no `componentes.md` (Botão), no `onevessel-docs`.
+
+- **Alteradas pelo nome** (o teste da versão cobra; o resto da fixture da v3.24.1 fica igual): no `controles.css`, `.ov-btn-secundario` e `.ov-btn-secundario[aria-busy="true"]:not(:disabled)::before` (o Salvando), `border-color: var(--ov-borda-forte)` → `border-color: var(--ov-borda-controle)`. Fundo, texto, hover, altura e as outras variantes não mudam.
+- **Medido no exemplo** (contraste da borda): sobre `ov-fundo`, de 1,17:1 a 3,69:1 no claro e de 1,50:1 a 3,87:1 no escuro; sobre `ov-superficie-elevada`, de 1,32:1 a 4,15:1 no claro e de 1,20:1 a 3,08:1 no escuro.
+- **Por que a v3.24.2 é patch:** correção de valor em regras que já existiam, sem seletor novo; nenhum token, JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** todo botão secundário da suíte ganha o contorno dos campos — Cancelar, Recarregar, Convidar, a ajuda dos Vínculos e os outros, também o de ícone e o pequeno. O resto fica igual.
 
 ### Relatório (papel e impressão)
 

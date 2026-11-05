@@ -3,7 +3,9 @@
 // com a altura do campo; e o "Salvando" (aria-busy) esmaecido a .6 sem
 // disabled, com o anel do foco inteiro. Minor: as fixtures da v3.23.0
 // (`test/fixtures/*-v3.23.0.*`, da tag, fixas) ficam iguais regra a regra,
-// fora a alterada pelo nome (a dataHoraCurta, que muda de valor).
+// fora a alterada pelo nome (a dataHoraCurta, que muda de valor). Desde a
+// v3.24.1, as janelas daqui são a fixture da v3.24.0 (fixture com fixture),
+// e a versão e a tag ficam com o teste da versão mais nova.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -27,7 +29,8 @@ const exemplo = ler('exemplo/index.html');
 const datasAntes = await import(`data:text/javascript,${encodeURIComponent(ler('test/fixtures/datas-v3.23.0.js').replace("from './texto.js'", `from '${url('js/texto.js').href}'`))}`);
 
 const NOMES = ['controles', 'janelas'];
-const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(`css/${n}.css`)]));
+const fonte = (n) => (n === 'janelas' ? 'test/fixtures/janelas-v3.24.0.css' : `css/${n}.css`);
+const ATUAL = Object.fromEntries(NOMES.map((n) => [n, ler(fonte(n))]));
 const ANTES = Object.fromEntries(NOMES.map((n) => [n, ler(`test/fixtures/${n}-v3.23.0.css`)]));
 
 const TOQUE = '@media (pointer: coarse)';
@@ -228,10 +231,8 @@ test('nenhum outro js/ produz ou espera a vírgula entre data e hora', () => {
 
 // ---------- Versão, README e exemplo ----------
 
-test('package.json 3.24.0, sem export novo; README com a tag, a seção, a alterada pelo nome e os contratos', () => {
-  assert.equal(pacote.version, '3.24.0');
+test('package.json sem export novo; README com a seção, a alterada pelo nome e os contratos', () => {
   assert.equal(Object.keys(pacote.exports).length, 29);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.24\.0"/);
   assert.match(leiame, /### Data sem vírgula, botão na linha de campos e Salvando esmaecido \(v3\.24\.0\)/);
   assert.match(leiame, /\*\*Alterada pelo nome\*\*[^\n]*`dataHoraCurta`/);
   assert.match(leiame, /\*\*Por que a v3\.24\.0 é minor:\*\*/);

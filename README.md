@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.2"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.3"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -677,6 +677,15 @@ Achado do Salim na barra de Pessoas da Bordo, decidido em 05/11: o "Convidar" (s
 - **Medido no exemplo** (contraste da borda): sobre `ov-fundo`, de 1,17:1 a 3,69:1 no claro e de 1,50:1 a 3,87:1 no escuro; sobre `ov-superficie-elevada`, de 1,32:1 a 4,15:1 no claro e de 1,20:1 a 3,08:1 no escuro.
 - **Por que a v3.24.2 é patch:** correção de valor em regras que já existiam, sem seletor novo; nenhum token, JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** todo botão secundário da suíte ganha o contorno dos campos — Cancelar, Recarregar, Convidar, a ajuda dos Vínculos e os outros, também o de ícone e o pequeno. O resto fica igual.
+
+### Folga de 4px em cima da folha cheia (v3.24.3)
+
+D6, decidido pelo Salim em 06/11: abaixo de 768px, a folha cheia começa no topo da janela, e o botão de 48px do cabeçalho encosta nele; o anel do foco (2px de `outline` + 2px de recuo) saía uns 4px acima da tela e aparecia cortado em cima no toque. A folha cheia ganha 4px acima do cabeçalho, somados à área segura. O painel cheio (abaixo de 1024px) ganha 5px: o `.ov-painel-cab` tem 48px contando a borda de baixo, e o botão de 48px passava meio pixel acima dele (com 4px, o anel ficava em −0,5). O cabeçalho continua com 48px e o anel é o do livro, sem recuo negativo nem exceção.
+
+- **Alteradas pelo nome** (o teste da versão cobra; o resto da fixture da v3.24.2 fica igual): no `janelas.css`, `.ov-folha[data-altura="cheia"]`, `padding-top: env(safe-area-inset-top, 0px)` → `padding-top: calc(env(safe-area-inset-top, 0px) + 4px)`; e `.ov-painel[data-altura="cheia"]` (no `@media (max-width: 1023px)`), o mesmo `padding-top` → `padding-top: calc(env(safe-area-inset-top, 0px) + 5px)`. A folha de 90%, o painel de 90% e o painel do computador não mudam.
+- **Medido numa página de teste** (375px, toque, foco pelo teclado, nos dois temas): topo do anel na folha cheia, de −4 a 0; no painel cheio, de −4,5 a +0,5. Botão com 48px; cabeçalho do painel com 48px e o da folha com 52px (os 4px de baixo do `.ov-folha-topo`, que já existiam).
+- **Por que a v3.24.3 é patch:** correção de valor em regras que já existiam, sem seletor novo; nenhum token, JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** toda folha cheia e todo painel cheio — Pessoas, convite, Templates e camarote na Bordo, e o Paradas — descem o conteúdo 4px (a folha) ou 5px (o painel), e o anel do foco do botão do cabeçalho aparece inteiro no toque.
 
 ### Relatório (papel e impressão)
 

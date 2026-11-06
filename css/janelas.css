@@ -90,7 +90,9 @@
 .ov-folha-rodape > *, .ov-folha-rodape > .ov-btn { flex: 1; height: var(--ov-altura-toque); }
 .ov-folha[data-altura="rapida"] { height: 40vh; height: 40dvh; }
 .ov-folha[data-altura="detalhe"] { height: 90vh; height: 90dvh; }
-.ov-folha[data-altura="cheia"] { height: 100vh; height: 100dvh; max-height: none; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
+/* A cheia começa no topo da janela: os 4px acima do cabeçalho deixam o anel
+   do foco (2px + 2px de recuo) de um botão de 48px inteiro na tela (v3.24.3). */
+.ov-folha[data-altura="cheia"] { height: 100vh; height: 100dvh; max-height: none; padding-top: calc(env(safe-area-inset-top, 0px) + 4px); border-radius: 0; }
 .ov-folha[data-altura="cheia"] .ov-folha-alca { display: none; }
 
 /* ---------- Abaixo de 1024px: o Painel lateral vira Folha móvel ---------- */
@@ -101,7 +103,10 @@
    nele. */
 @media (max-width: 1023px) {
   .ov-painel, .ov-painel[data-abas] { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: auto; height: 90vh; height: 90dvh; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-left: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; box-shadow: var(--ov-sombra-2); animation: ovSobe .22s cubic-bezier(.32,.72,0,1); }
-  .ov-painel[data-altura="cheia"] { height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); border-radius: 0; }
+  /* O anel do foco inteiro, como na folha cheia, com 1px a mais: o
+     .ov-painel-cab tem 48px com a borda de baixo, e o botão de 48px passa
+     meio pixel acima dele (v3.24.3). */
+  .ov-painel[data-altura="cheia"] { height: 100vh; height: 100dvh; padding-top: calc(env(safe-area-inset-top, 0px) + 5px); border-radius: 0; }
 }
 
 /* ---------- Modo foco (v3.17.0), só a partir de 1024px ---------- */

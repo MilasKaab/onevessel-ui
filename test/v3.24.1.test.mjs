@@ -4,7 +4,9 @@
 // da v3.24.0 (`test/fixtures/janelas-v3.24.0.css`, da tag, fixa) fica igual
 // regra a regra, fora a alterada pelo nome (a margem do painel do modo foco).
 // Desde a v3.24.2, o controles daqui é a fixture da v3.24.1 (conferida pelo
-// hash), e a versão e a tag ficam com o teste da versão mais nova.
+// hash), e a versão e a tag ficam com o teste da versão mais nova. Desde a
+// v3.24.3, as janelas daqui são a fixture da v3.24.2 (os mesmos bytes da
+// v3.24.1), conferida pelo hash.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -21,7 +23,7 @@ const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('
 const pacote = JSON.parse(ler('package.json'));
 const leiame = ler('README.md');
 
-const janelas = ler('css/janelas.css');
+const janelas = ler('test/fixtures/janelas-v3.24.2.css');
 const antes = ler('test/fixtures/janelas-v3.24.0.css');
 
 const COMPUTADOR = '@media (min-width: 1024px)';
@@ -104,6 +106,7 @@ test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da
   assert.deepEqual(readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort(), Object.keys(JS).sort(), 'nenhum js nasce nem some');
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.24.0.css'), 'ca9b305c456142c5fbca4c9d6d04f44d38ebcdb116251f99d7f1593ef5acc8e3');
+  assert.equal(sha256('test/fixtures/janelas-v3.24.2.css'), 'b58dbd1036562b661422456fb185117d0286470ea02ec74494bb636e4d16fdae');
   assert.equal(sha256('test/fixtures/controles-v3.24.1.css'), '0ae47b7685f1f6be95e2836f917e0b35692fded9908a21b9016880b8d855b12b');
 });
 

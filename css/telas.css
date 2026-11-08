@@ -300,9 +300,9 @@ a.ov-indicador:hover { background-image: linear-gradient(var(--ov-linha-hover), 
 /* ---------- Aviso em bloco (v3.25.0) ---------- */
 /* Uma frase que fica na tela, dentro do conteúdo (não flutua: isso é o
    Toast), nos tons da tag pastel: atencao (precisa de uma ação de alguém) e
-   erro (não deu certo); sem data-tom, a tag neutra. Texto de 6,1:1 ou mais sobre o próprio fundo nos
-   dois temas. O ícone (16px) vem do app e herda a cor do texto; o título é
-   opcional. O role (status ou alert) é do app.
+   erro (não deu certo); sem data-tom, a tag neutra. Texto de 6,1:1 ou mais
+   sobre o próprio fundo nos dois temas. O ícone (16px) vem do app e herda a
+   cor do texto; o título é opcional. O role (status ou alert) é do app.
      <div class="ov-aviso" data-tom="atencao" role="status">
        <svg aria-hidden="true">…</svg>
        <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Importante</p><p>Este link é pessoal.</p></div>

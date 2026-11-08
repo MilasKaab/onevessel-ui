@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Página de impressão de exemplo (v3.25.0): dados fictícios, para a prova
+     de que o papel sai colorido como a tela. O nome do arquivo sai do title. -->
+<title>ocupacao-navio-exemplo-2026-11-08</title>
+<link rel="stylesheet" href="../css/fontes.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/relatorio.css">
+<link rel="stylesheet" href="../css/impressao.css">
+<link rel="stylesheet" href="../css/controles.css">
+<style>
+  :root { --rel-rodape: "OneVessel · Exemplo · Ocupação dos camarotes"; }
+  /* Sem fundo no body: na tela, a .rel-area pinta a volta da folha; no papel,
+     só a folha tem cor (o Chrome sem interface imprime todo fundo). */
+  body { margin: 0; }
+</style>
+</head>
+<body>
+<div class="rel-area">
+  <div class="rel-barra">
+    <a class="ov-btn ov-btn-secundario" href="./index.html">Voltar</a>
+    <h2 class="rel-barra-titulo">Ocupação dos camarotes</h2>
+    <button class="ov-btn ov-btn-primario" type="button" onclick="window.print()">Imprimir ou salvar PDF</button>
+  </div>
+
+  <main class="rel-pagina">
+    <header class="rel-timbre">
+      <img src="../marca/bram-offshore-horizontal.png" alt="BRAM Offshore">
+      <div>
+        <h1 class="rel-titulo">Ocupação dos camarotes</h1>
+        <div class="rel-sub">Navio Exemplo · Main Deck</div>
+      </div>
+      <div class="rel-meta">08/11/2026, 16:30<br>Emitido por Joana Prado</div>
+    </header>
+
+    <div class="rel-resumo">
+      <div><b>11 / 16</b><span>leitos ocupados</span></div>
+      <div><b>5</b><span>leitos vagos</span></div>
+      <div><b>1</b><span>camarote sem ocupação</span></div>
+    </div>
+
+    <h2 class="rel-secao">Camarotes</h2>
+    <table class="rel-tabela">
+      <thead>
+        <tr><th>Camarote</th><th>Ramal</th><th>Ocupante</th><th>Tipo</th><th>Leito</th><th class="rel-num">Ocupados</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>201</td><td>2010</td><td>Rui Tavares</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num">2 / 2</td></tr>
+        <tr><td>201</td><td>2010</td><td>Caio Menezes</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>202</td><td>2020</td><td>Lia Moreno</td><td>Passageiros</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num">1 / 2</td></tr>
+        <tr><td>202</td><td>2020</td><td>—</td><td>—</td><td><span class="rel-estado"><span aria-hidden="true">○</span>Vago</span></td><td class="rel-num"></td></tr>
+        <tr><td>203</td><td>2030</td><td>Beto Arantes</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num">4 / 4</td></tr>
+        <tr><td>203</td><td>2030</td><td>Davi Lopes</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>203</td><td>2030</td><td>Enzo Faria</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>203</td><td>2030</td><td>Igor Nunes</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>204</td><td>2040</td><td>Nina Salgado</td><td>Passageiros</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num">2 / 4</td></tr>
+        <tr><td>204</td><td>2040</td><td>Otávio Reis</td><td>Passageiros</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>204</td><td>2040</td><td>—</td><td>—</td><td><span class="rel-estado"><span aria-hidden="true">○</span>Vago</span></td><td class="rel-num"></td></tr>
+        <tr><td>204</td><td>2040</td><td>—</td><td>—</td><td><span class="rel-estado"><span aria-hidden="true">○</span>Vago</span></td><td class="rel-num"></td></tr>
+        <tr><td>205</td><td>2050</td><td>Paula Viana</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num">2 / 2</td></tr>
+        <tr><td>205</td><td>2050</td><td>Sara Quintela</td><td>Tripulação</td><td><span class="rel-estado"><span aria-hidden="true">●</span>Ocupado</span></td><td class="rel-num"></td></tr>
+        <tr><td>206</td><td>2060</td><td>—</td><td>—</td><td><span class="rel-estado"><span aria-hidden="true">○</span>Vago</span></td><td class="rel-num">0 / 2</td></tr>
+        <tr><td>206</td><td>2060</td><td>—</td><td>—</td><td><span class="rel-estado"><span aria-hidden="true">○</span>Vago</span></td><td class="rel-num"></td></tr>
+      </tbody>
+    </table>
+
+    <footer class="rel-rodape"><span>OneVessel · Exemplo · Ocupação dos camarotes</span></footer>
+  </main>
+</div>
+</body>
+</html>

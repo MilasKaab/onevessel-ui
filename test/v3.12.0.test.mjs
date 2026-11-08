@@ -14,7 +14,16 @@ import { readFileSync } from 'node:fs';
 
 import { problemasDeBase, regras, semComentario, seletores } from '../scripts/css-regras.mjs';
 
-const ler = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
+// Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
+// bytes da tag, fixos): teste de versão passada compara fixture com fixture.
+const DA_V3243 = {
+  'css/impressao.css': 'test/fixtures/impressao-v3.24.3.css',
+  'css/relatorio.css': 'test/fixtures/relatorio-v3.24.3.css',
+  'css/telas.css': 'test/fixtures/telas-v3.24.3.css',
+  'css/janelas.css': 'test/fixtures/janelas-v3.24.3.css',
+  'tokens/tokens.json': 'test/fixtures/tokens-v3.24.3.json',
+};
+const ler = (p) => readFileSync(new URL(`../${DA_V3243[p] ?? p}`, import.meta.url), 'utf8');
 const fixo = (nome) => ler(`test/fixtures/${nome}-v3.11.0.css`);
 const v3120 = (nome) => ler(`test/fixtures/${nome}-v3.12.0.css`);
 const css = (nome) => (['controles', 'onevessel', 'telas', 'janelas'].includes(nome) ? v3120(nome) : fixo(nome));

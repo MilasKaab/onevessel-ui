@@ -24,16 +24,16 @@
   @bottom-right { content: "pág. " counter(page) "/" counter(pages); font-family: var(--font-rel-sans); font-size: 8pt; color: var(--rel-mudo); font-variant-numeric: tabular-nums; }
 }
 
-/* Papel em preto e branco: logo em cinza, sem fundos, títulos e números em
-   preto. O rodapé da folha some (sai pelas caixas); a barra e a área somem
-   pelo previa.css (v3.11.0). */
+/* Só a paginação (v3.25.0, decidido pelo Salim em 08/11): o papel sai
+   colorido como a tela (o print-color-adjust: exact está na .rel-pagina, no
+   relatorio.css); quem quiser preto e branco escolhe escala de cinza na
+   impressora. Até a v3.24.3 este bloco convertia o papel: logo em cinza,
+   sem fundos, títulos e números em preto. O rodapé da folha some (sai pelas
+   caixas); a barra e a área somem pelo previa.css (v3.11.0). */
 @media print {
-  .rel-pagina { max-width: none; margin: 0; padding: 0; background: none; }
+  .rel-pagina { max-width: none; margin: 0; padding: 0; }
   .rel-pagina[data-orientacao="paisagem"] { max-width: none; aspect-ratio: auto; }
-  .rel-timbre { border-bottom-color: #000; }
-  .rel-timbre img { height: 10mm; filter: grayscale(1); }
-  .rel-titulo, .rel-secao, .rel-resumo b { color: #000; }
-  .rel-resumo { background: none; border: .5px solid #999; }
+  .rel-timbre img { height: 10mm; }
   .rel-tabela tr { break-inside: avoid; }
   .rel-tabela thead { display: table-header-group; }
   .rel-rodape { display: none; }

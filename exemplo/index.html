@@ -27,6 +27,13 @@
   .janelas .moldura { height: 400px; }
   .janelas .moldura + .moldura { margin-top: 0; }
   .janelas-lista { flex: 1; padding: var(--ov-esp-5); color: var(--ov-texto-secundario); }
+  .avisos-cartao { display: flex; flex-direction: column; gap: var(--ov-esp-3); padding: var(--ov-esp-5); }
+  .moldura-coluna { height: 420px; margin-top: var(--ov-esp-4); }
+  .coluna-grade { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: var(--ov-esp-4); height: 100%; padding: var(--ov-esp-4); box-sizing: border-box; }
+  .coluna-area { display: grid; place-items: center; border: 1px dashed var(--ov-borda-forte); border-radius: var(--ov-raio-lg); color: var(--ov-texto-terciario); font: var(--ov-fonte-legenda); text-align: center; padding: var(--ov-esp-4); }
+  .coluna-celula { min-height: 0; min-width: 0; }
+  /* Abaixo de 1024px o painel é a Folha (90% da janela): a moldura ganha a altura da janela para ela caber inteira. */
+  @media (max-width: 1023px) { .moldura-coluna { height: 100vh; } .coluna-grade { grid-template-columns: minmax(0, 1fr); } .coluna-celula { height: 0; } }
   .telas-moldura { position: relative; height: 560px; overflow-y: auto; transform: translateZ(0); border: 1px solid var(--ov-borda-forte); border-radius: var(--ov-raio-lg); background: var(--ov-fundo); color: var(--ov-texto); font: var(--ov-fonte-corpo); padding: var(--ov-esp-6); display: flex; flex-direction: column; gap: var(--ov-esp-6); }
   .telas-moldura + .moldura-rotulo { margin-top: var(--ov-esp-4); }
   /* A moldura rola: os blocos não encolhem (a caixa tem overflow: hidden). */
@@ -778,6 +785,99 @@
             <tr><td class="nome">Parada de agosto</td><td class="meta">04/08/2026</td><td class="num">52</td><td class="num">44</td><td class="num">84,6%</td><td class="num">5</td><td class="num">3</td><td class="meta" data-some-no-tablet>12/08/2026 17:30</td><td data-some-no-tablet>Ana Souza</td><td>Duas atividades ficaram para a próxima parada</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2 class="ov-titulo-1">Aviso em bloco e painel em coluna (v3.25.0)</h2>
+    <p class="ov-legenda">.ov-aviso com data-tom="atencao" ou "erro" (o vocabulário da tag pastel; sem tom, neutro), ícone de 16px na cor do texto, título opcional (.ov-aviso-titulo) e o texto (.ov-aviso-texto); o role é do app. Abaixo, o .ov-painel[data-coluna]: a partir de 1024px ocupa a largura e a altura da célula que a tela montou (aqui, 380px ao lado da área), com a borda inteira e os cantos; abaixo de 1024px é a Folha, como todo painel.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <div class="ov-cartao avisos-cartao">
+        <div class="ov-aviso" data-tom="atencao" role="status">
+          <i data-icone="clock"></i>
+          <p class="ov-aviso-texto"><strong>Importante:</strong> este link é pessoal e ficará disponível até <strong>10/11/2026, 18:00</strong>.</p>
+        </div>
+        <div class="ov-aviso" data-tom="erro" role="alert">
+          <i data-icone="circle-alert"></i>
+          <p class="ov-aviso-texto">Não consegui enviar o cadastro. Tente de novo.</p>
+        </div>
+        <div class="ov-aviso" data-tom="atencao">
+          <i data-icone="lock"></i>
+          <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Paradas suspensas</p><p>Ninguém registra atividade até a suspensão terminar, às 06:00.</p></div>
+        </div>
+        <div class="ov-aviso" data-tom="erro">
+          <i data-icone="triangle-alert"></i>
+          <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Backup atrasado</p><p>O último backup foi há 3 dias.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="moldura moldura-coluna" data-theme="escuro">
+      <div class="coluna-grade">
+        <div class="coluna-area">Planta do convés (a área ao lado; a altura é da tela)</div>
+        <div class="coluna-celula">
+          <aside class="ov-painel" data-coluna role="complementary" aria-label="Camarote 214">
+            <div class="ov-painel-cab"><b>Camarote</b></div>
+            <div class="ov-painel-corpo">
+              <h3 class="ov-titulo-3">Camarote 214</h3>
+              <span class="ov-estado" data-tom="andamento">3 de 4 leitos ocupados</span>
+              <dl class="ov-dados">
+                <dt>Convés</dt><dd>Main Deck</dd>
+                <dt>Ramal</dt><dd>2140</dd>
+                <dt>Leito 1</dt><dd>Joana Prado</dd>
+                <dt>Leito 2</dt><dd>Rui Tavares</dd>
+                <dt>Leito 3</dt><dd>Lia Moreno</dd>
+                <dt>Leito 4</dt><dd>Livre</dd>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <p class="ov-rotulo moldura-rotulo">Tema claro</p>
+    <div class="controles-moldura" data-theme="claro">
+      <div class="ov-cartao avisos-cartao">
+        <div class="ov-aviso" data-tom="atencao" role="status">
+          <i data-icone="clock"></i>
+          <p class="ov-aviso-texto"><strong>Importante:</strong> este link é pessoal e ficará disponível até <strong>10/11/2026, 18:00</strong>.</p>
+        </div>
+        <div class="ov-aviso" data-tom="erro" role="alert">
+          <i data-icone="circle-alert"></i>
+          <p class="ov-aviso-texto">Não consegui enviar o cadastro. Tente de novo.</p>
+        </div>
+        <div class="ov-aviso" data-tom="atencao">
+          <i data-icone="lock"></i>
+          <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Paradas suspensas</p><p>Ninguém registra atividade até a suspensão terminar, às 06:00.</p></div>
+        </div>
+        <div class="ov-aviso" data-tom="erro">
+          <i data-icone="triangle-alert"></i>
+          <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Backup atrasado</p><p>O último backup foi há 3 dias.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="moldura moldura-coluna" data-theme="claro">
+      <div class="coluna-grade">
+        <div class="coluna-area">Planta do convés (a área ao lado; a altura é da tela)</div>
+        <div class="coluna-celula">
+          <aside class="ov-painel" data-coluna role="complementary" aria-label="Camarote 214">
+            <div class="ov-painel-cab"><b>Camarote</b></div>
+            <div class="ov-painel-corpo">
+              <h3 class="ov-titulo-3">Camarote 214</h3>
+              <span class="ov-estado" data-tom="andamento">3 de 4 leitos ocupados</span>
+              <dl class="ov-dados">
+                <dt>Convés</dt><dd>Main Deck</dd>
+                <dt>Ramal</dt><dd>2140</dd>
+                <dt>Leito 1</dt><dd>Joana Prado</dd>
+                <dt>Leito 2</dt><dd>Rui Tavares</dd>
+                <dt>Leito 3</dt><dd>Lia Moreno</dd>
+                <dt>Leito 4</dt><dd>Livre</dd>
+              </dl>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   </section>
@@ -1610,6 +1710,7 @@
     'chevron-right': '<path d="m9 18 6-6-6-6"/>',
     'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
     'circle-alert': '<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
     lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     'panel-left-close': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/>',
     'panel-left-open': '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/>',

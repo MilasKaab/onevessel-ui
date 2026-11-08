@@ -150,6 +150,17 @@
   [data-painel="foco"]:has(> .ov-painel) > .ov-painel :has(> .ov-campo-grupo) > :not(.ov-campo-grupo) { grid-column: 1 / -1; }
 }
 
+/* ---------- Painel dentro de uma coluna (v3.25.0), só a partir de 1024px ---------- */
+/* Para a tela que reserva ao painel uma coluna fixa ao lado de outra área
+   (Conveses da Bordo: a planta e a coluna de 380px). Com data-coluna, o
+   painel ocupa a largura e a altura do contêiner que o app montou (a altura
+   da área ao lado é do app, como o contêiner), com a borda inteira e os
+   cantos ov-raio-lg, porque não encosta na beira da tela; o corpo rola por
+   dentro e o canto recorta. Abaixo de 1024px é a Folha, como todo painel. */
+@media (min-width: 1024px) {
+  .ov-painel[data-coluna] { width: 100%; height: 100%; min-height: 0; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); overflow: hidden; }
+}
+
 /* ---------- Abaixo de 768px: diálogo de formulário em tela cheia, toasts no topo ---------- */
 @media (max-width: 767px) {
   /* A confirmação continua centrada, com 16px de margem (a largura acima). */

@@ -1,0 +1,771 @@
+{
+ "name": "OneVessel",
+ "version": 3,
+ "meta": {
+  "source": "Volta à paleta petrol/ciano e à fonte do sistema na interface (set/2026), com as correções de contraste que os apps faziam localmente. Relatórios internos e marca seguem o padrão Bram Power novo: rel-* e IBM Plex. Correções de contraste da v3.1: ov-acao-texto para link e ícone ativo no tema escuro; ov-borda-controle mais escuro no tema claro. v3.2: ov-superficie-recuada e ov-fundo-barra, vindos das variáveis do kit sem equivalente (navy-850 e top-bg). v3.3: ov-barra-lateral-recolhida (56px), para a casca abaixo de 1024px."
+ },
+ "color": {
+  "themes": [
+   {
+    "id": "escuro",
+    "name": "Escuro"
+   },
+   {
+    "id": "claro",
+    "name": "Claro"
+   }
+  ],
+  "tokens": [
+   {
+    "name": "ov-fundo",
+    "value": {
+     "escuro": "#040a12",
+     "claro": "#eef2f6"
+    },
+    "usage": "Fundo da página, da barra lateral e da barra inferior."
+   },
+   {
+    "name": "ov-fundo-barra",
+    "value": {
+     "escuro": "rgba(4,10,18,.92)",
+     "claro": "rgba(255,255,255,.93)"
+    },
+    "usage": "Fundo da barra superior fixa e de barras flutuantes com desfoque. Translúcido de propósito: o conteúdo aparece por baixo ao rolar. Nunca como fundo de texto pequeno."
+   },
+   {
+    "name": "ov-superficie",
+    "value": {
+     "escuro": "#0b1a2b",
+     "claro": "#ffffff"
+    },
+    "usage": "Cartões, tabelas, painel lateral e campos em cartões."
+   },
+   {
+    "name": "ov-superficie-elevada",
+    "value": {
+     "escuro": "#0f2438",
+     "claro": "#ffffff"
+    },
+    "usage": "Menus, diálogos, paleta de comandos e folhas móveis. No claro, a elevação vem da sombra."
+   },
+   {
+    "name": "ov-superficie-recuada",
+    "value": {
+     "escuro": "#07111c",
+     "claro": "#f7fafc"
+    },
+    "usage": "Superfície afundada dentro de outra: fundo de campo dentro de cartão, corpo de gaveta, item de lista embutido. Mais escura que ov-fundo no escuro, mais clara no claro."
+   },
+   {
+    "name": "ov-borda",
+    "value": {
+     "escuro": "#152b3d",
+     "claro": "#e6edf4"
+    },
+    "usage": "Borda de cartões e divisores. Decorativa: nunca a única borda de um controle."
+   },
+   {
+    "name": "ov-borda-forte",
+    "value": {
+     "escuro": "#1a3247",
+     "claro": "#d6e2ec"
+    },
+    "usage": "Borda de botão secundário, chips de filtro e teclas de atalho."
+   },
+   {
+    "name": "ov-borda-controle",
+    "value": {
+     "escuro": "#4a7196",
+     "claro": "#687f96"
+    },
+    "usage": "Borda de campo, select e checkbox. Acima de 3:1 sobre superfície e fundo nos dois temas — sem isso o campo some sob o sol da ponte."
+   },
+   {
+    "name": "ov-texto",
+    "value": {
+     "escuro": "#e3edf7",
+     "claro": "#0f1f2d"
+    },
+    "usage": "Texto principal sobre qualquer superfície (14:1 ou mais)."
+   },
+   {
+    "name": "ov-texto-secundario",
+    "value": {
+     "escuro": "#93aac0",
+     "claro": "#41596f"
+    },
+    "usage": "Descrições, rótulos de indicador e navegação inativa sobre qualquer superfície (7:1 ou mais)."
+   },
+   {
+    "name": "ov-texto-terciario",
+    "value": {
+     "escuro": "#7d97b0",
+     "claro": "#4d6682"
+    },
+    "usage": "Terceiro nível de texto: metadados e placeholders. Acima de 4,5:1 em qualquer superfície dos dois temas."
+   },
+   {
+    "name": "ov-acao",
+    "value": {
+     "escuro": "#0e7490",
+     "claro": "#0e7490"
+    },
+    "usage": "Única cor de ação: botão primário, link, ícone do item ativo, seleção e borda de campo em foco. Petrol da Bram Power, o mesmo nos dois temas."
+   },
+   {
+    "name": "ov-acao-hover",
+    "value": {
+     "escuro": "#22d3ee",
+     "claro": "#0a5f77"
+    },
+    "usage": "Estado hover da cor de ação. No escuro é o ciano, que também clareia o que precisa saltar sobre o navy; no claro, o petrol escurecido."
+   },
+   {
+    "name": "ov-sobre-acao",
+    "value": {
+     "escuro": "#e6feff",
+     "claro": "#ffffff"
+    },
+    "usage": "Texto e ícone sobre a cor de ação."
+   },
+   {
+    "name": "ov-acao-suave",
+    "value": {
+     "escuro": "rgba(14,116,144,.22)",
+     "claro": "rgba(14,116,144,.12)"
+    },
+    "usage": "Fundo de linha selecionada, resultado ativo da paleta e contador de ação. Texto ov-texto sobre ele."
+   },
+   {
+    "name": "ov-acao-texto",
+    "value": {
+     "escuro": "#22d3ee",
+     "claro": "#0e7490"
+    },
+    "usage": "Cor de ação quando ela vira TEXTO: link, ícone do item ativo, botão fantasma. No escuro o petrol de ov-acao não alcança 4,5:1 sobre as superfícies; aqui ele clareia. Preenchimento de botão continua em ov-acao."
+   },
+   {
+    "name": "ov-foco",
+    "value": {
+     "escuro": "#22d3ee",
+     "claro": "#0a5f77"
+    },
+    "usage": "Anel de foco: 2px com offset de 2px. É o ciano no escuro e o petrol escurecido no claro, porque o petrol puro não alcança 3:1 sobre o fundo escuro."
+   },
+   {
+    "name": "ov-destaque",
+    "value": {
+     "escuro": "#fb923c",
+     "claro": "#b45309"
+    },
+    "usage": "Laranja BRAM: só para o que exige atenção agora (indicador em alerta, contador de pendências). Texto ou borda; 4,7:1 ou mais sobre as superfícies."
+   },
+   {
+    "name": "ov-destaque-suave",
+    "value": {
+     "escuro": "rgba(251,146,60,.16)",
+     "claro": "rgba(180,83,9,.12)"
+    },
+    "usage": "Fundo do contador de pendências, com texto ov-destaque."
+   },
+   {
+    "name": "ov-destaque-texto",
+    "value": {
+     "escuro": "#fb923c",
+     "claro": "#9a4508"
+    },
+    "usage": "Texto do .ov-contador-destaque sobre ov-destaque-suave (VP1, BX14): 5,5:1 no claro e 6,0:1 no escuro."
+   },
+   {
+    "name": "ov-marca-azul",
+    "value": {
+     "escuro": "#0d4b88"
+    },
+    "usage": "Azul do logo BRAM Offshore: fundo do monograma, ícones de PWA e títulos de relatório. Texto sobre ele: #ffffff."
+   },
+   {
+    "name": "ov-marca-laranja",
+    "value": {
+     "escuro": "#ec6a3b"
+    },
+    "usage": "Laranja da corda do logo: filete de timbre e detalhes de marca. Nunca texto sobre branco (3,1:1)."
+   },
+   {
+    "name": "ov-sucesso",
+    "value": {
+     "escuro": "#34d399",
+     "claro": "#047857"
+    },
+    "usage": "Concluído, atendido, livre, aprovado. Ponto de estado, ícone ou texto, sempre com palavra junto."
+   },
+   {
+    "name": "ov-atencao",
+    "value": {
+     "escuro": "#facc15",
+     "claro": "#a16207"
+    },
+    "usage": "Pendente, aguardando, aprovação necessária."
+   },
+   {
+    "name": "ov-erro",
+    "value": {
+     "escuro": "#f87171",
+     "claro": "#dc2626"
+    },
+    "usage": "Erro, falha, ação destrutiva, urgente em lista."
+   },
+   {
+    "name": "ov-sobre-erro",
+    "value": {
+     "escuro": "#040a12",
+     "claro": "#ffffff"
+    },
+    "usage": "Texto do botão destrutivo sobre ov-erro (6,9:1 no escuro, 5,6:1 no claro)."
+   },
+   {
+    "name": "ov-info",
+    "value": {
+     "escuro": "#60a5fa",
+     "claro": "#2563eb"
+    },
+    "usage": "Estado informativo. Azul, distinto do petrol de ação, para não ser lido como algo clicável."
+   },
+   {
+    "name": "ov-neutro",
+    "value": {
+     "escuro": "#7d97b0",
+     "claro": "#4d6682"
+    },
+    "usage": "Ponto de estado neutro e ícone desligado. Mesmo cinza-azulado do texto terciário."
+   },
+   {
+    "name": "ov-status-andamento",
+    "value": {
+     "escuro": "#facc15",
+     "claro": "#facc15"
+    },
+    "usage": "Em andamento (Paradas) e ocupação parcial (Bordo): ponto, filete e barra, nunca texto. Exceção do livro: 1,5:1 sobre o branco, sempre com a palavra ao lado."
+   },
+   {
+    "name": "ov-critico",
+    "value": {
+     "escuro": "#f87171",
+     "claro": "#dc2626"
+    },
+    "usage": "Fundo da tag forte do Crítico (.ov-tag[data-tom=\"critico\"]), com texto ov-sobre-erro."
+   },
+   {
+    "name": "ov-tag-neutro-fundo",
+    "value": {
+     "escuro": "rgba(125,151,176,.18)",
+     "claro": "#e8eef4"
+    },
+    "usage": "Fundo da tag pastel neutra (Em terra, Arquivada), com texto ov-tag-neutro-texto."
+   },
+   {
+    "name": "ov-tag-neutro-texto",
+    "value": {
+     "escuro": "#c3d2e0",
+     "claro": "#334a60"
+    },
+    "usage": "Texto da tag pastel neutra (Em terra, Arquivada) sobre ov-tag-neutro-fundo (6,1:1 ou mais em toda superfície dos dois temas)."
+   },
+   {
+    "name": "ov-tag-info-fundo",
+    "value": {
+     "escuro": "rgba(96,165,250,.18)",
+     "claro": "#dbeafe"
+    },
+    "usage": "Fundo da tag pastel informativa (A bordo), com texto ov-tag-info-texto."
+   },
+   {
+    "name": "ov-tag-info-texto",
+    "value": {
+     "escuro": "#bfdbfe",
+     "claro": "#1e40af"
+    },
+    "usage": "Texto da tag pastel informativa (A bordo) sobre ov-tag-info-fundo (6,1:1 ou mais em toda superfície dos dois temas)."
+   },
+   {
+    "name": "ov-tag-atencao-fundo",
+    "value": {
+     "escuro": "rgba(250,204,21,.16)",
+     "claro": "#fef3c7"
+    },
+    "usage": "Fundo da tag pastel de atenção (alerta da planta, jornada), com texto ov-tag-atencao-texto."
+   },
+   {
+    "name": "ov-tag-atencao-texto",
+    "value": {
+     "escuro": "#fde68a",
+     "claro": "#854d0e"
+    },
+    "usage": "Texto da tag pastel de atenção (alerta da planta, jornada) sobre ov-tag-atencao-fundo (6,1:1 ou mais em toda superfície dos dois temas)."
+   },
+   {
+    "name": "ov-tag-erro-fundo",
+    "value": {
+     "escuro": "rgba(248,113,113,.18)",
+     "claro": "#fee2e2"
+    },
+    "usage": "Fundo da tag pastel de erro (Urgente, jornada excedida), com texto ov-tag-erro-texto."
+   },
+   {
+    "name": "ov-tag-erro-texto",
+    "value": {
+     "escuro": "#fecaca",
+     "claro": "#991b1b"
+    },
+    "usage": "Texto da tag pastel de erro (Urgente, jornada excedida) sobre ov-tag-erro-fundo (6,1:1 ou mais em toda superfície dos dois temas)."
+   },
+   {
+    "name": "ov-tag-sucesso-fundo",
+    "value": {
+     "escuro": "rgba(52,211,153,.16)",
+     "claro": "#d1fae5"
+    },
+    "usage": "Fundo da tag pastel de sucesso, com texto ov-tag-sucesso-texto."
+   },
+   {
+    "name": "ov-tag-sucesso-texto",
+    "value": {
+     "escuro": "#a7f3d0",
+     "claro": "#065f46"
+    },
+    "usage": "Texto da tag pastel de sucesso sobre ov-tag-sucesso-fundo (6,1:1 ou mais em toda superfície dos dois temas)."
+   },
+   {
+    "name": "ov-veu",
+    "value": {
+     "escuro": "rgba(2,6,12,.7)",
+     "claro": "rgba(15,31,45,.35)"
+    },
+    "usage": "Véu atrás de diálogos, paleta de comandos e folhas móveis. Painel lateral não usa véu no computador."
+   },
+   {
+    "name": "ov-item-ativo",
+    "value": {
+     "escuro": "rgba(255,255,255,.07)",
+     "claro": "rgba(15,31,45,.07)"
+    },
+    "usage": "Fundo do item ativo na barra lateral e da visão salva selecionada."
+   },
+   {
+    "name": "ov-linha-hover",
+    "value": {
+     "escuro": "rgba(14,116,144,.13)",
+     "claro": "rgba(14,116,144,.08)"
+    },
+    "usage": "Hover de linha de tabela, item de menu e botão fantasma."
+   },
+   {
+    "name": "ov-toast-fundo",
+    "value": {
+     "escuro": "#e3edf7",
+     "claro": "#0b1a2b"
+    },
+    "usage": "Fundo invertido do toast: se destaca sem usar cor."
+   },
+   {
+    "name": "ov-toast-texto",
+    "value": {
+     "escuro": "#0f1f2d",
+     "claro": "#e3edf7"
+    },
+    "usage": "Texto do toast sobre ov-toast-fundo (15:1)."
+   },
+   {
+    "name": "ov-toast-acao",
+    "value": {
+     "escuro": "#0e7490",
+     "claro": "#22d3ee"
+    },
+    "usage": "Botão Desfazer e barra de tempo dentro do toast (6,3:1 ou mais)."
+   },
+   {
+    "name": "ov-toast-sucesso",
+    "value": {
+     "escuro": "#047857",
+     "claro": "#34d399"
+    },
+    "usage": "Ícone de sucesso dentro do toast (4,1:1 ou mais, ícone)."
+   },
+   {
+    "name": "ov-toast-erro",
+    "value": {
+     "escuro": "#dc2626",
+     "claro": "#f87171"
+    },
+    "usage": "Ícone de erro dentro do toast (4,5:1 ou mais sobre ov-toast-fundo)."
+   },
+   {
+    "name": "rel-papel",
+    "value": {
+     "escuro": "#ffffff"
+    },
+    "usage": "Fundo da página do relatório."
+   },
+   {
+    "name": "rel-texto",
+    "value": {
+     "escuro": "#0e141b"
+    },
+    "usage": "Texto do relatório sobre rel-papel e rel-tinta."
+   },
+   {
+    "name": "rel-titulo",
+    "value": {
+     "escuro": "{ov-marca-azul}"
+    },
+    "usage": "Títulos de seção e números de resumo (8,8:1 sobre rel-papel)."
+   },
+   {
+    "name": "rel-mudo",
+    "value": {
+     "escuro": "#5b6573"
+    },
+    "usage": "Rodapé, meta e cabeçalho de tabela (5,9:1)."
+   },
+   {
+    "name": "rel-linha",
+    "value": {
+     "escuro": "#dfe3e8"
+    },
+    "usage": "Divisores finos de tabela e rodapé."
+   },
+   {
+    "name": "rel-tinta",
+    "value": {
+     "escuro": "#f2f5f9"
+    },
+    "usage": "Fundo da faixa de resumo."
+   },
+   {
+    "name": "rel-filete",
+    "value": {
+     "escuro": "{ov-marca-laranja}"
+    },
+    "usage": "Filete de 2px do timbre. Só filete."
+   }
+  ]
+ },
+ "type": {
+  "fonts": [],
+  "families": {
+   "sans": "ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+   "mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+   "rel-sans": "\"IBM Plex Sans\", ui-sans-serif, system-ui, sans-serif",
+   "rel-mono": "\"IBM Plex Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+  },
+  "groups": [
+   {
+    "name": "Interface",
+    "family": "sans",
+    "styles": [
+     {
+      "name": "numero-grande",
+      "fontSize": "32px",
+      "lineHeight": "40px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.02em",
+      "sample": "1.621",
+      "usage": "Valor de indicador. Sempre com algarismos tabulares."
+     },
+     {
+      "name": "titulo-1",
+      "fontSize": "24px",
+      "lineHeight": "32px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.015em",
+      "sample": "Visão geral",
+      "usage": "Título da tela no computador. Um por tela."
+     },
+     {
+      "name": "titulo-2",
+      "fontSize": "20px",
+      "lineHeight": "28px",
+      "fontWeight": 600,
+      "letterSpacing": "-0.01em",
+      "sample": "Requisições",
+      "usage": "Título da tela no celular e título de diálogo grande."
+     },
+     {
+      "name": "titulo-3",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 600,
+      "sample": "Precisa de você",
+      "usage": "Título de cartão, seção e painel."
+     },
+     {
+      "name": "corpo",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "sample": "Quem estiver nesta sala vê e edita o mesmo dia.",
+      "usage": "Texto corrido, células de tabela e itens de menu."
+     },
+     {
+      "name": "corpo-forte",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 500,
+      "sample": "Eixo Kongsberg P/N 000078834",
+      "usage": "Nome do registro na linha, botões e navegação."
+     },
+     {
+      "name": "corpo-grande",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 400,
+      "sample": "salim.rabelo@empresa",
+      "usage": "Texto digitado em campos e listas no celular (evita zoom automático)."
+     },
+     {
+      "name": "legenda",
+      "fontSize": "13px",
+      "lineHeight": "18px",
+      "fontWeight": 400,
+      "sample": "2269325 · Aprovação necessária · Máquina",
+      "usage": "Metadados abaixo do nome, ajuda de campo e toasts."
+     },
+     {
+      "name": "rotulo",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 500,
+      "sample": "Situação",
+      "usage": "Cabeçalho de tabela, grupo da barra lateral e rótulo da barra inferior. Tamanho mínimo da interface."
+     }
+    ]
+   },
+   {
+    "name": "Código",
+    "family": "mono",
+    "styles": [
+     {
+      "name": "codigo",
+      "fontSize": "13px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "sample": "10.325135",
+      "usage": "Só códigos que a pessoa copia ou compara caractere a caractere, e teclas de atalho."
+     }
+    ]
+   }
+  ]
+ },
+ "spacing": {
+  "tokens": [
+   {
+    "name": "ov-esp-1",
+    "value": "4px",
+    "usage": "Entre ícone e texto pequeno; entre itens da barra lateral (2–4px)."
+   },
+   {
+    "name": "ov-esp-2",
+    "value": "8px",
+    "usage": "Entre botões, entre chips e padding de chip."
+   },
+   {
+    "name": "ov-esp-3",
+    "value": "12px",
+    "usage": "Padding horizontal de célula e de item de lista."
+   },
+   {
+    "name": "ov-esp-4",
+    "value": "16px",
+    "usage": "Gap de grade de cartões, margem lateral no celular e padding de toast."
+   },
+   {
+    "name": "ov-esp-5",
+    "value": "20px",
+    "usage": "Padding de cartão e entre campos de formulário."
+   },
+   {
+    "name": "ov-esp-6",
+    "value": "24px",
+    "usage": "Padding de painel e diálogo; entre blocos da tela."
+   },
+   {
+    "name": "ov-esp-8",
+    "value": "32px",
+    "usage": "Margem lateral da tela no computador; entre grupos de formulário."
+   },
+   {
+    "name": "ov-esp-12",
+    "value": "48px",
+    "usage": "Respiro de estados vazios e de login."
+   },
+   {
+    "name": "ov-esp-16",
+    "value": "64px",
+    "usage": "Topo de telas de login e de erro."
+   }
+  ]
+ },
+ "radius": {
+  "tokens": [
+   {
+    "name": "ov-raio-sm",
+    "value": "6px",
+    "usage": "Chips de filtro, itens da barra lateral, teclas de atalho, contadores."
+   },
+   {
+    "name": "ov-raio-md",
+    "value": "8px",
+    "usage": "Botões, campos, visões salvas, itens de menu, toast."
+   },
+   {
+    "name": "ov-raio-lg",
+    "value": "12px",
+    "usage": "Cartões, tabelas em cartão, menus, diálogos."
+   },
+   {
+    "name": "ov-raio-xl",
+    "value": "16px",
+    "usage": "Folha móvel (cantos superiores) e paleta de comandos."
+   },
+   {
+    "name": "ov-raio-pill",
+    "value": "999px",
+    "usage": "Pontos de estado e barras de progresso."
+   }
+  ]
+ },
+ "shadow": {
+  "tokens": [
+   {
+    "name": "ov-sombra-1",
+    "value": {
+     "escuro": "0 8px 24px rgba(0,0,0,.40)",
+     "claro": "0 1px 2px rgba(14,20,27,.06), 0 8px 24px rgba(14,20,27,.10)"
+    },
+    "usage": "Menus, popovers, barra de ações em massa e cartões elevados no tema claro."
+   },
+   {
+    "name": "ov-sombra-2",
+    "value": {
+     "escuro": "0 24px 64px rgba(0,0,0,.50)",
+     "claro": "0 24px 64px rgba(14,20,27,.18)"
+    },
+    "usage": "Diálogos, paleta de comandos, toast e folha móvel."
+   }
+  ]
+ },
+ "tamanho": {
+  "note": "Medidas fixas de estrutura e controles.",
+  "tokens": [
+   {
+    "name": "ov-altura-controle",
+    "value": "36px",
+    "usage": "Botões e visões salvas no computador."
+   },
+   {
+    "name": "ov-altura-campo",
+    "value": "44px",
+    "usage": "Campos de formulário em qualquer tela e botões no celular."
+   },
+   {
+    "name": "ov-altura-toque",
+    "value": "48px",
+    "usage": "Alvo mínimo no celular e tablet (luva)."
+   },
+   {
+    "name": "ov-linha-tabela",
+    "value": "44px",
+    "usage": "Linha de tabela padrão; 36px no modo compacto e 56px no conforto."
+   },
+   {
+    "name": "ov-barra-lateral",
+    "value": "240px",
+    "usage": "Barra lateral no computador (1024px ou mais)."
+   },
+   {
+    "name": "ov-barra-lateral-recolhida",
+    "value": "56px",
+    "usage": "Barra lateral recolhida, só ícones, de 768px a 1023px."
+   },
+   {
+    "name": "ov-barra-superior",
+    "value": "56px",
+    "usage": "Barra superior no computador e cabeçalho no celular."
+   },
+   {
+    "name": "ov-barra-inferior",
+    "value": "64px",
+    "usage": "Barra de navegação inferior no celular, mais a área segura do aparelho."
+   },
+   {
+    "name": "ov-painel-lateral",
+    "value": "400px",
+    "usage": "Painel de detalhe à direita, sem abas internas."
+   },
+   {
+    "name": "ov-painel-lateral-abas",
+    "value": "480px",
+    "usage": "Painel de detalhe com abas internas (data-abas)."
+   },
+   {
+    "name": "ov-dialogo",
+    "value": "440px",
+    "usage": "Diálogo de confirmação (o padrão)."
+   },
+   {
+    "name": "ov-dialogo-formulario",
+    "value": "640px",
+    "usage": "Diálogo de formulário (data-tamanho=\"formulario\"), com rolagem interna."
+   },
+   {
+    "name": "ov-conteudo-max",
+    "value": "1280px",
+    "usage": "Largura máxima do conteúdo de tela."
+   },
+   {
+    "name": "ov-conteudo-largo",
+    "value": "1864px",
+    "usage": "Teto da tela de lista ou grade (.ov-tela[data-largura=\"larga\"]): usa a largura disponível; 1920 − 56 (a lateral recolhida), o teto só age acima de 1920."
+   }
+  ]
+ },
+ "zIndex": {
+  "note": "Camadas únicas para todos os apps.",
+  "tokens": [
+   {
+    "name": "ov-z-flutuante",
+    "value": "20",
+    "usage": "Botão flutuante e barra de ações em massa."
+   },
+   {
+    "name": "ov-z-barra",
+    "value": "30",
+    "usage": "Barra superior, barra lateral e barra inferior."
+   },
+   {
+    "name": "ov-z-menu",
+    "value": "40",
+    "usage": "Menus e popovers."
+   },
+   {
+    "name": "ov-z-dialogo",
+    "value": "50",
+    "usage": "Véu, diálogo, paleta de comandos e folha móvel."
+   },
+   {
+    "name": "ov-z-toast",
+    "value": "60",
+    "usage": "Toasts, sempre acima de tudo."
+   }
+  ]
+ },
+ "movimento": {
+  "note": "Tempos que o app pode ajustar sem CSS novo.",
+  "tokens": [
+   {
+    "name": "ov-toast-duracao",
+    "value": "8s",
+    "usage": "Quanto o toast com Desfazer fica na tela; a barra de tempo anda nesse prazo."
+   }
+  ]
+ }
+}

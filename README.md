@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.24.3"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.25.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -202,6 +202,11 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
   <div class="ov-painel-corpo">…<div class="ov-abas-internas">…</div><dl class="ov-dados">…</dl></div>
 </aside>
 
+<!-- Painel dentro de uma coluna (v3.25.0): a célula e a altura são do app -->
+<div class="coluna-de-380-do-app">
+  <aside class="ov-painel" data-coluna role="complementary">…</aside>
+</div>
+
 <!-- Folha móvel: data-altura="rapida" (40%), "detalhe" (90%) ou "cheia" (100%) -->
 <div class="ov-folha" data-altura="detalhe">
   <div class="ov-folha-alca"></div>
@@ -215,6 +220,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 - **Toast**: centro inferior no computador; com a barra de ações em massa na tela, o app põe `data-com-barra` na `.ov-toasts` e a pilha sobe para 96px. Abaixo de 768px, logo abaixo da barra superior (`--ov-barra-superior` + área segura + 12px), entrando de cima. Sem `data-tipo` (ou `"sucesso"`) o ícone vai em `--ov-toast-sucesso`; `data-tipo="erro"` usa `--ov-toast-erro` e o CSS esconde a barra de tempo. O máximo de 3 é do app.
 - **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (`js/toast-nucleo.js` desde a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
 - **Painel lateral**: não é modal no computador. **Abaixo de 1024px vira Folha móvel de 90%** (`data-altura="cheia"` no painel dá a tela inteira) e passa a ser modal: **o app põe o `.ov-veu` antes dele e prende o foco** enquanto a folha estiver aberta.
+- **Painel dentro de uma coluna** (v3.25.0), para a tela que reserva ao painel uma coluna fixa ao lado de outra área (os Conveses da Bordo: a planta e a coluna de 380px, a exceção do Painel lateral no `componentes.md`). Com `data-coluna` no `.ov-painel`, a partir de 1024px, o painel ocupa a largura e a altura do contêiner que o app montou (`width` e `height` 100%), com a borda inteira em `--ov-borda`, os cantos `--ov-raio-lg` e `overflow: hidden` (o corpo rola por dentro e o canto recorta). A célula, a largura dela e a altura da área ao lado continuam do app (C1 de 16/10). Abaixo de 1024px é a Folha, como todo painel. Sem `!important`: o app tira os utilitários com `!` que fazia isso.
 - **Modo foco** (v3.17.0), para a tela em que a lista ao lado polui a leitura (em teste em Pessoas da Bordo). A tela põe `data-painel="foco"` no contêiner que tem, **como filhos**, a coluna da lista (o elemento que contém a `.ov-tabela`) e o `.ov-painel`; o modo age só a partir de 1024px e só enquanto o painel é filho dele (`:has`), então o atributo pode ficar fixo na tela. Cabeçalho e célula das colunas principais levam `data-principal` (`<th data-principal>`, `<td class="nome" data-principal>`); as outras somem e voltam ao fechar o painel. A lista fica numa coluna de 360px (se não sobram 520px para o painel, ela cede), com o nome em reticências; o texto das linhas que não estão abertas passa a `--ov-texto-secundario` (cor, nunca `opacity`) e volta com `:hover` e `:focus-visible`; a linha aberta mantém o destaque de seleção; `.meta` e `.ov-estado` guardam a cor própria. O painel ganha `--ov-superficie-elevada`, borda esquerda `--ov-borda-forte`, `--ov-sombra-2`, o resto da largura (mínimo 520px) e a altura toda abaixo da barra superior (`sticky`), com o corpo rolando por dentro. Os Detalhes vão para colunas de no mínimo 280px: na `.ov-dados`, cada par `dt`/`dd` embrulhado num `div` (fora do modo o `div` some, com `display: contents`, e a lista fica como a de pares soltos); no formulário, o elemento cujos filhos são `.ov-campo-grupo`, e o resto dele (botões, avisos) ocupa a linha toda. Sem véu: a lista continua clicável e rolável. Abaixo de 1024px nada muda (Folha móvel).
 - **Por que a v3.17.0 é minor:** só regras novas no `janelas.css`: `.ov-dados > div` e um bloco `@media (min-width: 1024px)` com o modo foco, todo preso a `[data-painel="foco"]:has(> .ov-painel)`. Nenhuma regra de antes muda; tela sem o atributo e `.ov-dados` de pares soltos ficam iguais.
 - **Modo foco, segundo plano revisto** (v3.18.1): as linhas que não estão abertas passam de `--ov-texto-secundario` a `--ov-texto-terciario` **e peso 400**, também no `.nome` (que tem 500): com o secundário (7,3:1 no claro, contra 16,7:1 do texto) o esmaecimento quase não se via. O terciário fica em 5,9:1 sobre `--ov-superficie` no claro e 5,8:1 no escuro (5,3 e 6,5 sobre `--ov-fundo`), ainda AA, porque as linhas continuam clicáveis. `:hover` e `:focus-visible` devolvem cor e peso; a linha aberta fica como estava.
@@ -325,6 +331,13 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
   </table>
 </div>
 
+<!-- Aviso em bloco (v3.25.0): atencao ou erro; o role é do app -->
+<div class="ov-aviso" data-tom="atencao" role="status">
+  <svg aria-hidden="true">…</svg>                       <!-- 16px, na cor do texto -->
+  <div class="ov-aviso-texto"><p class="ov-aviso-titulo">Importante</p><p>Este link é pessoal.</p></div>
+</div>
+<p class="ov-aviso" data-tom="erro" role="alert"><svg aria-hidden="true">…</svg><span class="ov-aviso-texto">Não consegui enviar.</span></p>
+
 <!-- Barra de ações em massa: data-flutuante dá a posição e a entrada -->
 <div class="ov-acoes-massa" data-flutuante role="toolbar" aria-label="3 selecionadas">…</div>
 
@@ -352,6 +365,7 @@ Desde a v3.7.0 (D1 da F5). O CSS que ficava só no `onevessel.css` (e que a Bord
 - **Miolo do item** (v3.8.0): o `.ov-pendencia-estado` vai ao lado do `.ov-estado`, numa coluna de 88px (as palavras alinham); título (`.ov-pendencia-titulo`, 600, com elipse) e contexto (`.ov-pendencia-contexto`, 12px/16px) em duas linhas; o identificador (`.ov-pendencia-id`, mono 12px/16px) antes do título; a seta (`.ov-pendencia-seta`) no fim. Identificador, contexto e seta em `ov-texto-terciario`. **Item sem link** é `div.ov-pendencia`, sem a seta e sem CSS próprio: o realce e o anel de foco são só do `a`. O título da caixa é do app.
 - **Indicadores**: a grade é a `.ov-indicadores`, em `div` ou `ul`; o máximo de 4 é do app. Em `ul`, desde a v3.8.0 o `li` é flex e o cartão ocupa a altura dele: os cartões de uma linha ficam da mesma altura nas duas formas. A grade continua 4/2/1 (1 coluna até 767px).
 - **Barra de ações em massa**: `data-flutuante` põe a `.ov-acoes-massa` fixa, centrada, 24px acima do rodapé e da área segura (no celular, acima da `.ov-barra-inferior`), em `--ov-z-flutuante` e `--ov-fundo-barra` sem desfoque, entrando de 12px em 180ms. Sem o atributo, a caixa é a da v3.6. Com ela na tela, a `.ov-toasts` leva `data-com-barra`. Esc e ✕ limpam a seleção no app.
+- **Aviso em bloco** (v3.25.0): `.ov-aviso`, uma frase que fica na tela, dentro do conteúdo (o que flutua e some é o Toast). Tons da tag pastel, com o mesmo vocabulário da `.ov-tag`: `data-tom="atencao"` (precisa de uma ação de alguém) e `data-tom="erro"` (não deu certo); sem `data-tom`, a tag neutra. Texto sobre o próprio fundo com 6,15:1 (atenção) e 6,80:1 (erro) no claro, 9,99:1 e 9,39:1 no escuro sobre `--ov-superficie`. O ícone (`svg` filho direto, 16px) vem do app e herda a cor do texto; `.ov-aviso-texto` leva a frase (num `p` ou num `div` com parágrafos), e `.ov-aviso-titulo`, opcional, fica em 600. O `role` (`status` ou `alert`) é do app.
 - **Esqueleto**: `.ov-esqueleto` é o bloco (o app dá a altura; 48px sem ela), `.ov-esqueleto-texto` uma linha de texto (o app dá a largura) e `.ov-esqueleto-linha` uma linha de tabela (44px; 64px no celular). Também serve uma `<tr>` da `.ov-tabela` com um `.ov-esqueleto-texto` por célula. Pulsa só na opacidade.
 - **Movimento reduzido** (`telas.css`): a barra de massa só aparece, já no lugar (`ovFade`, da casca), e o esqueleto não pulsa.
 - **Teclado da tabela** (↑↓, Enter, X): o núcleo é o `js/teclas-da-tabela.js` desde a v3.8.0 (ver `js/`); quem diz onde está o foco dentro da linha é a tabela, no app.
@@ -687,6 +701,19 @@ D6, decidido pelo Salim em 06/11: abaixo de 768px, a folha cheia começa no topo
 - **Por que a v3.24.3 é patch:** correção de valor em regras que já existiam, sem seletor novo; nenhum token, JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** toda folha cheia e todo painel cheio — Pessoas, convite, Templates e camarote na Bordo, e o Paradas — descem o conteúdo 4px (a folha) ou 5px (o painel), e o anel do foco do botão do cabeçalho aparece inteiro no toque.
 
+### Aviso em bloco, painel em coluna e papel colorido (v3.25.0)
+
+Quatro pendências da suíte, decididas pelo Salim em 08/11 (`implementacao.md`, "Pacote v3.25.0"). O indicador em alerta continua em `ov-destaque` (D2: o C2 fecha sem mudança).
+
+- **Papel colorido** (`relatorio.css` e `impressao.css`): ver "Relatório", abaixo. Os relatórios internos imprimem como a tela; o `@media print` fica só com a paginação.
+- **Aviso em bloco** (`telas.css`): `.ov-aviso`, `.ov-aviso[data-tom="atencao"]`, `.ov-aviso[data-tom="erro"]`, `.ov-aviso > svg`, `.ov-aviso-texto`, `.ov-aviso-texto > p`, `.ov-aviso-titulo`. Ver "Telas".
+- **Painel dentro de uma coluna** (`janelas.css`): `.ov-painel[data-coluna]`, a partir de 1024px. Ver "Janelas".
+- **`ov-borda-forte`** (`tokens.json`): a descrição deixa de dizer "borda de botão secundário" (desde a v3.24.2 o secundário usa `ov-borda-controle`) e passa a dizer onde o token está: o contorno do que flutua (menu, paleta, diálogo, barra de ações em massa, link de pular), o painel no modo foco, o segmentado, os chips de filtro e as teclas de atalho. Valor e `tokens.css` não mudam.
+- **Alteradas pelo nome** (o teste da versão cobra; o resto das fixtures da v3.24.3 fica igual): no `relatorio.css`, `.rel-pagina` ganha `-webkit-print-color-adjust: exact; print-color-adjust: exact`. No `@media print` do `impressao.css`, `.rel-pagina` perde `background: none` e `.rel-timbre img` perde `filter: grayscale(1)`; saem as regras `.rel-timbre` (`border-bottom-color: #000`), `.rel-titulo, .rel-secao, .rel-resumo b` (`color: #000`) e `.rel-resumo` (`background: none; border: .5px solid #999`). No `tokens.json`, o `usage` do `ov-borda-forte`.
+- **Por que a v3.25.0 é minor:** classes e regras novas (`.ov-aviso*`, `.ov-painel[data-coluna]`) e a página `exemplo/relatorio.html`; nenhum token muda de valor, nenhum JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** na tela, nada sozinho; as classes novas só aparecem onde o app as puser. No papel, todo relatório interno sai colorido: logo, filete laranja, títulos de seção e números do resumo em azul, faixa de resumo tingida.
+- **Adoção:** a **Bordo** troca a `.aviso-do-convite` local (convite e revisão do convite) pela `.ov-aviso`, com `data-tom="perigo"` → `"erro"`; tira os utilitários com `!` da ficha dos Conveses (`lg:!w-full lg:!rounded-lg lg:!border …`) por `data-coluna`; o `print-color-adjust` local da ocupação e da planta fica sobrando, sem dano. O **Paradas** troca o `AVISO_DE_ATENCAO` da Administração (suspensão e backup atrasado) pela `.ov-aviso`; o PDF do pdfmake já é colorido e não muda. A **plataforma** só sobe a tag.
+
 ### Relatório (papel e impressão)
 
 Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no `relatorio.css`, com os mesmos valores, fora três regras: a `.rel-pagina` ganhou `page: relatorio`, o `.rel-tabela th` subiu de 11px para 8,5pt e a `.rel-barra` virou interface (fonte do sistema, `--ov-*`, sem o `max-width: 210mm`). O `impressao.css` foi reescrito sem seletor global. As regras do documento (Timbre, resumo, estados, nome do arquivo) estão em `relatorios-e-logos.md`, no `onevessel-docs`.
@@ -739,7 +766,7 @@ import 'onevessel-ui/css/previa.css'
   - `page: relatorio` sem o `impressao.css` (o Materiais, que recebe a `.rel-pagina` pelo `onevessel.css`) não muda tamanho nem margem, mas força uma quebra de página antes e depois da folha, como toda troca de página com nome.
   - **Na rota do relatório, nenhum `@page` sem nome pode vir depois do `impressao.css`.** No Chromium 156 (medido em 20/10, no PDF), um `@page { size; margin }` sem nome que venha depois ganha do `@page relatorio` no tamanho e na margem: o Chromium decide pela ordem, não pelo nome. Antes dele, não atrapalha.
 - **Rodapé.** Sai inteiro pelas caixas de margem das duas páginas, em IBM Plex Sans 8pt, `rel-mudo`: à esquerda (`@bottom-left`) o texto de `--rel-rodape`; à direita (`@bottom-right`) "pág. n/N", dos contadores `page` e `pages`. **O app escreve `--rel-rodape` no `<html>` (`:root`) da prévia, com o texto entre aspas** (`--rel-rodape: "OneVessel · Bordo · Ocupação do convés"`, pelo atributo `style` do `<html>` ou por um `:root { }` da rota). Definida no `body` ou na `.rel-pagina`, a caixa sai vazia (medido no Chromium 156: a caixa de margem herda da raiz, não da folha); sem a variável, a esquerda sai vazia e a numeração continua. Só o Chrome e o Edge 131+ desenham caixas de margem: fora deles, o documento sai sem rodapé. A `.rel-rodape` da folha some no papel, para o texto não sair duas vezes; na tela ela continua. No diálogo do Chrome, desmarcar "Cabeçalhos e rodapés", senão o navegador soma os dele.
-- **Papel em preto e branco** (`@media print`): a `.rel-barra` some e a `.rel-area` perde o fundo (pelo `previa.css`); filete em preto; logo em cinza, com 10mm de altura (40px na tela); sem fundos (a `.rel-area` e a folha ficam sem cor, o resumo sem tinta e com borda fina); títulos e números do resumo em preto. Linha de tabela não quebra entre páginas (`.rel-tabela tr`), e o cabeçalho (`.rel-tabela thead`) se repete em cada página.
+- **Papel colorido como a tela** (v3.25.0, decidido pelo Salim em 08/11; até a v3.24.3 o `@media print` convertia para preto e branco): a `.rel-pagina` leva `print-color-adjust: exact` (e o `-webkit-`), que herda para tudo o que está nela — logo, títulos, filete laranja, faixa de resumo e fundos saem como na tela, também em quem imprime sem o `impressao.css`. Quem quiser preto e branco escolhe escala de cinza na impressora. O `@media print` fica só com a paginação: a folha sem largura, margem nem recuo (o `@page` dá a margem), o logo com 10mm de altura (40px na tela), a `.rel-rodape` some; a `.rel-barra` some e a `.rel-area`, que é interface, perde o fundo (pelo `previa.css`). Linha de tabela não quebra entre páginas (`.rel-tabela tr`), e o cabeçalho (`.rel-tabela thead`) se repete em cada página.
 - **Tamanhos**: todo texto da folha com 8,5pt ou mais (o `th` subiu para 8,5pt); o rodapé, 8pt.
 - **Coluna numérica**: `.rel-num` no `th` e no `td` da coluna: à direita, `tabular-nums`.
 - **Estado e prioridade**: `.rel-estado` é símbolo e palavra, sem fundo e sem cor de estado (herda a cor do texto). O app escreve o símbolo num `span` com `aria-hidden` (● ○ ▲ × △, a tabela está em `relatorios-e-logos.md`); a Plex não tem esses glifos, e eles caem na fonte do sistema.

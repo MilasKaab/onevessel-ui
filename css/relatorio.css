@@ -12,7 +12,11 @@
 @import url("./previa.css");
 
 /* ---------- Folha ---------- */
-.rel-pagina { max-width: 210mm; margin: 0 auto; padding: 16mm; background: var(--rel-papel); color: var(--rel-texto); font: 400 13.3px/1.4 var(--font-rel-sans); page: relatorio; }
+/* O papel sai colorido como a tela (v3.25.0, decidido pelo Salim em 08/11):
+   o print-color-adjust herda para tudo o que está na folha (logo, títulos,
+   filete, faixa de resumo e fundos), e vale também para quem imprime sem o
+   impressao.css. Preto e branco é escolha de escala de cinza na impressora. */
+.rel-pagina { max-width: 210mm; margin: 0 auto; padding: 16mm; background: var(--rel-papel); color: var(--rel-texto); font: 400 13.3px/1.4 var(--font-rel-sans); page: relatorio; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .rel-pagina[data-orientacao="paisagem"] { box-sizing: border-box; max-width: 297mm; aspect-ratio: 297 / 210; page: relatorio-paisagem; }
 
 /* ---------- Timbre ---------- */

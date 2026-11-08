@@ -15,7 +15,16 @@ import { createHash } from 'node:crypto';
 import { problemasDeBase, regras, seletores } from '../scripts/css-regras.mjs';
 import { acaoDaTeclaNoMenu } from '../js/menu-nucleo.js';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
+// bytes da tag, fixos): teste de versão passada compara fixture com fixture.
+const DA_V3243 = {
+  'css/impressao.css': 'test/fixtures/impressao-v3.24.3.css',
+  'css/relatorio.css': 'test/fixtures/relatorio-v3.24.3.css',
+  'css/telas.css': 'test/fixtures/telas-v3.24.3.css',
+  'css/janelas.css': 'test/fixtures/janelas-v3.24.3.css',
+  'tokens/tokens.json': 'test/fixtures/tokens-v3.24.3.json',
+};
+const url = (p) => new URL(`../${DA_V3243[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const NOMES = ['casca', 'telas'];

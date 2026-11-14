@@ -6,6 +6,7 @@
 ### Onde está a verdade
 - `../onevessel-docs/` é a fonte das decisões (`implementacao.md` primeiro). Leia antes de decidir qualquer coisa que toque outro app, permissão, banco ou infraestrutura.
 - `../onevessel-docs/` e as pastas dos outros apps são **só leitura**. Nunca edite, commite ou rode comando que escreva nelas.
+- Todo levantamento ou relatório pedido pelo prompt termina **gravado em arquivo** em `../relatorios/<app>-<tema>-levantamento.md` (fora dos repositórios), além de mostrado na tela. Relatório só na tela não conta como entregue.
 - Decisão não se inventa aqui. Diante de um conflito com os docs, de duas saídas razoáveis ou de algo irreversível: **liste o conflito com as opções e PARE**. Não escolha o caminho óbvio.
 
 ### Git
@@ -28,7 +29,7 @@
 - Toda rota valida permissão no servidor; esconder na interface não é segurança.
 - Falhar fechado: sem segredo, sem banco ou sem resposta, nenhuma permissão.
 - Chave de função `app.módulo.tela.função`, quatro segmentos; depois de em uso, nunca muda.
-- Todo caminho de app termina em barra.
+- Todo caminho de app termina em barra. **Hoje está suspensa** para app atrás do rewrite da plataforma (decidido em 17/10): o rewrite `/<app>/:path*` não casa caminho com barra no fim e a plataforma devolve 404. Não ative `trailingSlash` até a fase da plataforma, quando o rewrite preservar a barra.
 - Interface nova não usa `alert()` nem `confirm()` (ver `janelas-e-avisos.md`).
 
 ### Ambiente do Salim

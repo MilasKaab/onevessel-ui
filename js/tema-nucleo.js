@@ -61,7 +61,7 @@ export function migrarTemaAntigo(storage, migracao) {
     const antiga = storage?.getItem(migracao.chave);
     if (antiga === null || antiga === undefined) return;
     const migram = migracao.migram ?? Object.keys(migracao.mapa);
-    const migrado = migram.includes(antiga) && Object.hasOwn(migracao.mapa, antiga) ? migracao.mapa[antiga] : null;
+    const migrado = migram.includes(antiga) && Object.prototype.hasOwnProperty.call(migracao.mapa, antiga) ? migracao.mapa[antiga] : null;
     if (ehTema(migrado) && !ehTema(storage?.getItem(CHAVE_TEMA))) storage?.setItem(CHAVE_TEMA, migrado);
     storage?.removeItem(migracao.chave);
   } catch {

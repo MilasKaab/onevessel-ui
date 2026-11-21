@@ -101,3 +101,11 @@ test('package.json 3.26.0 com os três exports novos depois do filtro-nucleo; RE
     assert.match(leiame, new RegExp(`from 'onevessel-ui/js/${nome}\\.js'`), `${nome} com exemplo de uso`);
   }
 });
+
+// Object.hasOwn só existe a partir do Safari do iOS 15.4, e o build dos apps
+// não acrescenta suporte: nenhum arquivo de js/ o usa (nem em comentário).
+test('nenhum arquivo de js/ usa Object.hasOwn', () => {
+  for (const nome of readdirSync(url('js'))) {
+    assert.doesNotMatch(ler(`js/${nome}`), /Object\s*\.\s*hasOwn\b/, `js/${nome}`);
+  }
+});

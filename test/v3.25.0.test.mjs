@@ -12,6 +12,10 @@ import { createHash } from 'node:crypto';
 
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
+// Desde a v3.26.0, os três núcleos novos de js/ (e as entradas deles em
+// exports) ficam fora da conta desta versão: nascem na v3.26.0.
+const DA_V3260 = ['barra-nucleo.js', 'embarcacao-nucleo.js', 'tema-nucleo.js'];
+
 const url = (p) => new URL(`../${p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
@@ -271,10 +275,9 @@ test('exemplo/relatorio.html: dados fictícios, o CSS do relatório e a impress�
   assert.match(pagina, /onclick="window\.print\(\)"/);
 });
 
-test('package.json 3.25.0, sem export novo; README com a tag, a seção, as alteradas pelo nome, a adoção e os componentes', () => {
-  assert.equal(pacote.version, '3.25.0');
-  assert.equal(Object.keys(pacote.exports).length, 29);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.25\.0"/);
+// Desde a v3.26.0, a versão e a tag ficam com o teste da versão mais nova.
+test('sem export novo; README com a seção, as alteradas pelo nome, a adoção e os componentes', () => {
+  assert.equal(Object.keys(pacote.exports).filter((k) => !DA_V3260.some((n) => k === `./js/${n}`)).length, 29);
   assert.match(leiame, /### Aviso em bloco, painel em coluna e papel colorido \(v3\.25\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome\*\*[^\n]*`\.rel-pagina` ganha `-webkit-print-color-adjust: exact; print-color-adjust: exact`[^\n]*`filter: grayscale\(1\)`[^\n]*`usage` do `ov-borda-forte`/);
   assert.match(leiame, /\*\*Por que a v3\.25\.0 é minor:\*\*/);

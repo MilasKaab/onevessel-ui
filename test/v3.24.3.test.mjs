@@ -12,6 +12,10 @@ import { createHash } from 'node:crypto';
 
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
+// Desde a v3.26.0, os três núcleos novos de js/ (e as entradas deles em
+// exports) ficam fora da conta desta versão: nascem na v3.26.0.
+const DA_V3260 = ['barra-nucleo.js', 'embarcacao-nucleo.js', 'tema-nucleo.js'];
+
 // Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
 // bytes da tag, fixos): teste de versão passada compara fixture com fixture.
 const DA_V3243 = {
@@ -110,7 +114,7 @@ test('os outros CSS e o tokens.json com os bytes da v3.24.2; a fixture da tag', 
 
 // Desde a v3.25.0, a versão e a tag ficam com o teste da versão mais nova.
 test('sem export novo; README com a seção, as alteradas pelo nome e o que muda na tela', () => {
-  assert.equal(Object.keys(pacote.exports).length, 29);
+  assert.equal(Object.keys(pacote.exports).filter((k) => !DA_V3260.some((n) => k === `./js/${n}`)).length, 29);
   assert.match(leiame, /### Folga de 4px em cima da folha cheia \(v3\.24\.3\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome\*\*[^\n]*`padding-top: env\(safe-area-inset-top, 0px\)` → `padding-top: calc\(env\(safe-area-inset-top, 0px\) \+ 4px\)`[^\n]*`padding-top: calc\(env\(safe-area-inset-top, 0px\) \+ 5px\)`/);
   assert.match(leiame, /\*\*Por que a v3\.24\.3 é patch:\*\*/);

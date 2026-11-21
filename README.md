@@ -24,7 +24,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `icons/` | `plataforma/`: os ícones do PWA da OneVessel (192, 512, maskable, apple-touch-icon e o SVG de origem); `bordo/`, `paradas/` e `materiais/`: só o `icone.svg` de cada módulo, que não é instalável (v3.14.0) |
 | `marca/` | O logo horizontal da BRAM Offshore (`bram-offshore-horizontal.png`, 2425×1073, fundo transparente), para o timbre dos relatórios (v3.10.0) |
 | `manifestos/` | O `plataforma.webmanifest`, modelo do manifesto do PWA da OneVessel, o único instalável (desde a v3.14.0; os dos módulos saíram) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha; desde a v3.20.0, o plural, as datas e os teclados das abas, da lista de cards, do menu e do "+ Filtro". ESM puro, sem dependência (nem de React), com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha; desde a v3.20.0, o plural, as datas e os teclados das abas, da lista de cards, do menu e do "+ Filtro"; desde a v3.26.0, o tema, o cookie do navio e a barra inferior. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `controles.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (sem exceção desde a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
 | `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo; e `v3.15.0.test.mjs`: toda regra do `casca.css` da v3.14.0 igual, o que nasceu exatamente pela lista, a lateral recolhida por escolha com as mesmas declarações da de abaixo de 1024px (sem a margem), nenhuma `transition`, o botão escondido abaixo de 1024px, o núcleo (ler, gravar, alternar, aplicar, armazenamento quebrado, evento de outra aba) e o exemplo; e `v3.15.1.test.mjs`: toda regra do `casca.css` da v3.15.0 igual, fora as alteradas pelo nome (o `data-fixo` e o botão), nenhuma nascida, os dois blocos de recolhido ainda iguais, o botão com texto, o rodapé na ordem e, com o Chromium do Playwright instalado, os centros dos ícones medidos no exemplo recolhido (iguais, com 1px de tolerância, a 1280px pelo atributo e a 900px pela largura). Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.25.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.26.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -714,6 +714,29 @@ Quatro pendências da suíte, decididas pelo Salim em 08/11 (`implementacao.md`,
 - **O que muda na tela dos apps ao adotar:** na tela, nada sozinho; as classes novas só aparecem onde o app as puser. No papel, todo relatório interno sai colorido: logo, filete laranja, títulos de seção e números do resumo em azul, faixa de resumo tingida.
 - **Adoção:** a **Bordo** troca a `.aviso-do-convite` local (convite e revisão do convite) pela `.ov-aviso`, com `data-tom="perigo"` → `"erro"`; tira os utilitários com `!` da ficha dos Conveses (`lg:!w-full lg:!rounded-lg lg:!border …`) por `data-coluna`; o `print-color-adjust` local da ocupação e da planta fica sobrando, sem dano. O **Paradas** troca o `AVISO_DE_ATENCAO` da Administração (suspensão e backup atrasado) pela `.ov-aviso`; o PDF do pdfmake já é colorido e não muda. A **plataforma** só sobe a tag.
 
+### Tema, cookie do navio e barra inferior em js/ (v3.26.0)
+
+Três núcleos que a Bordo e o Paradas tinham iguais e o Materiais seria a terceira cópia (MC17, decidido pelo Salim em 21/11; `implementacao.md`, "[Materiais F3] Levantamento da F3 respondido"). Só lógica, sem React e sem DOM: o `localStorage` e o texto do cookie vêm de quem chama. Conferidos com `diff` depois de tirar tipos, ponto e vírgula e aspas, e rodados lado a lado com o código dos dois apps.
+
+- **`js/tema-nucleo.js`**: o `src/lib/tema.js` do Paradas e o `src/lib/tema.ts` da Bordo. A migração da chave antiga recebe a chave, o mapa e quais valores migram:
+
+  ```js
+  // Paradas (a CHAVE_TEMA_ANTIGA do src/lib/espaco.js dele)
+  lerPreferenciaTema(localStorage, { chave: CHAVE_TEMA_ANTIGA, mapa: { light: 'claro', dark: 'escuro' } })
+  // Bordo
+  lerPreferenciaTema(localStorage, { chave: 'tema', mapa: { claro: 'claro', escuro: 'escuro' } })
+  // Materiais (MC6): só o claro migra; o escuro gravado pode ser só o padrão
+  lerPreferenciaTema(localStorage, { chave: 'bp-tema', mapa: { claro: 'claro', escuro: 'escuro' }, migram: ['claro'] })
+  temaEfetivo(preferencia, matchMedia('(prefers-color-scheme: dark)').matches)
+  ```
+
+  Só grava o `ov-tema` se ele não tiver tema válido (o da suíte vence); a chave antiga é apagada sempre que existe, migrando ou não; armazenamento bloqueado dá `null` (segue o sistema). O script inline que a Bordo põe no layout para não piscar (`SCRIPT_TEMA`) e o `aplicarTema` (os atributos `data-tema` e `data-theme`) ficam no app.
+- **`js/embarcacao-nucleo.js`**: o `ov-embarcacao` é cookie de preferência (só o id, sem `HttpOnly`). `lerIdDeEmbarcacao` é o dos dois apps; `embarcacaoDoCookie(document.cookie)` acha o id no texto, ainda sem validar. A gravação tem os mesmos atributos nos dois apps (`Path=/`, `Max-Age` de um ano, `Secure`, `SameSite=Lax`): no cliente, `document.cookie = cookieDeEmbarcacao(id)` (devolve `null` para id malformado, e aí não se grava); no Next, `cookies().set(NOME_COOKIE_EMBARCACAO, String(id), OPCOES_DO_COOKIE_EMBARCACAO)`. `idsNoEscopo(escopo, idsDaOrganizacao)` e `idNoEscopo(id, escopo, idsDaOrganizacao)`: frota, todas as da organização; senão, as listadas que existem na organização, na ordem dela; sem escopo, nenhuma. **A regra D4** (um navio só abre e corrige o cookie; vários pedem a escolha) **fica em cada app**: as entradas são de formato diferente.
+- **`js/barra-nucleo.js`**: `destinosDaBarra(secoes, { foraDoTurno, naBarra })`, com o que era constante de cada app como parâmetro (`foraDoTurno`: `['admin']` no Paradas, `['tabela-mestra', 'despacho', 'templates']` na Bordo; `naBarra`: 3, o padrão). Até 3 seções do turno na barra; o resto e as fora do turno no "Mais"; com uma seção ou nenhuma, sem barra. O "Buscar" e o "Mais" o app desenha.
+- **Por que a v3.26.0 é minor:** três arquivos novos em `js/`, cada um com o `.d.ts` e a entrada em `exports`; nenhum CSS, token nem `js/` de antes muda (o teste da versão confere os bytes).
+- **O que muda na tela dos apps ao adotar:** nada. É a mesma lógica que já roda neles.
+- **Adoção:** o **Materiais** importa na F3-1. A **Bordo** e o **Paradas** trocam a cópia pelo import nos PRs de ícones de cada um.
+
 ### Relatório (papel e impressão)
 
 Desde a v3.10.0 (D1 da F7). As `.rel-*` que moravam no `onevessel.css` estão no `relatorio.css`, com os mesmos valores, fora três regras: a `.rel-pagina` ganhou `page: relatorio`, o `.rel-tabela th` subiu de 11px para 8,5pt e a `.rel-barra` virou interface (fonte do sistema, `--ov-*`, sem o `max-width: 210mm`). O `impressao.css` foi reescrito sem seletor global. As regras do documento (Timbre, resumo, estados, nome do arquivo) estão em `relatorios-e-logos.md`, no `onevessel-docs`.
@@ -877,6 +900,9 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/teclas-da-lista.js` | O teclado da Lista de cards (v3.20.0, C10): `acaoDaTeclaNaLista` (↑↓ sem volta, Home, End, Enter, Esc de dentro do card) e `cardDoTab` |
 | `js/menu-nucleo.js` | O teclado do Menu (v3.20.0, bloco D): `acaoDaTeclaNoMenu` (↑↓ com volta, Home, End, Esc devolve ao gatilho, Tab fecha sem prender) |
 | `js/filtro-nucleo.js` | O "+ Filtro" (v3.20.0, bloco D): `menuDoFiltro` (os campos a oferecer, ou o aviso), `TODOS_EM_USO` e `NADA_PARA_FILTRAR` |
+| `js/tema-nucleo.js` | O tema da suíte (v3.26.0, MC17): `CHAVE_TEMA` (`ov-tema`), `lerPreferenciaTema`, `gravarPreferenciaTema`, `temaEfetivo`, `ehTema` e `migrarTemaAntigo` (a chave antiga, o mapa e quais valores migram, do app) |
+| `js/embarcacao-nucleo.js` | O cookie do navio (v3.26.0, MC17): `lerIdDeEmbarcacao`, `embarcacaoDoCookie` (o id num texto de cookies), `cookieDeEmbarcacao` (o texto do `document.cookie`), `OPCOES_DO_COOKIE_EMBARCACAO` (as do `cookies().set` do Next), `idsNoEscopo` e `idNoEscopo`. A regra D4 (qual navio abrir) fica no app |
+| `js/barra-nucleo.js` | A barra inferior do celular (v3.26.0, MC17): `destinosDaBarra(secoes, { foraDoTurno, naBarra })`, `DESTINOS_NA_BARRA` (4) e `SECOES_NA_BARRA` (3) |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
@@ -893,6 +919,9 @@ import { abaDeDestino } from 'onevessel-ui/js/teclas-das-abas.js'
 import { acaoDaTeclaNaLista, cardDoTab } from 'onevessel-ui/js/teclas-da-lista.js'
 import { acaoDaTeclaNoMenu } from 'onevessel-ui/js/menu-nucleo.js'
 import { menuDoFiltro, TODOS_EM_USO, NADA_PARA_FILTRAR } from 'onevessel-ui/js/filtro-nucleo.js'
+import { lerPreferenciaTema, gravarPreferenciaTema, temaEfetivo } from 'onevessel-ui/js/tema-nucleo.js'
+import { embarcacaoDoCookie, cookieDeEmbarcacao, idNoEscopo } from 'onevessel-ui/js/embarcacao-nucleo.js'
+import { destinosDaBarra } from 'onevessel-ui/js/barra-nucleo.js'
 ```
 
 Desde a v3.20.0, os seis da rodada de UX (plural, datas e os quatro de teclado); o contrato e um exemplo de cada estão em **Texto, datas e teclado (v3.20.0)**.

@@ -11,6 +11,10 @@ import { createHash } from 'node:crypto';
 
 import { problemasDeBase, regras, seletores } from '../scripts/css-regras.mjs';
 
+// Desde a v3.26.0, os três núcleos novos de js/ (e as entradas deles em
+// exports) ficam fora da conta desta versão: nascem na v3.26.0.
+const DA_V3260 = ['barra-nucleo.js', 'embarcacao-nucleo.js', 'tema-nucleo.js'];
+
 // Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
 // bytes da tag, fixos): teste de versão passada compara fixture com fixture.
 const DA_V3243 = {
@@ -134,7 +138,7 @@ test('os outros CSS e os js de antes com os bytes da v3.20.0; as fixtures da tag
   // de antes, que a v3.23.0 só acrescenta no fim): fixture com fixture.
   const fonteJs = (nome) => (nome === 'lateral-nucleo' ? `test/fixtures/${nome}-v3.22.0.js` : `js/${nome}.js`);
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(fonteJs(nome)), sha, nome);
-  const js = readdirSync(url('js')).filter((n) => n.endsWith('.js')).map((n) => n.slice(0, -3)).sort();
+  const js = readdirSync(url('js')).filter((n) => n.endsWith('.js') && !DA_V3260.includes(n)).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, [...Object.keys(JS), 'datas'].sort(), 'nenhum js nasce nem some; só o datas muda');
 });
 

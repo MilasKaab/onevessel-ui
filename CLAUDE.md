@@ -80,7 +80,11 @@ chave de função (não há servidor). O resto vale igual.
 - **Fixture por versão:** o CSS que muda é copiado da tag anterior para
   `test/fixtures/<arquivo>-vX.Y.Z.css`, sem edição, e o teste da versão nova
   cobra toda regra dele igual, fora a lista pelo nome. Os testes de versões
-  passadas comparam fixture com fixture, nunca com o arquivo atual.
+  passadas leem o arquivo atual (alguns fixam os bytes dele por sha256)
+  enquanto ele não muda; o PR que muda um arquivo re-aponta, em cada teste
+  passado que o lê, o caminho dele para a fixture da tag anterior (o mapa
+  no `url()` do teste), e dali em diante esse teste compara fixture com
+  fixture. Fixture nunca se edita.
 - No mesmo PR: `package.json` (versão e, se for o caso, `exports`), a linha
   de instalação do README e a seção do que mudou. Branch `ov/vX.Y.Z`; a tag
   é leve, posta no merge, e só depois do "pode mergear".

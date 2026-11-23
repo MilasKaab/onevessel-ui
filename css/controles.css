@@ -85,6 +85,10 @@
 /* O ícone do botão só de ícone é do pacote (v3.19, C17): 18px; o app não
    passa size. Ao lado de texto, os 16 de sempre. */
 .ov-btn-icone svg { width: 18px; height: 18px; flex: none; }
+/* O ícone ao lado do texto não encolhe (v3.27.0, RP3): numa trilha que pode
+   ficar menor que o botão (minmax(0, 1fr)), ele sumia antes do texto. Onde o
+   rótulo não cabe, o texto passa da borda: a largura é do app. */
+.ov-btn > svg { flex: none; }
 .ov-btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
 /* Toque: 48px, o alvo do livro (era 44 até a v3.11). O .ov-btn vem depois
    do .ov-btn-sm, com a mesma força: o pequeno também sobe. */

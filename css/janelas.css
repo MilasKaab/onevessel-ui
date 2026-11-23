@@ -1,5 +1,6 @@
-/* OneVessel — janelas (v3.5): Diálogo, Toast, Painel lateral, rodapé e
-   alturas da Folha móvel, e o .ov-btn-perigo (só dentro do Diálogo).
+/* OneVessel — janelas (v3.5): Diálogo, Toast, Painel lateral, Gaveta
+   (v3.27.0), rodapé e alturas da Folha móvel, e o .ov-btn-perigo (só dentro
+   do Diálogo).
    Importável sozinho, como a casca: depende de tokens.css e de casca.css
    (véu .ov-veu, .ov-folha, .ov-folha-alca, @keyframes ovSobe e ovFade).
    Sem regra de html, body, a, button, tamanho de fonte base ou impressão;
@@ -10,11 +11,12 @@
 
    Larguras: abaixo de 1024px o Painel lateral vira Folha móvel de 90% (é
    modal: o app põe o .ov-veu e prende o foco); abaixo de 768px o Diálogo de
-   formulário vira folha em tela cheia e os toasts descem para logo abaixo
-   da barra superior. O app não precisa saber a largura. */
+   formulário e a Gaveta viram folha (a Gaveta, cheia ou de 90%) e os toasts
+   descem para logo abaixo da barra superior. O app não precisa saber a
+   largura. */
 
 :where(.ov-dialogo, .ov-dialogo-corpo, .ov-dialogo-acoes, .ov-toasts, .ov-toast, .ov-toast-linha, .ov-toast-acao,
-  .ov-painel, .ov-painel-cab, .ov-painel-corpo, .ov-dados, .ov-abas-internas, .ov-folha-rodape, .ov-folha-corpo) {
+  .ov-painel, .ov-painel-cab, .ov-painel-corpo, .ov-dados, .ov-abas-internas, .ov-folha-rodape, .ov-folha-corpo, .ov-gaveta) {
   box-sizing: border-box;
 }
 
@@ -161,6 +163,37 @@
   .ov-painel[data-coluna] { width: 100%; height: 100%; min-height: 0; border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-lg); overflow: hidden; }
 }
 
+/* ---------- Gaveta (v3.27.0, ML7) ---------- */
+/* Modal, para abrir, agir e fechar um registro sem percorrer a lista (para
+   percorrer, o Painel lateral). Encostada à direita, com a altura toda e sem
+   raio (não usa 100vh: cabe na moldura que a contém e não depende da barra
+   do navegador); o recuo da área segura à direita vai na caixa. É uma camada
+   como o Diálogo: o mesmo z-index, o .ov-veu do app logo antes dela (vence
+   pela ordem no DOM; sem desfoque), o Toast por cima. Dentro, o miolo do
+   Painel: .ov-painel-cab (48px), .ov-painel-corpo (rola) e .ov-dados, que não
+   herdam a largura, a Folha nem o modo foco, presos ao .ov-painel. A alça
+   (.ov-folha-alca) só aparece abaixo de 768px, na de 90%. Sem saída animada,
+   como as outras camadas. */
+.ov-gaveta { position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: var(--ov-gaveta); display: flex; flex-direction: column; overflow: hidden; padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); animation: ovEntraDaDireita .22s cubic-bezier(.32,.72,0,1); }
+.ov-gaveta > .ov-folha-alca { display: none; }
+/* Rodapé opcional: até 2 botões de 36px à direita, Cancelar antes. O
+   detalhe só de leitura fica sem ele. */
+.ov-gaveta-rodape { flex: none; display: flex; justify-content: flex-end; gap: 8px; padding: 12px 24px; border-top: 1px solid var(--ov-borda); }
+@keyframes ovEntraDaDireita { from { transform: translateX(100%); } to { transform: none; } }
+
+/* Abaixo de 768px vira Folha móvel pelo próprio CSS: cheia por padrão (com
+   campo), de 90% e com alça com data-altura="detalhe" (sem campo, C21). A
+   cheia tem 5px acima do cabeçalho, como o painel cheio (o anel do foco
+   inteiro); o rodapé ganha a geometria do .ov-folha-rodape. */
+@media (max-width: 767px) {
+  .ov-gaveta { left: 0; width: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 5px); padding-left: env(safe-area-inset-left, 0px); border-left: 0; animation-name: ovSobe; }
+  .ov-gaveta[data-altura="detalhe"] { top: auto; height: 90vh; height: 90dvh; padding-top: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; }
+  .ov-gaveta[data-altura="detalhe"] > .ov-folha-alca { display: grid; flex: none; }
+  .ov-gaveta-rodape { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+  /* O segundo seletor vence a altura do .ov-btn, como no .ov-folha-rodape. */
+  .ov-gaveta-rodape > *, .ov-gaveta-rodape > .ov-btn { flex: 1; height: var(--ov-altura-toque); }
+}
+
 /* ---------- Abaixo de 768px: diálogo de formulário em tela cheia, toasts no topo ---------- */
 @media (max-width: 767px) {
   /* A confirmação continua centrada, com 16px de margem (a largura acima). */
@@ -178,6 +211,6 @@
    A barra de tempo continua, porque diz quanto falta; a especificidade vence
    a regra global de duração do onevessel.css. */
 @media (prefers-reduced-motion: reduce) {
-  .ov-dialogo, .ov-dialogo[data-tamanho="formulario"], .ov-toast, .ov-painel, .ov-painel[data-abas] { animation-name: ovFade; }
+  .ov-dialogo, .ov-dialogo[data-tamanho="formulario"], .ov-toast, .ov-painel, .ov-painel[data-abas], .ov-gaveta { animation-name: ovFade; }
   .ov-toast-tempo > span { animation-duration: var(--ov-toast-duracao, 8s) !important; }
 }

@@ -9,7 +9,15 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.27.0, estes são lidos pelas fixtures da v3.26.0 (os bytes da
+// tag, fixos): o janelas.css, o controles.css e os tokens mudam na v3.27.0.
+const FIXTURAS_V3260 = {
+  'css/controles.css': 'test/fixtures/controles-v3.26.0.css',
+  'css/janelas.css': 'test/fixtures/janelas-v3.26.0.css',
+  'css/tokens.css': 'test/fixtures/tokens-v3.26.0.css',
+  'tokens/tokens.json': 'test/fixtures/tokens-v3.26.0.json',
+};
+const url = (p) => new URL(`../${FIXTURAS_V3260[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const pacote = JSON.parse(ler('package.json'));
@@ -84,13 +92,12 @@ for (const nome of NOVOS) {
   });
 }
 
-test('package.json 3.26.0 com os três exports novos depois do filtro-nucleo; README com a tag, a seção e um exemplo de cada', () => {
-  assert.equal(pacote.version, '3.26.0');
+// Desde a v3.27.0, a versão e a tag ficam com o teste da versão mais nova.
+test('package.json com os três exports novos depois do filtro-nucleo; README com a seção e um exemplo de cada', () => {
   const chaves = Object.keys(pacote.exports);
   assert.equal(chaves.length, 32);
   const i = chaves.indexOf('./js/filtro-nucleo.js');
   assert.deepEqual(chaves.slice(i + 1, i + 4), NOVOS.map((n) => `./js/${n}.js`));
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.26\.0"/);
   assert.match(leiame, /### Tema, cookie do navio e barra inferior em js\/ \(v3\.26\.0\)/);
   assert.match(leiame, /\*\*Por que a v3\.26\.0 é minor:\*\*/);
   assert.match(leiame, /\*\*O que muda na tela dos apps ao adotar:\*\* nada/);

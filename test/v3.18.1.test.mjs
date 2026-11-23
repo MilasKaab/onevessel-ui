@@ -26,7 +26,14 @@ const DA_V3243 = {
   'css/janelas.css': 'test/fixtures/janelas-v3.24.3.css',
   'tokens/tokens.json': 'test/fixtures/tokens-v3.24.3.json',
 };
-const url = (p) => new URL(`../${DA_V3243[p] ?? p}`, import.meta.url);
+
+// Desde a v3.27.0, também estes são lidos pelas fixtures da v3.26.0 (os
+// bytes da tag, fixos): o controles.css e o tokens.css mudam na v3.27.0.
+const FIXTURAS_V3260 = {
+  'css/controles.css': 'test/fixtures/controles-v3.26.0.css',
+  'css/tokens.css': 'test/fixtures/tokens-v3.26.0.css',
+};
+const url = (p) => new URL(`../${DA_V3243[p] ?? FIXTURAS_V3260[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const ATUAL = { janelas: ler('test/fixtures/janelas-v3.18.2.css'), telas: ler('test/fixtures/telas-v3.18.1.css') };

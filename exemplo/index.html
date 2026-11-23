@@ -112,6 +112,16 @@
   /* A 390px a tabela vira a lista do celular (td.nome); a célula com o
      campo e os botões ocupa a linha de baixo inteira. */
   @media (max-width: 767px) { .linha-campos .ov-tabela td:has(> .ov-campo-com-botao) { flex: 1 1 100%; min-width: 0; margin-top: 6px; } }
+  /* Gaveta e o ícone do botão (v3.27.0). A moldura contém a Gaveta (é fixed
+     e a moldura tem transform); abaixo de 768px ganha a altura da janela,
+     para a folha de 90% caber inteira. */
+  .gaveta-ex { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .gaveta-ex > h2 { margin: 0 0 var(--ov-esp-4); }
+  .gaveta-ex .moldura { height: 560px; }
+  .gaveta-ex .moldura + .moldura-rotulo, .gaveta-ex .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  @media (max-width: 767px) { .gaveta-ex .moldura { height: 100vh; } }
+  .fileira-btn { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 100%; }
+  .fileira-btn > .ov-btn { width: 100%; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1669,6 +1679,140 @@
         <button class="ov-btn ov-btn-fantasma" type="button" aria-busy="true"><span>Salvando<span class="ov-reticencias" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></span></button>
         <button class="ov-btn ov-btn-primario" type="button" disabled title="Preencha o nome">Salvar</button>
         <button class="ov-btn ov-btn-secundario" type="button" disabled title="Preencha o nome">Cancelar</button>
+      </div>
+    </div>
+</section>
+
+<section class="gaveta-ex">
+  <h2 class="ov-titulo-1">Gaveta e o ícone do botão (v3.27.0)</h2>
+  <p class="ov-legenda">A Gaveta (<code class="ov-codigo">.ov-gaveta</code>, ML7): modal, encostada à direita, 520px (<code class="ov-codigo">--ov-gaveta</code>), altura toda, sem raio, entrando da direita; o véu do pacote, sem desfoque. O miolo é o do Painel lateral (<code class="ov-codigo">.ov-painel-cab</code>, <code class="ov-codigo">.ov-painel-corpo</code>, <code class="ov-codigo">.ov-dados</code>), e o rodapé (<code class="ov-codigo">.ov-gaveta-rodape</code>) é opcional: Cancelar antes, os dois à direita. Abaixo de 768px vira Folha pelo próprio CSS: cheia, ou de 90% com alça com <code class="ov-codigo">data-altura="detalhe"</code> (sem campo). Na última moldura, três <code class="ov-codigo">.ov-btn</code> com ícone numa grade <code class="ov-codigo">repeat(3, minmax(0, 1fr))</code> (RP3): o ícone não encolhe mais; a 420px o rótulo mais longo passa da borda do botão, e a largura é do app. Cada moldura faz o papel da tela. Dados fictícios.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Gaveta sem rodapé, só leitura · tema escuro · abaixo de 768px, folha de 90% com alça (<code class="ov-codigo">data-altura="detalhe"</code>)</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="janelas-lista">Lista de requisições…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" data-altura="detalhe" role="dialog" aria-modal="true" aria-labelledby="gv-leitura-escuro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Item da requisição</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h3 class="ov-titulo-3" id="gv-leitura-escuro">Luva nitrílica, caixa com 100</h3>
+          <span class="ov-estado" data-tom="atencao">Aguardando entrega</span>
+          <dl class="ov-dados">
+            <dt>Requisição</dt><dd>RQ-0412</dd>
+            <dt>Quantidade</dt><dd>12 caixas</dd>
+            <dt>Pedido em</dt><dd>14/10 08:30</dd>
+            <dt>Previsão</dt><dd>18/10</dd>
+            <dt>Fornecedor</dt><dd>Fornecedor Exemplo</dd>
+            <dt>Observação</dt><dd>Entregar no almoxarifado do convés principal.</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Gaveta com rodapé e campo · tema escuro · abaixo de 768px, folha cheia</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="janelas-lista">Lista de materiais…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" role="dialog" aria-modal="true" aria-labelledby="gv-campo-escuro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Material</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h3 class="ov-titulo-3" id="gv-campo-escuro">Cabo de aço 12 mm</h3>
+          <span class="ov-estado" data-tom="sucesso">Em estoque</span>
+          <dl class="ov-dados">
+            <dt>Código</dt><dd>MT-0007</dd>
+            <dt>Saldo</dt><dd>140 m</dd>
+            <dt>Local</dt><dd>Paiol 2</dd>
+          </dl>
+          <div class="ov-campo-grupo">
+            <label class="ov-label" for="gv-ajuste-escuro">Novo saldo (m)</label>
+            <input class="ov-campo ov-tnum" id="gv-ajuste-escuro" type="text" inputmode="decimal" value="138">
+          </div>
+          <div class="ov-campo-grupo">
+            <label class="ov-label" for="gv-motivo-escuro">Motivo</label>
+            <textarea class="ov-campo" id="gv-motivo-escuro" rows="3">Conferência do paiol.</textarea>
+          </div>
+        </div>
+        <div class="ov-gaveta-rodape">
+          <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+          <button class="ov-btn ov-btn-primario" type="button">Salvar ajuste</button>
+        </div>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Três botões com ícone numa fileira estreita · tema escuro · 520px e 420px</p>
+    <div class="controles-moldura" data-theme="escuro">
+      <div class="fileira-btn" style="width: 520px">
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="triangle-alert"></i>Marcar crítico</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="pencil"></i>Editar atividade</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="x"></i>Cancelar atividade</button>
+      </div>
+      <div class="fileira-btn" style="width: 420px">
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="triangle-alert"></i>Marcar crítico</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="pencil"></i>Editar atividade</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="x"></i>Cancelar atividade</button>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Gaveta sem rodapé, só leitura · tema claro · abaixo de 768px, folha de 90% com alça (<code class="ov-codigo">data-altura="detalhe"</code>)</p>
+    <div class="moldura" data-theme="claro">
+      <div class="janelas-lista">Lista de requisições…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" data-altura="detalhe" role="dialog" aria-modal="true" aria-labelledby="gv-leitura-claro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Item da requisição</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h3 class="ov-titulo-3" id="gv-leitura-claro">Luva nitrílica, caixa com 100</h3>
+          <span class="ov-estado" data-tom="atencao">Aguardando entrega</span>
+          <dl class="ov-dados">
+            <dt>Requisição</dt><dd>RQ-0412</dd>
+            <dt>Quantidade</dt><dd>12 caixas</dd>
+            <dt>Pedido em</dt><dd>14/10 08:30</dd>
+            <dt>Previsão</dt><dd>18/10</dd>
+            <dt>Fornecedor</dt><dd>Fornecedor Exemplo</dd>
+            <dt>Observação</dt><dd>Entregar no almoxarifado do convés principal.</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Gaveta com rodapé e campo · tema claro · abaixo de 768px, folha cheia</p>
+    <div class="moldura" data-theme="claro">
+      <div class="janelas-lista">Lista de materiais…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" role="dialog" aria-modal="true" aria-labelledby="gv-campo-claro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Material</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h3 class="ov-titulo-3" id="gv-campo-claro">Cabo de aço 12 mm</h3>
+          <span class="ov-estado" data-tom="sucesso">Em estoque</span>
+          <dl class="ov-dados">
+            <dt>Código</dt><dd>MT-0007</dd>
+            <dt>Saldo</dt><dd>140 m</dd>
+            <dt>Local</dt><dd>Paiol 2</dd>
+          </dl>
+          <div class="ov-campo-grupo">
+            <label class="ov-label" for="gv-ajuste-claro">Novo saldo (m)</label>
+            <input class="ov-campo ov-tnum" id="gv-ajuste-claro" type="text" inputmode="decimal" value="138">
+          </div>
+          <div class="ov-campo-grupo">
+            <label class="ov-label" for="gv-motivo-claro">Motivo</label>
+            <textarea class="ov-campo" id="gv-motivo-claro" rows="3">Conferência do paiol.</textarea>
+          </div>
+        </div>
+        <div class="ov-gaveta-rodape">
+          <button class="ov-btn ov-btn-secundario" type="button">Cancelar</button>
+          <button class="ov-btn ov-btn-primario" type="button">Salvar ajuste</button>
+        </div>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Três botões com ícone numa fileira estreita · tema claro · 520px e 420px</p>
+    <div class="controles-moldura" data-theme="claro">
+      <div class="fileira-btn" style="width: 520px">
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="triangle-alert"></i>Marcar crítico</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="pencil"></i>Editar atividade</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="x"></i>Cancelar atividade</button>
+      </div>
+      <div class="fileira-btn" style="width: 420px">
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="triangle-alert"></i>Marcar crítico</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="pencil"></i>Editar atividade</button>
+        <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="x"></i>Cancelar atividade</button>
       </div>
     </div>
 </section>

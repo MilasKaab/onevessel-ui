@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.26.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.27.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -207,6 +207,15 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
   <aside class="ov-painel" data-coluna role="complementary">…</aside>
 </div>
 
+<!-- Gaveta (v3.27.0): modal, à direita, 520px; o miolo é o do Painel -->
+<div class="ov-veu"></div>
+<div class="ov-gaveta" role="dialog" aria-modal="true" aria-labelledby="g">  <!-- data-altura="detalhe" sem campo -->
+  <div class="ov-folha-alca"></div>                   <!-- só aparece abaixo de 768px, na de 90% -->
+  <div class="ov-painel-cab">…tipo do registro e o fechar…</div>
+  <div class="ov-painel-corpo"><h3 id="g">…</h3>…<dl class="ov-dados">…</dl></div>
+  <div class="ov-gaveta-rodape">…Cancelar, ação…</div>  <!-- opcional -->
+</div>
+
 <!-- Folha móvel: data-altura="rapida" (40%), "detalhe" (90%) ou "cheia" (100%) -->
 <div class="ov-folha" data-altura="detalhe">
   <div class="ov-folha-alca"></div>
@@ -224,6 +233,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 - **Modo foco** (v3.17.0), para a tela em que a lista ao lado polui a leitura (em teste em Pessoas da Bordo). A tela põe `data-painel="foco"` no contêiner que tem, **como filhos**, a coluna da lista (o elemento que contém a `.ov-tabela`) e o `.ov-painel`; o modo age só a partir de 1024px e só enquanto o painel é filho dele (`:has`), então o atributo pode ficar fixo na tela. Cabeçalho e célula das colunas principais levam `data-principal` (`<th data-principal>`, `<td class="nome" data-principal>`); as outras somem e voltam ao fechar o painel. A lista fica numa coluna de 360px (se não sobram 520px para o painel, ela cede), com o nome em reticências; o texto das linhas que não estão abertas passa a `--ov-texto-secundario` (cor, nunca `opacity`) e volta com `:hover` e `:focus-visible`; a linha aberta mantém o destaque de seleção; `.meta` e `.ov-estado` guardam a cor própria. O painel ganha `--ov-superficie-elevada`, borda esquerda `--ov-borda-forte`, `--ov-sombra-2`, o resto da largura (mínimo 520px) e a altura toda abaixo da barra superior (`sticky`), com o corpo rolando por dentro. Os Detalhes vão para colunas de no mínimo 280px: na `.ov-dados`, cada par `dt`/`dd` embrulhado num `div` (fora do modo o `div` some, com `display: contents`, e a lista fica como a de pares soltos); no formulário, o elemento cujos filhos são `.ov-campo-grupo`, e o resto dele (botões, avisos) ocupa a linha toda. Sem véu: a lista continua clicável e rolável. Abaixo de 1024px nada muda (Folha móvel).
 - **Por que a v3.17.0 é minor:** só regras novas no `janelas.css`: `.ov-dados > div` e um bloco `@media (min-width: 1024px)` com o modo foco, todo preso a `[data-painel="foco"]:has(> .ov-painel)`. Nenhuma regra de antes muda; tela sem o atributo e `.ov-dados` de pares soltos ficam iguais.
 - **Modo foco, segundo plano revisto** (v3.18.1): as linhas que não estão abertas passam de `--ov-texto-secundario` a `--ov-texto-terciario` **e peso 400**, também no `.nome` (que tem 500): com o secundário (7,3:1 no claro, contra 16,7:1 do texto) o esmaecimento quase não se via. O terciário fica em 5,9:1 sobre `--ov-superficie` no claro e 5,8:1 no escuro (5,3 e 6,5 sobre `--ov-fundo`), ainda AA, porque as linhas continuam clicáveis. `:hover` e `:focus-visible` devolvem cor e peso; a linha aberta fica como estava.
+- **Gaveta** (v3.27.0, ML7), para abrir, agir e fechar um registro sem percorrer a lista (percorrer é do Painel lateral; confirmar, do Diálogo). Modal: o app põe o `.ov-veu` logo antes dela (sem desfoque), prende o foco (`focoQueGira`), empilha pelo `camada.js` e cuida do Esc, do véu, do foco inicial e devolvido e da entrada no histórico, como no Diálogo; não há JS novo. `.ov-gaveta` encostada à direita (`top`, `right` e `bottom` 0, sem `100vh`), com `--ov-gaveta` (520px), sem raio, borda esquerda `--ov-borda-forte`, `--ov-sombra-2`, `--ov-superficie-elevada` e o recuo da área segura à direita; `z-index` `--ov-z-dialogo` (o Toast passa por cima). Coluna flex com `overflow: hidden`: dentro, o `.ov-painel-cab`, o `.ov-painel-corpo` (rola) e a `.ov-dados` do Painel, que não herdam a largura, a Folha nem o modo foco (presos ao `.ov-painel`). **Rodapé opcional** `.ov-gaveta-rodape`: borda de cima `--ov-borda`, até 2 botões de 36px à direita, Cancelar antes. **Abaixo de 768px vira Folha móvel pelo próprio CSS**: cheia por padrão (com campo) e de 90%, com alça, com `data-altura="detalhe"` (sem campo, C21); o rodapé ganha a geometria do `.ov-folha-rodape` (botões de 48, mesma largura, área segura). De 768 a 1023 continua à direita. Entra deslizando da direita, a largura toda, em .22s com `cubic-bezier(.32,.72,0,1)` (`@keyframes ovEntraDaDireita`); abaixo de 768px sobe como a Folha (`ovSobe`); com movimento reduzido, `ovFade`. Sem saída animada, como as outras camadas.
 - **Folha**: sem `data-altura`, a altura do conteúdo (o "Mais"). Na `"cheia"` some o raio e a alça, e entra a área segura de cima. Os botões do `.ov-folha-rodape` têm 48px e a mesma largura.
 - **Movimento reduzido** (`janelas.css` e `casca.css`): as entradas não sobem nem escalam, só aparecem; a barra de tempo continua, porque diz quanto falta.
 
@@ -258,6 +268,7 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 - **Botão**: 36px no computador e **48px no toque** (`pointer: coarse`; até a v3.11.0, 44), peso 500, raio `ov-raio-md`. O `.ov-btn-sm` (28px) é só do computador: no toque vai a 48 como os outros. O `.ov-btn-icone` fica quadrado (36 ou 48). O `.ov-btn-primario` sob o mouse tem o texto em `ov-fundo` (desde a v3.11.0: 10,99:1 no escuro e 6,40:1 no claro, em vez de 1,72:1).
 - **Campo**: 44px no computador e **48px no toque** (v3.19.0, C30; até a v3.18.2, 44 em qualquer tela), texto de 16px, borda `ov-borda-controle`, fundo `ov-superficie-recuada` (o do livro para o campo dentro de cartão, e o mesmo fora dele: no cartão fica recuado, na página um tom acima). **Foco: o anel único do livro** (`outline: 2px solid var(--ov-foco)`, recuo 2px), sem halo e sem trocar a borda; o `outline: none` saiu. Erro: `aria-invalid="true"` põe a borda em `ov-erro`.
 - **Rótulo** (`.ov-label`): 14px/500 em `ov-texto`; `small` dentro dele para "(opcional)". Ajuda em `.ov-ajuda` e erro em `.ov-erro-campo`, os dois em 13px.
+- **Ícone ao lado do texto** (v3.27.0, RP3): `.ov-btn > svg { flex: none; }`. Numa trilha que pode ficar menor que o botão (o `grid-cols-3` do Tailwind é `repeat(3, minmax(0, 1fr))`), o ícone encolhia até sumir antes do texto; agora fica com o tamanho dele, e onde o rótulo não cabe é o texto que passa da borda: a largura do botão é do app. O `.ov-btn-icone svg` (18px) fica como estava.
 - **Ícone do erro** (v3.13.0): o `CircleAlert` do Lucide, 16px, `aria-hidden`, como primeiro filho do `.ov-erro-campo`; o `svg` filho direto não encolhe quando o texto quebra e fica centrado na primeira linha de 18px.
 - **`textarea.ov-campo`** (v3.13.0): a altura vem do `rows` do app (`height: auto`), com o mínimo de 44px; padding de 9px em cima e embaixo, que põe a primeira linha de 16/24 na mesma altura do texto do input; `resize: vertical`.
 - **Campo de linha** (v3.13.0, a exceção do livro): `data-densidade="linha"` no `.ov-campo` (`input`, `select` ou `textarea`) para o campo que edita uma célula dentro da linha da tabela (ou da lista densa): **36px e texto de 14/20 no computador**, com o fundo, a borda, o raio e o anel do `.ov-campo`; no `textarea`, mínimo de 36 e padding de 7px. **No toque, é o `.ov-campo` de 48 e 16px** (v3.19.0, C30: no toque, todo controle tem 48; até a v3.18.2 ficava em 44), e texto abaixo de 16px faz o Safari do iPhone dar zoom no foco; a linha da tabela cresce com ele no toque. Fica no meio da célula (`vertical-align: middle`): na linha de base, o espaço do descendente fazia a linha crescer (50 no toque). Formulário é sempre o `.ov-campo` sem o atributo.
@@ -736,6 +747,18 @@ Três núcleos que a Bordo e o Paradas tinham iguais e o Materiais seria a terce
 - **Por que a v3.26.0 é minor:** três arquivos novos em `js/`, cada um com o `.d.ts` e a entrada em `exports`; nenhum CSS, token nem `js/` de antes muda (o teste da versão confere os bytes).
 - **O que muda na tela dos apps ao adotar:** nada. É a mesma lógica que já roda neles.
 - **Adoção:** o **Materiais** importa na F3-1. A **Bordo** e o **Paradas** trocam a cópia pelo import nos PRs de ícones de cada um.
+
+### Gaveta e o ícone do botão que não encolhe (v3.27.0)
+
+A Gaveta do pacote (ML7) e o RP3, decididos em 23/11 (`implementacao.md`, "RP4 e o escopo do ML7" e "ML7, a Gaveta: levantamento respondido (GV1–GV12)"; a regra de uso em `componentes.md`, Gaveta).
+
+- **Gaveta** (`janelas.css`): `.ov-gaveta`, `.ov-gaveta > .ov-folha-alca`, `.ov-gaveta-rodape`, `@keyframes ovEntraDaDireita` e, abaixo de 768px, `.ov-gaveta[data-altura="detalhe"]`, a alça dela e os botões do rodapé. O `.ov-gaveta` entra na lista do `:where(...)` de `box-sizing` e no movimento reduzido. Ver "Janelas".
+- **`--ov-gaveta`** (`tokens.json` e `tokens.css`): 520px, no grupo de layout, ao lado do `ov-dialogo`. A descrição do `ov-z-dialogo` passa a incluir a gaveta. O 520 do modo foco continua escrito à mão.
+- **Ícone do `.ov-btn`** (`controles.css`): `.ov-btn > svg { flex: none; }`. Ver "Controles".
+- **Alteradas pelo nome:** nenhuma regra muda de valor. O seletor `:where(...)` de `box-sizing` do `janelas.css` ganha o `.ov-gaveta` (as classes de antes continuam nele, com a mesma declaração); no `tokens.json`, o `usage` do `ov-z-dialogo`.
+- **Por que a v3.27.0 é minor:** classes, regras, keyframe e token novos; nenhum valor de antes muda, nenhum JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** a Gaveta só aparece onde o app a puser. O ícone de todo `.ov-btn` com texto deixa de encolher: onde a fileira é estreita (no Paradas, os três botões do card da atividade em `grid-cols-3`), o ícone volta, e abaixo de ~450px de fileira o rótulo mais longo passa a vazar da borda do botão em vez de o ícone sumir.
+- **Adoção:** o **Materiais** usa a Gaveta na F4, que decide quais das janelas dele viram Gaveta e quais viram Diálogo. O **Paradas** mede os cards reais (painel aberto a 1024, tablet) no PR de adoção e decide a fileira de três botões (GV12). A **Bordo** e a **plataforma** só sobem a tag.
 
 ### Relatório (papel e impressão)
 

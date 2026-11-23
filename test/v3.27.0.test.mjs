@@ -77,10 +77,11 @@ test('o :where(...) de box-sizing é o de antes com o .ov-gaveta no fim, e a mes
   assert.deepEqual(declaracoesEm(ANTES.janelas, '', ONDE_ANTES), ['box-sizing: border-box']);
 });
 
-test('Gaveta no computador: encostada à direita, 520 pelo token, sem raio, sem 100vh, a camada do Diálogo', () => {
+test('Gaveta a partir de 768px: encostada à direita, 520 pelo token, sem raio, sem 100vh, a camada do Diálogo, a área segura em cima, à direita e embaixo', () => {
   assert.deepEqual(declaracoesEm(ATUAL.janelas, '', GAVETA), [
     'position: fixed', 'top: 0', 'right: 0', 'bottom: 0', 'z-index: var(--ov-z-dialogo)', 'width: var(--ov-gaveta)',
-    'display: flex', 'flex-direction: column', 'overflow: hidden', 'padding-right: env(safe-area-inset-right, 0px)',
+    'display: flex', 'flex-direction: column', 'overflow: hidden',
+    'padding-top: env(safe-area-inset-top, 0px)', 'padding-right: env(safe-area-inset-right, 0px)', 'padding-bottom: env(safe-area-inset-bottom, 0px)',
     'background: var(--ov-superficie-elevada)', 'border-left: 1px solid var(--ov-borda-forte)', 'box-shadow: var(--ov-sombra-2)',
     'color: var(--ov-texto)', 'font: var(--ov-fonte-corpo)', 'animation: ovEntraDaDireita .22s cubic-bezier(.32,.72,0,1)',
   ]);
@@ -96,7 +97,12 @@ test('Gaveta no computador: encostada à direita, 520 pelo token, sem raio, sem 
 });
 
 test('Gaveta abaixo de 768px: Folha cheia por padrão, 90% com alça no detalhe, o rodapé do .ov-folha-rodape', () => {
-  assert.deepEqual(declaracoesEm(ATUAL.janelas, MOVEL, GAVETA), ['left: 0', 'width: auto', 'padding-top: calc(env(safe-area-inset-top, 0px) + 5px)', 'padding-left: env(safe-area-inset-left, 0px)', 'border-left: 0', 'animation-name: ovSobe']);
+  // O padding-top do celular troca o da área segura (não soma), e a caixa
+  // zera o de baixo: o rodapé já leva o env(safe-area-inset-bottom).
+  assert.deepEqual(declaracoesEm(ATUAL.janelas, MOVEL, GAVETA), ['left: 0', 'width: auto', 'padding-top: calc(env(safe-area-inset-top, 0px) + 5px)', 'padding-bottom: 0', 'padding-left: env(safe-area-inset-left, 0px)', 'border-left: 0', 'animation-name: ovSobe']);
+  const abaixo = regras(ATUAL.janelas).filter((r) => r.media === MOVEL && r.seletores.some((x) => x.includes('ov-gaveta')));
+  assert.equal(abaixo.filter((r) => /padding(-bottom)?:[^;]*safe-area-inset-bottom/.test(r.corpo)).length, 1, 'só o rodapé soma a área segura de baixo');
+  assert.ok(declaracoesEm(ATUAL.janelas, MOVEL, RODAPE)[0].includes('env(safe-area-inset-bottom, 0px)'));
   assert.deepEqual(declaracoesEm(ATUAL.janelas, MOVEL, DETALHE), ['top: auto', 'height: 90vh', 'height: 90dvh', 'padding-top: 0', 'border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0']);
   assert.deepEqual(declaracoesEm(ATUAL.janelas, MOVEL, `${DETALHE} > .ov-folha-alca`), ['display: grid', 'flex: none']);
   // A geometria do .ov-folha-rodape: o padding e os botões de 48, mesma largura.

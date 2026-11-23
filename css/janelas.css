@@ -169,12 +169,15 @@
    raio (não usa 100vh: cabe na moldura que a contém e não depende da barra
    do navegador); o recuo da área segura à direita vai na caixa. É uma camada
    como o Diálogo: o mesmo z-index, o .ov-veu do app logo antes dela (vence
-   pela ordem no DOM; sem desfoque), o Toast por cima. Dentro, o miolo do
+   pela ordem no DOM; sem desfoque), o Toast por cima. Os recuos da área
+   segura em cima e embaixo (o iPad com o app instalado, viewport-fit=cover)
+   tiram o cabeçalho de baixo da barra de status e o fim do corpo ou o
+   rodapé de cima do indicador de início. Dentro, o miolo do
    Painel: .ov-painel-cab (48px), .ov-painel-corpo (rola) e .ov-dados, que não
    herdam a largura, a Folha nem o modo foco, presos ao .ov-painel. A alça
    (.ov-folha-alca) só aparece abaixo de 768px, na de 90%. Sem saída animada,
    como as outras camadas. */
-.ov-gaveta { position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: var(--ov-gaveta); display: flex; flex-direction: column; overflow: hidden; padding-right: env(safe-area-inset-right, 0px); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); animation: ovEntraDaDireita .22s cubic-bezier(.32,.72,0,1); }
+.ov-gaveta { position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--ov-z-dialogo); width: var(--ov-gaveta); display: flex; flex-direction: column; overflow: hidden; padding-top: env(safe-area-inset-top, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); background: var(--ov-superficie-elevada); border-left: 1px solid var(--ov-borda-forte); box-shadow: var(--ov-sombra-2); color: var(--ov-texto); font: var(--ov-fonte-corpo); animation: ovEntraDaDireita .22s cubic-bezier(.32,.72,0,1); }
 .ov-gaveta > .ov-folha-alca { display: none; }
 /* Rodapé opcional: até 2 botões de 36px à direita, Cancelar antes. O
    detalhe só de leitura fica sem ele. */
@@ -184,9 +187,10 @@
 /* Abaixo de 768px vira Folha móvel pelo próprio CSS: cheia por padrão (com
    campo), de 90% e com alça com data-altura="detalhe" (sem campo, C21). A
    cheia tem 5px acima do cabeçalho, como o painel cheio (o anel do foco
-   inteiro); o rodapé ganha a geometria do .ov-folha-rodape. */
+   inteiro); o rodapé ganha a geometria do .ov-folha-rodape, que já soma a
+   área segura de baixo: a caixa zera a dela, para não somar dois recuos. */
 @media (max-width: 767px) {
-  .ov-gaveta { left: 0; width: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 5px); padding-left: env(safe-area-inset-left, 0px); border-left: 0; animation-name: ovSobe; }
+  .ov-gaveta { left: 0; width: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 5px); padding-bottom: 0; padding-left: env(safe-area-inset-left, 0px); border-left: 0; animation-name: ovSobe; }
   .ov-gaveta[data-altura="detalhe"] { top: auto; height: 90vh; height: 90dvh; padding-top: 0; border-radius: var(--ov-raio-xl) var(--ov-raio-xl) 0 0; }
   .ov-gaveta[data-altura="detalhe"] > .ov-folha-alca { display: grid; flex: none; }
   .ov-gaveta-rodape { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }

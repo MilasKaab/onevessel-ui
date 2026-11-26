@@ -19,7 +19,8 @@
    campo de linha, .ov-campo[data-densidade="linha"] (36px e 14px no
    computador, a exceção do livro para a célula editada na linha).
    Desde a v3.24: o .ov-campo-com-botao (o botão na linha de campos, com a
-   altura do campo) e o "Salvando" esmaecido sem disabled (TP4, 04/11). */
+   altura do campo) e o "Salvando" esmaecido sem disabled (TP4, 04/11).
+   Desde a v3.28: o interruptor (.ov-interruptor, MJ18; T1 a T6, 26/11). */
 
 :where(.ov-btn, .ov-campo-grupo, .ov-campo) { box-sizing: border-box; }
 
@@ -163,8 +164,56 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
   .ov-campo-com-botao > .ov-btn-icone, .ov-campo-com-botao:has(> .ov-campo[data-densidade="linha"]) > .ov-btn-icone { width: var(--ov-altura-toque); }
 }
 
+/* ---------- Interruptor (v3.28.0, MJ18) ---------- */
+/* Liga e desliga o ativo/inativo de um cadastro, gravando na hora. Só
+   desenho: o app põe o aria-checked, o nome, a palavra, a gravação e o
+   motivo (contrato no README). Espaço e Enter vêm do <button>.
+     <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo">
+       <span class="ov-interruptor-trilho" aria-hidden="true"></span>
+       <span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span>
+     </button>
+   O nome é fixo (T1): a palavra visível troca, mas é aria-hidden, e o estado
+   vem do aria-checked ("Ativo, interruptor, ligado / desligado"). O botão é o
+   alvo, o anel e o hover: 36 de altura, 48 no toque. */
+.ov-interruptor { box-sizing: border-box; display: inline-flex; align-items: center; gap: 8px; min-height: var(--ov-altura-controle); margin: 0; padding: 0 6px 0 4px; border: 0; border-radius: var(--ov-raio-md); background: transparent; color: var(--ov-texto); font: 500 14px/20px var(--font-sans); text-align: start; cursor: pointer; transition: background-color .12s; }
+.ov-interruptor:hover:not(:disabled):not([aria-busy="true"]) { background: var(--ov-linha-hover); }
+.ov-interruptor:focus-visible { outline: 2px solid var(--ov-foco); outline-offset: 2px; }
+/* O trilho: 36 x 20, com a borda ov-borda-controle nos dois estados (T2: o
+   ov-acao sobre a superfície elevada do escuro dá 2,95:1; a borda, 3,08:1).
+   A bolinha é o ::before, com box-sizing também nele: 14 de lado a 2 da
+   borda de dentro, a mesma folga nos quatro lados (34 x 18 por dentro:
+   2 + 14 + 2 na altura; 2 + 14 + 16 + 2 na largura, ligado). A borda
+   transparente da bolinha aparece nas cores forçadas. */
+.ov-interruptor-trilho { box-sizing: border-box; position: relative; flex: none; width: 36px; height: 20px; border: 1px solid var(--ov-borda-controle); border-radius: var(--ov-raio-pill); background: var(--ov-superficie-recuada); transition: background-color .12s; }
+.ov-interruptor-trilho::before { content: ""; box-sizing: border-box; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border: 1px solid transparent; border-radius: var(--ov-raio-pill); background: var(--ov-neutro); transition: transform .12s, background-color .12s; }
+.ov-interruptor[aria-checked="true"] .ov-interruptor-trilho { background: var(--ov-acao); }
+.ov-interruptor[aria-checked="true"] .ov-interruptor-trilho::before { background: var(--ov-sobre-acao); transform: translateX(16px); }
+/* A palavra, do app (Ativo/Inativo, Ativa/Inativa): a largura de "Inativo"
+   fica reservada por um ::after sem altura, e nada pula ao trocar. */
+.ov-interruptor-palavra { display: inline-block; }
+.ov-interruptor-palavra::after { content: "Inativo"; display: block; height: 0; overflow: hidden; visibility: hidden; }
+/* Gravando (T4): o app troca o aria-checked no clique, põe aria-busy="true"
+   e ignora clique, Espaço e Enter até a resposta; o trilho a .6. Com
+   disabled ao mesmo tempo, fica só o .6 do disabled. */
+.ov-interruptor[aria-busy="true"] { cursor: progress; }
+.ov-interruptor[aria-busy="true"]:not(:disabled) .ov-interruptor-trilho { opacity: .6; }
+/* Desabilitado pela regra (T3, C13): disabled nativo, como o .ov-btn (o Tab
+   pula); o conjunto a .6, o motivo no title e, no toque, escrito abaixo
+   (.ov-motivo, ligado pelo aria-describedby). */
+.ov-interruptor:disabled { opacity: .6; cursor: not-allowed; }
+/* Toque: alvo de 48, trilho de 44 x 24, bolinha de 18 (42 x 22 por dentro:
+   2 + 18 + 2; ligado, 2 + 18 + 20 + 2). */
+@media (pointer: coarse) {
+  .ov-interruptor { min-height: var(--ov-altura-toque); }
+  .ov-interruptor-trilho { width: 44px; height: 24px; }
+  .ov-interruptor-trilho::before { width: 18px; height: 18px; }
+  .ov-interruptor[aria-checked="true"] .ov-interruptor-trilho::before { transform: translateX(20px); }
+}
+
 /* ---------- Movimento reduzido ---------- */
-/* As reticências param, os três pontos visíveis. */
+/* As reticências param, os três pontos visíveis. A bolinha do interruptor
+   salta, sem deslizar (v3.28.0); a cor continua trocando em 120 ms. */
 @media (prefers-reduced-motion: reduce) {
   .ov-reticencias > span { animation: none; opacity: 1; }
+  .ov-interruptor-trilho::before { transition: background-color .12s; }
 }

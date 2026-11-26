@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.27.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.28.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -192,7 +192,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
     <div class="ov-toast-tempo"><span></span></div>
   </div>
   <div class="ov-toast" data-tipo="erro" role="alert">
-    <div class="ov-toast-linha"><svg …/>Não consegui encerrar a TT.<button class="ov-toast-acao">Tentar de novo</button></div>
+    <div class="ov-toast-linha"><svg …/>Não consegui encerrar a TT.<button class="ov-toast-acao">Tentar novamente</button></div>
   </div>
 </div>
 
@@ -225,6 +225,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 ```
 
 - **Diálogo**: `data-tamanho="confirmacao"` (ou sem atributo) tem 440px (`--ov-dialogo`); `"formulario"` tem 640px (`--ov-dialogo-formulario`), com o `.ov-dialogo-corpo` rolando. Abaixo de 768px a confirmação continua centrada, com 16px de margem, e **o formulário vira folha em tela cheia pelo próprio CSS** (`@media` sobre `data-tamanho="formulario"`): o app não troca classe nem precisa saber a largura. Nesse caso as ações ganham a geometria do `.ov-folha-rodape`.
+- **Pé que não cabe** (v3.28.0, MJ22): no Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda; onde cabem, nada muda. É pela largura dos rótulos, não da tela: o `.ov-dialogo-acoes` tem a largura do que leva (`fit-content`, encostado à direita) e cresce até a do Diálogo; passou dela, os botões quebram com `flex-wrap: wrap-reverse` (o último do HTML, a ação, fica em cima) e cada um cresce até a linha (`flex: 1 0 auto`). A ordem no HTML continua Cancelar, ação; o app não faz nada. "Cancelar" + "Tentar novamente" (245px) quebram a 320 (238 úteis) e cabem a partir de 328px de tela. Um botão só não quebra: se o rótulo passa da largura, vaza, como antes. O Diálogo de formulário não muda (640px; abaixo de 768, o rodapé da Folha).
 - **`ov-btn-perigo`** só existe dentro do Diálogo e traz **só as cores** (`--ov-erro` e `--ov-sobre-erro`). A base do botão (altura, padding, fonte) é o `ov-btn` do `controles.css` (v3.12.0): o `janelas.css` não o importa, como não importa a casca (a soma do `onevessel.css` repetiria as regras); o app importa os dois.
 - **Toast**: centro inferior no computador; com a barra de ações em massa na tela, o app põe `data-com-barra` na `.ov-toasts` e a pilha sobe para 96px. Abaixo de 768px, logo abaixo da barra superior (`--ov-barra-superior` + área segura + 12px), entrando de cima. Sem `data-tipo` (ou `"sucesso"`) o ícone vai em `--ov-toast-sucesso`; `data-tipo="erro"` usa `--ov-toast-erro` e o CSS esconde a barra de tempo. O máximo de 3 é do app.
 - **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (`js/toast-nucleo.js` desde a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
@@ -261,6 +262,12 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 
 <textarea class="ov-campo" id="motivo" rows="3"></textarea>
 
+<!-- Interruptor (v3.28.0): nome fixo, estado no aria-checked, palavra do app -->
+<button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo">
+  <span class="ov-interruptor-trilho" aria-hidden="true"></span>
+  <span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span>
+</button>
+
 <!-- Campo de linha: a célula editada dentro da linha da tabela -->
 <td><input class="ov-campo" data-densidade="linha" aria-label="Camarote de João Pereira"></td>
 ```
@@ -269,6 +276,9 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 - **Campo**: 44px no computador e **48px no toque** (v3.19.0, C30; até a v3.18.2, 44 em qualquer tela), texto de 16px, borda `ov-borda-controle`, fundo `ov-superficie-recuada` (o do livro para o campo dentro de cartão, e o mesmo fora dele: no cartão fica recuado, na página um tom acima). **Foco: o anel único do livro** (`outline: 2px solid var(--ov-foco)`, recuo 2px), sem halo e sem trocar a borda; o `outline: none` saiu. Erro: `aria-invalid="true"` põe a borda em `ov-erro`.
 - **Rótulo** (`.ov-label`): 14px/500 em `ov-texto`; `small` dentro dele para "(opcional)". Ajuda em `.ov-ajuda` e erro em `.ov-erro-campo`, os dois em 13px.
 - **Ícone ao lado do texto** (v3.27.0, RP3): `.ov-btn > svg { flex: none; }`. Numa trilha que pode ficar menor que o botão (o `grid-cols-3` do Tailwind é `repeat(3, minmax(0, 1fr))`), o ícone encolhia até sumir antes do texto; agora fica com o tamanho dele, e onde o rótulo não cabe é o texto que passa da borda: a largura do botão é do app. O `.ov-btn-icone svg` (18px) fica como estava.
+- **Interruptor** (v3.28.0, MJ18; T1 a T6 de 26/11): liga e desliga o ativo/inativo de um cadastro, gravando na hora. **Só CSS**, sem núcleo JS: é um `<button type="button" role="switch">`, e Espaço e Enter vêm dele. Trilho 36 × 20 (44 × 24 no toque, alvo de 48), borda `ov-borda-controle` nos dois estados; desligado, fundo `ov-superficie-recuada` e bolinha `ov-neutro`; ligado, fundo `ov-acao` e bolinha `ov-sobre-acao`. A bolinha fica centrada, com 2px de folga nos quatro lados nos dois tamanhos e nos dois estados. A palavra fica à direita, 14/20 peso 500, com a largura de "Inativo" reservada. Hover `ov-linha-hover`, foco no anel único em volta do trilho e da palavra, 120 ms; com movimento reduzido, a bolinha salta; nas cores forçadas, a bolinha aparece pela borda transparente.
+  - **O contrato do app:** o `aria-checked` (`"true"` ligado, `"false"` desligado); o **nome fixo** no `aria-label` ("Ativo" ou "Ativa"), e o trilho e a palavra `aria-hidden` (o leitor diz "Ativo, interruptor, ligado / desligado"); **a palavra é do app**, no gênero do registro (Ativo/Inativo, Ativa/Inativa). **No clique**, o app troca o `aria-checked` e a palavra na hora e põe `aria-busy="true"` enquanto grava (trilho a .6, cursor `progress`), ignorando clique, Espaço e Enter até a resposta; gravou, tira o `aria-busy` e mostra o Toast com Desfazer; falhou, volta ao estado de antes e mostra o Toast de erro com "Tentar novamente" (servidor) ou "Recarregar" (concorrência). O foco fica no interruptor. **Desabilitado pela regra**: `disabled` nativo, como o `.ov-btn` (o Tab pula), o motivo no `title` e num `.ov-motivo` logo abaixo, ligado pelo `aria-describedby` (escrito só no toque). Sem a função, o app não desenha o interruptor: no lugar, a palavra em texto.
+  - **Não use** para Sim/Não de formulário que grava no Salvar (`.ov-segmentado`), para filtro (botão com `aria-pressed`), nem para o que pede Diálogo num dos sentidos ou tira a linha da lista.
 - **Ícone do erro** (v3.13.0): o `CircleAlert` do Lucide, 16px, `aria-hidden`, como primeiro filho do `.ov-erro-campo`; o `svg` filho direto não encolhe quando o texto quebra e fica centrado na primeira linha de 18px.
 - **`textarea.ov-campo`** (v3.13.0): a altura vem do `rows` do app (`height: auto`), com o mínimo de 44px; padding de 9px em cima e embaixo, que põe a primeira linha de 16/24 na mesma altura do texto do input; `resize: vertical`.
 - **Campo de linha** (v3.13.0, a exceção do livro): `data-densidade="linha"` no `.ov-campo` (`input`, `select` ou `textarea`) para o campo que edita uma célula dentro da linha da tabela (ou da lista densa): **36px e texto de 14/20 no computador**, com o fundo, a borda, o raio e o anel do `.ov-campo`; no `textarea`, mínimo de 36 e padding de 7px. **No toque, é o `.ov-campo` de 48 e 16px** (v3.19.0, C30: no toque, todo controle tem 48; até a v3.18.2 ficava em 44), e texto abaixo de 16px faz o Safari do iPhone dar zoom no foco; a linha da tabela cresce com ele no toque. Fica no meio da célula (`vertical-align: middle`): na linha de base, o espaço do descendente fazia a linha crescer (50 no toque). Formulário é sempre o `.ov-campo` sem o atributo.
@@ -759,6 +769,18 @@ A Gaveta do pacote (ML7) e o RP3, decididos em 23/11 (`implementacao.md`, "RP4 e
 - **Por que a v3.27.0 é minor:** classes, regras, keyframe e token novos; nenhum valor de antes muda, nenhum JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** a Gaveta só aparece onde o app a puser. O ícone de todo `.ov-btn` com texto deixa de encolher: onde a fileira é estreita (no Paradas, os três botões do card da atividade em `grid-cols-3`), o ícone volta, e abaixo de ~450px de fileira o rótulo mais longo passa a vazar da borda do botão em vez de o ícone sumir.
 - **Adoção:** o **Materiais** usa a Gaveta na F4, que decide quais das janelas dele viram Gaveta e quais viram Diálogo. O **Paradas** mede os cards reais (painel aberto a 1024, tablet) no PR de adoção e decide a fileira de três botões (GV12). A **Bordo** e a **plataforma** só sobem a tag.
+
+### Interruptor, o pé do Diálogo que quebra e "Tentar novamente" (v3.28.0)
+
+O interruptor (MJ18) e a quebra do pé do Diálogo (MJ22), decididos em 26/11 (`implementacao.md`, "[Suíte] Interruptor do pacote (MJ18): levantamento e decisões T1–T6"; a regra de uso em `componentes.md`, Interruptor e Diálogo), e o "Tentar novamente" de 25/11 (`janelas-e-avisos.md`).
+
+- **Interruptor** (`controles.css`): `.ov-interruptor`, o hover, o `:focus-visible`, o `[aria-checked="true"]`, o `[aria-busy="true"]` e o `:disabled`; `.ov-interruptor-trilho` e o `::before` (a bolinha); `.ov-interruptor-palavra` e o `::after` (a largura de "Inativo"); o bloco do toque e a bolinha no movimento reduzido. Ver "Controles".
+- **Pé do Diálogo** (`janelas.css`): `.ov-dialogo:not([data-tamanho="formulario"]) .ov-dialogo-acoes` e os filhos dele. Ver "Janelas".
+- **"Tentar novamente"** no lugar de "Tentar de novo" neste README e no `exemplo/index.html` (e "Tente novamente." no aviso em bloco do exemplo).
+- **Alteradas pelo nome:** nenhuma regra muda de valor nem de seletor.
+- **Por que a v3.28.0 é minor:** classes e regras novas; nenhum valor de antes muda, nenhum JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** o interruptor só aparece onde o app o puser. O pé de todo Diálogo de confirmação cujos dois botões não cabem lado a lado deixa de vazar ou de espremer: a ação vai para cima e o Cancelar embaixo, os dois com a largura toda. Com os rótulos de hoje, a 320px de tela quebram o "Tentar novamente" do Materiais (que já reserva essa largura no botão da ação), o "Continuar editando" + "Descartar" (Bordo, Paradas, plataforma) e o "Gerar nova credencial" da plataforma; a 360 e a 375, só o "Voltar para Aguardando PTW" do Paradas. Onde cabem, o pé fica como era.
+- **Adoção:** o **Materiais** já usa "Tentar novamente" desde a F4-3 (o #34 dele) e estreia o interruptor na F4-5 (endereço e setores). **Bordo**, **Paradas** e **plataforma** trocam "Tentar de novo" por "Tentar novamente" no PR de adoção da v3.28.0 (decisão de 25/11, 18h20); o interruptor entra nelas um caso por vez, depois.
 
 ### Relatório (papel e impressão)
 

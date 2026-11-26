@@ -11,7 +11,13 @@ import { createHash } from 'node:crypto';
 
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.28.0, estes são lidos pelas fixtures da v3.27.0 (os bytes da
+// tag, fixos): o controles.css e o janelas.css mudam na v3.28.0.
+const FIXTURAS_V3270 = {
+  'css/controles.css': 'test/fixtures/controles-v3.27.0.css',
+  'css/janelas.css': 'test/fixtures/janelas-v3.27.0.css',
+};
+const url = (p) => new URL(`../${FIXTURAS_V3270[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const pacote = JSON.parse(ler('package.json'));
@@ -255,10 +261,9 @@ test('exemplo: a Gaveta com e sem rodapé nos dois temas, e a fileira de três b
   assert.doesNotMatch(secao, /@[a-z0-9-]+\.[a-z]/i, 'nenhum e-mail');
 });
 
-test('package.json 3.27.0 sem export novo; README com a tag, a seção, a Gaveta em Janelas e o RP3 em Controles', () => {
-  assert.equal(pacote.version, '3.27.0');
+// Desde a v3.28.0, a versão e a tag ficam com o teste da versão mais nova.
+test('package.json sem export novo; README com a seção, a Gaveta em Janelas e o RP3 em Controles', () => {
   assert.equal(Object.keys(pacote.exports).length, 32);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.27\.0"/);
   assert.match(leiame, /### Gaveta e o ícone do botão que não encolhe \(v3\.27\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* nenhuma regra muda de valor/);
   assert.match(leiame, /\*\*Por que a v3\.27\.0 é minor:\*\*/);

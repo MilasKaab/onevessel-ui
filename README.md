@@ -780,7 +780,7 @@ O interruptor (MJ18) e a quebra do pé do Diálogo (MJ22), decididos em 26/11 (`
 - **Alteradas pelo nome:** nenhuma regra muda de valor nem de seletor.
 - **Por que a v3.28.0 é minor:** classes e regras novas; nenhum valor de antes muda, nenhum JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** o interruptor só aparece onde o app o puser. O pé de todo Diálogo de confirmação cujos dois botões não cabem lado a lado deixa de vazar ou de espremer: a ação vai para cima e o Cancelar embaixo, os dois com a largura toda. Com os rótulos de hoje, a 320px de tela quebram o "Tentar novamente" do Materiais (que já reserva essa largura no botão da ação), o "Continuar editando" + "Descartar" (Bordo, Paradas, plataforma) e o "Gerar nova credencial" da plataforma; a 360 e a 375, só o "Voltar para Aguardando PTW" do Paradas. Onde cabem, o pé fica como era.
-- **Adoção:** o **Materiais** estreia o interruptor na F4-5 (endereço e setores) e troca o "Tentar de novo" ao adotar. **Bordo**, **Paradas** e **plataforma** só sobem a tag; o interruptor entra nelas um caso por vez, depois.
+- **Adoção:** o **Materiais** já usa "Tentar novamente" desde a F4-3 (o #34 dele) e estreia o interruptor na F4-5 (endereço e setores). **Bordo**, **Paradas** e **plataforma** trocam "Tentar de novo" por "Tentar novamente" no PR de adoção da v3.28.0 (decisão de 25/11, 18h20); o interruptor entra nelas um caso por vez, depois.
 
 ### Relatório (papel e impressão)
 

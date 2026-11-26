@@ -14,8 +14,8 @@ import { extname, join, normalize } from 'node:path';
 
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
-// Desde a v3.28.1, o controles.css é lido pela fixture da v3.28.0 (os bytes
-// da tag, fixos): o interruptor muda na v3.28.1.
+// Desde a v3.29.0, o controles.css é lido pela fixture da v3.28.0 (os bytes
+// da tag, fixos): o interruptor muda na v3.29.0.
 const FIXTURAS_V3280 = { 'css/controles.css': 'test/fixtures/controles-v3.28.0.css' };
 const url = (p) => new URL(`../${FIXTURAS_V3280[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
@@ -280,11 +280,11 @@ test('exemplo: o interruptor nos dois temas, sobre a superfície e a elevada (li
   for (const b of botoes) assert.match(b, /aria-label="Ativo"/);
   assert.equal(botoes.filter((b) => /aria-busy="true"/.test(b)).length, 4);
   assert.equal(botoes.filter((b) => /aria-checked="false"/.test(b)).length, 8);
-  // Desde a v3.28.1, a ordem (palavra antes do trilho) e o apagado
-  // (aria-disabled no lugar do disabled) ficam com o teste da v3.28.1.
+  // Desde a v3.29.0, a ordem (palavra antes do trilho) e o apagado
+  // (aria-disabled no lugar do disabled) ficam com o teste da v3.29.0.
 });
 
-// Desde a v3.28.1, a versão e a tag ficam com o teste da versão mais nova.
+// Desde a v3.29.0, a versão e a tag ficam com o teste da versão mais nova.
 test('package.json sem export novo; README com a seção, o interruptor em Controles e o pé em Janelas', () => {
   assert.equal(Object.keys(pacote.exports).length, 32);
   assert.match(leiame, /### Interruptor, o pé do Diálogo que quebra e "Tentar novamente" \(v3\.28\.0\)/);

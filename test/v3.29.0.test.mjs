@@ -1,7 +1,7 @@
-// v3.28.1 (T3, T7 e T8 de 26/11, revistos pelo Salim no F4-5 do Materiais):
+// v3.29.0 (T3, T7 e T8 de 26/11, revistos pelo Salim no F4-5 do Materiais):
 // o interruptor com a palavra antes do trilho, o trilho na borda direita, o
 // apagado por aria-disabled e o motivo sob o controle, mostrado pelo app.
-// Patch: a fixture da v3.28.0 (`test/fixtures/controles-v3.28.0.css`, da
+// Minor: a fixture da v3.28.0 (`test/fixtures/controles-v3.28.0.css`, da
 // tag, fixa) fica igual regra a regra, fora as alteradas pelo nome; o que
 // nasce é a lista.
 import { test } from 'node:test';
@@ -49,7 +49,7 @@ const ALTERADAS = {
   [`|${PALAVRA}`]: { antes: [], depois: ['text-align: end'] },
 };
 
-test('controles.css, patch: toda regra da v3.28.0 igual, fora as alteradas pelo nome; o hover troca de seletor com a mesma declaração; nasce só a lista', () => {
+test('controles.css, minor: toda regra da v3.28.0 igual, fora as alteradas pelo nome; o hover troca de seletor com a mesma declaração; nasce só a lista', () => {
   for (const r of regras(ANTES)) {
     for (const s of r.seletores) {
       const chave = `${r.media}|${s}`;
@@ -135,16 +135,18 @@ test('exemplo: todo interruptor com a palavra antes do trilho; o apagado com ari
   assert.match(exemplo, /setAttribute\('data-visivel', 'true'\)/);
 });
 
-test('package.json 3.28.1 sem export novo; README com a tag, a seção, a marcação nova e o contrato', () => {
-  assert.equal(pacote.version, '3.28.1');
+test('package.json 3.29.0 sem export novo; README com a tag, a seção, a marcação nova e o contrato', () => {
+  assert.equal(pacote.version, '3.29.0');
   assert.equal(Object.keys(pacote.exports).length, 32);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.28\.1"/);
-  assert.match(leiame, /### Interruptor revisto \(v3\.28\.1\)/);
+  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.29\.0"/);
+  assert.match(leiame, /### Interruptor revisto \(v3\.29\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* `\.ov-interruptor` \(`margin: 0` → `margin: 0 -4px 0 0`; `padding: 0 6px 0 4px` → `padding: 0 4px 0 6px`\)/);
-  assert.match(leiame, /\*\*Por que patch, e não minor:\*\*/);
+  assert.match(leiame, /\*\*Por que a v3\.29\.0 é minor:\*\*/);
+  assert.doesNotMatch(leiame, /Por que patch/);
   const controles = leiame.slice(leiame.indexOf('### Controles'), leiame.indexOf('### Telas'));
+  assert.match(controles, /o pacote não esconde: o motivo mostrado fica visível até a regra deixar de valer, quando a tela recarrega, ou até a pessoa sair da tela/);
   assert.match(controles, /<span class="ov-interruptor-palavra" aria-hidden="true">Ativo<\/span>\n\s*<span class="ov-interruptor-trilho" aria-hidden="true"><\/span>/);
-  assert.match(controles, /\*\*Apagado pela regra\*\* \(v3\.28\.1[^\n]*`aria-disabled="true"`[^\n]*`data-visivel="true"`/);
+  assert.match(controles, /\*\*Apagado pela regra\*\* \(v3\.29\.0[^\n]*`aria-disabled="true"`[^\n]*`data-visivel="true"`/);
 });
 
 // ---------- Medida no navegador ----------

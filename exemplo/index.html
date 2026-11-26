@@ -135,7 +135,7 @@
   .fundo-interruptor[data-fundo="superficie"] { background: var(--ov-superficie); }
   .fundo-interruptor[data-fundo="elevada"] { background: var(--ov-superficie-elevada); }
   .fundo-interruptor .ov-legenda { margin: var(--ov-esp-2) 0 0; }
-  /* v3.28.1: a linha do painel com os valores alinhados à direita, como no
+  /* v3.29.0: a linha do painel com os valores alinhados à direita, como no
      painel do local do Materiais (T8); a palavra na linha de base do rótulo. */
   .painel-interruptor { align-items: baseline; font: var(--ov-fonte-corpo); }
   .painel-interruptor dd { text-align: end; }
@@ -1840,8 +1840,8 @@
 </section>
 
 <section class="interruptor-ex">
-  <h2 class="ov-titulo-1">Interruptor e o pé do Diálogo que quebra (v3.28.0; interruptor revisto na v3.28.1)</h2>
-  <p class="ov-legenda">O interruptor (<code class="ov-codigo">.ov-interruptor</code>, MJ18) liga e desliga o ativo/inativo de um cadastro, gravando na hora. É um <code class="ov-codigo">&lt;button role="switch"&gt;</code> com o nome fixo no <code class="ov-codigo">aria-label</code> e o estado no <code class="ov-codigo">aria-checked</code>; o trilho e a palavra são <code class="ov-codigo">aria-hidden</code>, e a palavra é do app. 36 &times; 20 no computador, 44 &times; 24 no toque (alvo de 48). Desde a v3.28.1 a palavra vem antes do trilho, alinhada à direita, e o trilho termina na borda direita da linha, como os outros valores; o apagado é <code class="ov-codigo">aria-disabled</code> (recebe o foco) e o motivo fica na linha de baixo, à direita, sob o controle. Aqui o clique só troca o <code class="ov-codigo">aria-checked</code> e a palavra (o papel do app); no apagado, mostra o motivo (<code class="ov-codigo">data-visivel="true"</code>). No Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda (MJ22). Dados fictícios.</p>
+  <h2 class="ov-titulo-1">Interruptor e o pé do Diálogo que quebra (v3.28.0; interruptor revisto na v3.29.0)</h2>
+  <p class="ov-legenda">O interruptor (<code class="ov-codigo">.ov-interruptor</code>, MJ18) liga e desliga o ativo/inativo de um cadastro, gravando na hora. É um <code class="ov-codigo">&lt;button role="switch"&gt;</code> com o nome fixo no <code class="ov-codigo">aria-label</code> e o estado no <code class="ov-codigo">aria-checked</code>; o trilho e a palavra são <code class="ov-codigo">aria-hidden</code>, e a palavra é do app. 36 &times; 20 no computador, 44 &times; 24 no toque (alvo de 48). Desde a v3.29.0 a palavra vem antes do trilho, alinhada à direita, e o trilho termina na borda direita da linha, como os outros valores; o apagado é <code class="ov-codigo">aria-disabled</code> (recebe o foco) e o motivo fica na linha de baixo, à direita, sob o controle. Aqui o clique só troca o <code class="ov-codigo">aria-checked</code> e a palavra (o papel do app); no apagado, mostra o motivo (<code class="ov-codigo">data-visivel="true"</code>). No Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda (MJ22). Dados fictícios.</p>
 
     <p class="ov-rotulo moldura-rotulo">Interruptor · tema escuro</p>
     <div class="controles-moldura" data-theme="escuro">
@@ -1984,7 +1984,7 @@
 </section>
 
 <section class="interruptor-tabela-ex">
-  <h2 class="ov-titulo-1">Interruptor na tabela (v3.28.1)</h2>
+  <h2 class="ov-titulo-1">Interruptor na tabela (v3.29.0)</h2>
   <p class="ov-legenda">A coluna Situação alinhada à direita: o trilho termina onde terminam os outros valores da coluna, e o motivo do apagado fica sob o controle, na mesma célula. Dados fictícios.</p>
   <p class="ov-rotulo moldura-rotulo">Setores · tema escuro</p>
   <div class="controles-moldura" data-theme="escuro">
@@ -2199,7 +2199,7 @@
 
   // Interruptor: o papel do app na amostra, só trocar o aria-checked e a
   // palavra (sem gravação). O gravando não troca; o apagado (aria-disabled,
-  // v3.28.1) não troca e mostra o motivo, também no computador.
+  // v3.29.0) não troca e mostra o motivo, também no computador.
   for (const it of document.querySelectorAll('.interruptor-ex .ov-interruptor, .interruptor-tabela-ex .ov-interruptor')) {
     it.addEventListener('click', () => {
       if (it.getAttribute('aria-disabled') === 'true') {

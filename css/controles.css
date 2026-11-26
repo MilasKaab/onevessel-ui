@@ -21,7 +21,7 @@
    Desde a v3.24: o .ov-campo-com-botao (o botão na linha de campos, com a
    altura do campo) e o "Salvando" esmaecido sem disabled (TP4, 04/11).
    Desde a v3.28: o interruptor (.ov-interruptor, MJ18; T1 a T6, 26/11);
-   na v3.28.1, revisto (T3, T7 e T8, 26/11): a palavra antes do trilho, o
+   na v3.29.0, revisto (T3, T7 e T8, 26/11): a palavra antes do trilho, o
    apagado por aria-disabled e o motivo sob o controle. */
 
 :where(.ov-btn, .ov-campo-grupo, .ov-campo) { box-sizing: border-box; }
@@ -177,7 +177,7 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
    O nome é fixo (T1): a palavra visível troca, mas é aria-hidden, e o estado
    vem do aria-checked ("Ativo, interruptor, ligado / desligado"). O botão é o
    alvo, o anel e o hover: 36 de altura, 48 no toque.
-   A palavra antes do trilho, pela ordem do HTML (v3.28.1, T8: "Situação ……
+   A palavra antes do trilho, pela ordem do HTML (v3.29.0, T8: "Situação ……
    Ativo" e o trilho na borda direita, como os outros valores). A folga de
    dentro do lado do trilho (4px) volta numa margem negativa igual: o trilho
    termina onde terminam os outros valores alinhados à direita, e o fundo do
@@ -197,7 +197,7 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
 .ov-interruptor[aria-checked="true"] .ov-interruptor-trilho::before { background: var(--ov-sobre-acao); transform: translateX(16px); }
 /* A palavra, do app (Ativo/Inativo, Ativa/Inativa): a largura de "Inativo"
    fica reservada por um ::after sem altura, e nada pula ao trocar. Alinhada
-   à direita dentro dela (v3.28.1): a reserva sobra à esquerda, e "Ativo"
+   à direita dentro dela (v3.29.0): a reserva sobra à esquerda, e "Ativo"
    fica encostado no trilho. */
 .ov-interruptor-palavra { display: inline-block; text-align: end; }
 .ov-interruptor-palavra::after { content: "Inativo"; display: block; height: 0; overflow: hidden; visibility: hidden; }
@@ -209,9 +209,9 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
 /* Desabilitado pela regra (T3, C13): disabled nativo, como o .ov-btn (o Tab
    pula); o conjunto a .6, o motivo no title e, no toque, escrito abaixo
    (.ov-motivo, ligado pelo aria-describedby). Continua valendo; desde a
-   v3.28.1 o recomendado é o aria-disabled, logo abaixo. */
+   v3.29.0 o recomendado é o aria-disabled, logo abaixo. */
 .ov-interruptor:disabled { opacity: .6; cursor: not-allowed; }
-/* Apagado pela regra (v3.28.1, T3 revisto no T7, só para o interruptor):
+/* Apagado pela regra (v3.29.0, T3 revisto no T7, só para o interruptor):
    aria-disabled="true". Recebe o foco, e clique, Espaço e Enter chegam ao
    app, que não grava e mostra o motivo. A aparência é a do disabled (o
    conjunto a .6, sem hover), mas o .6 vai no trilho e na palavra, não no
@@ -219,7 +219,7 @@ textarea.ov-campo[data-densidade="linha"] { height: auto; min-height: var(--ov-a
    aparece (a U7 do menu: a .6, o anel caía a 2,92:1 no claro). */
 .ov-interruptor[aria-disabled="true"] { cursor: not-allowed; }
 .ov-interruptor[aria-disabled="true"] > * { opacity: .6; }
-/* O motivo do interruptor (v3.28.1, T7 e T8): o .ov-motivo logo depois do
+/* O motivo do interruptor (v3.29.0, T7 e T8): o .ov-motivo logo depois do
    botão, no mesmo contêiner (a dd do painel, a td da tabela), vai na linha
    de baixo, alinhado à direita, sob o controle; quebra em linhas mesmo na
    célula da tabela (nowrap). No toque, sempre visível (a regra do toque,

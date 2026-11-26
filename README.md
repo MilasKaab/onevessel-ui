@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.29.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.30.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -216,6 +216,10 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
   <div class="ov-gaveta-rodape">…Cancelar, ação…</div>  <!-- opcional -->
 </div>
 
+<!-- Título de seção da Gaveta ou da Folha (v3.30.0): em caixa normal no HTML -->
+<h3 class="ov-titulo-secao">Informações principais</h3>
+<dl class="ov-dados">…</dl>
+
 <!-- Folha móvel: data-altura="rapida" (40%), "detalhe" (90%) ou "cheia" (100%) -->
 <div class="ov-folha" data-altura="detalhe">
   <div class="ov-folha-alca"></div>
@@ -235,6 +239,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 - **Por que a v3.17.0 é minor:** só regras novas no `janelas.css`: `.ov-dados > div` e um bloco `@media (min-width: 1024px)` com o modo foco, todo preso a `[data-painel="foco"]:has(> .ov-painel)`. Nenhuma regra de antes muda; tela sem o atributo e `.ov-dados` de pares soltos ficam iguais.
 - **Modo foco, segundo plano revisto** (v3.18.1): as linhas que não estão abertas passam de `--ov-texto-secundario` a `--ov-texto-terciario` **e peso 400**, também no `.nome` (que tem 500): com o secundário (7,3:1 no claro, contra 16,7:1 do texto) o esmaecimento quase não se via. O terciário fica em 5,9:1 sobre `--ov-superficie` no claro e 5,8:1 no escuro (5,3 e 6,5 sobre `--ov-fundo`), ainda AA, porque as linhas continuam clicáveis. `:hover` e `:focus-visible` devolvem cor e peso; a linha aberta fica como estava.
 - **Gaveta** (v3.27.0, ML7), para abrir, agir e fechar um registro sem percorrer a lista (percorrer é do Painel lateral; confirmar, do Diálogo). Modal: o app põe o `.ov-veu` logo antes dela (sem desfoque), prende o foco (`focoQueGira`), empilha pelo `camada.js` e cuida do Esc, do véu, do foco inicial e devolvido e da entrada no histórico, como no Diálogo; não há JS novo. `.ov-gaveta` encostada à direita (`top`, `right` e `bottom` 0, sem `100vh`), com `--ov-gaveta` (520px), sem raio, borda esquerda `--ov-borda-forte`, `--ov-sombra-2`, `--ov-superficie-elevada` e os recuos da área segura em cima, à direita e embaixo (o iPad com o app instalado: o cabeçalho fora da barra de status, o fim do corpo e o rodapé fora do indicador de início); `z-index` `--ov-z-dialogo` (o Toast passa por cima). Coluna flex com `overflow: hidden`: dentro, o `.ov-painel-cab`, o `.ov-painel-corpo` (rola) e a `.ov-dados` do Painel, que não herdam a largura, a Folha nem o modo foco (presos ao `.ov-painel`). **Rodapé opcional** `.ov-gaveta-rodape`: borda de cima `--ov-borda`, até 2 botões de 36px à direita, Cancelar antes. **Abaixo de 768px vira Folha móvel pelo próprio CSS**: cheia por padrão (com campo) e de 90%, com alça, com `data-altura="detalhe"` (sem campo, C21); o rodapé ganha a geometria do `.ov-folha-rodape` (botões de 48, mesma largura, área segura), e a caixa troca os recuos de cima e de baixo pelos da Folha, sem somar dois. De 768 a 1023 continua à direita. Entra deslizando da direita, a largura toda, em .22s com `cubic-bezier(.32,.72,0,1)` (`@keyframes ovEntraDaDireita`); abaixo de 768px sobe como a Folha (`ovSobe`); com movimento reduzido, `ovFade`. Sem saída animada, como as outras camadas.
+- **Título de seção** (v3.30.0; livro da marca, 26/11): `.ov-titulo-secao`, para separar as seções dentro de uma **Gaveta** ou de uma **Folha**. 11/16, peso 700, `letter-spacing: .12em`, `text-transform: uppercase`, cor `--ov-texto-secundario`, `margin: 0 0 8px` (`--ov-esp-2`); a distância de cima é do app (no `.ov-painel-corpo`, o `gap` de 16px). Vale para **qualquer elemento** (h2, h3, div): escolha o nível pela hierarquia da janela. **O texto vai em caixa normal no HTML** (`<h3 class="ov-titulo-secao">Informações principais</h3>`), nunca digitado em maiúsculas: só o CSS põe em caixa alta, e assim o leitor de tela não soletra e a busca e a cópia seguem com o texto de verdade. É a única caixa alta do livro fora das siglas; fora de Gaveta e Folha, título de seção segue em caixa normal. Contraste do secundário sobre a `--ov-superficie-elevada` (o fundo das duas): 6,58:1 no escuro e 7,28:1 no claro.
 - **Folha**: sem `data-altura`, a altura do conteúdo (o "Mais"). Na `"cheia"` some o raio e a alça, e entra a área segura de cima. Os botões do `.ov-folha-rodape` têm 48px e a mesma largura.
 - **Movimento reduzido** (`janelas.css` e `casca.css`): as entradas não sobem nem escalam, só aparecem; a barra de tempo continua, porque diz quanto falta.
 
@@ -782,6 +787,17 @@ A Gaveta do pacote (ML7) e o RP3, decididos em 23/11 (`implementacao.md`, "RP4 e
 - **Por que a v3.27.0 é minor:** classes, regras, keyframe e token novos; nenhum valor de antes muda, nenhum JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** a Gaveta só aparece onde o app a puser. O ícone de todo `.ov-btn` com texto deixa de encolher: onde a fileira é estreita (no Paradas, os três botões do card da atividade em `grid-cols-3`), o ícone volta, e abaixo de ~450px de fileira o rótulo mais longo passa a vazar da borda do botão em vez de o ícone sumir.
 - **Adoção:** o **Materiais** usa a Gaveta na F4, que decide quais das janelas dele viram Gaveta e quais viram Diálogo. O **Paradas** mede os cards reais (painel aberto a 1024, tablet) no PR de adoção e decide a fileira de três botões (GV12). A **Bordo** e a **plataforma** só sobem a tag.
+
+### Título de seção da Gaveta e da Folha (v3.30.0)
+
+A exceção nova do livro da marca (26/11, seção de texto): caixa alta só em siglas e no título de seção de Gaveta ou Folha (`implementacao.md`, "[Materiais F4] Ajustes do item da requisição (5.2.1), título de seção da suíte…"). Só o `janelas.css`, ao lado da Gaveta e da Folha, que são as duas janelas onde ele vale.
+
+- **`.ov-titulo-secao`** (`janelas.css`): `margin: 0 0 var(--ov-esp-2); font: 700 11px/16px var(--font-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--ov-texto-secundario)`. Não há token de 11px nem de espaçamento de letra: o 11/16 e o `.12em` vão escritos. Ver "Janelas".
+- **Contraste** (WCAG, `--ov-texto-secundario` sobre o fundo da Gaveta e da Folha, `--ov-superficie-elevada`): 6,58:1 no escuro, 7,28:1 no claro (mínimo 4,5:1).
+- **Alteradas pelo nome:** nenhuma regra muda de valor nem de seletor; nenhum token muda.
+- **Por que a v3.30.0 é minor:** classe nova; nenhum valor de antes muda, nenhum JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** nada, até o app pôr a classe. Quem a usar escreve o título em caixa normal no HTML.
+- **Adoção:** o **Materiais** adota na 5.2.1 (item da requisição). **Bordo** e **Paradas** adotam quando passarem pelas Gavetas e Folhas deles (fila de adoção).
 
 ### Interruptor revisto (v3.29.0)
 

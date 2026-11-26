@@ -1,6 +1,7 @@
 /* OneVessel — janelas (v3.5): Diálogo, Toast, Painel lateral, Gaveta
    (v3.27.0), rodapé e alturas da Folha móvel, e o .ov-btn-perigo (só dentro
-   do Diálogo). Desde a v3.28.0, o pé do Diálogo que quebra (MJ22).
+   do Diálogo). Desde a v3.28.0, o pé do Diálogo que quebra (MJ22); desde a
+   v3.30.0, o título de seção da Gaveta e da Folha (.ov-titulo-secao).
    Importável sozinho, como a casca: depende de tokens.css e de casca.css
    (véu .ov-veu, .ov-folha, .ov-folha-alca, @keyframes ovSobe e ovFade).
    Sem regra de html, body, a, button, tamanho de fonte base ou impressão;
@@ -194,6 +195,15 @@
    detalhe só de leitura fica sem ele. */
 .ov-gaveta-rodape { flex: none; display: flex; justify-content: flex-end; gap: 8px; padding: 12px 24px; border-top: 1px solid var(--ov-borda); }
 @keyframes ovEntraDaDireita { from { transform: translateX(100%); } to { transform: none; } }
+
+/* ---------- Título de seção da Gaveta e da Folha (v3.30.0) ---------- */
+/* A única caixa alta do livro fora das siglas (26/11): 11/16, peso 700,
+   letras espaçadas, na cor secundária (6,58:1 sobre a elevada no escuro,
+   7,28:1 no claro). Vale para qualquer elemento (h2, h3, div). O texto vai
+   em caixa normal no HTML e só o CSS põe em maiúsculas: o leitor de tela não
+   soletra, e a busca e a cópia seguem com o texto de verdade. A distância
+   de cima é do app (no .ov-painel-corpo, o gap). */
+.ov-titulo-secao { margin: 0 0 var(--ov-esp-2); font: 700 11px/16px var(--font-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--ov-texto-secundario); }
 
 /* Abaixo de 768px vira Folha móvel pelo próprio CSS: cheia por padrão (com
    campo), de 90% e com alça com data-altura="detalhe" (sem campo, C21). A

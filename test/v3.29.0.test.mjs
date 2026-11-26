@@ -14,7 +14,10 @@ import { extname, join, normalize } from 'node:path';
 
 import { problemasDeBase, regras, semComentario } from '../scripts/css-regras.mjs';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.30.0, o janelas.css é lido pela fixture da v3.29.0 (os bytes
+// da tag, fixos): o título de seção nasce na v3.30.0.
+const FIXTURAS_V3290 = { 'css/janelas.css': 'test/fixtures/janelas-v3.29.0.css' };
+const url = (p) => new URL(`../${FIXTURAS_V3290[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const pacote = JSON.parse(ler('package.json'));
@@ -135,10 +138,9 @@ test('exemplo: todo interruptor com a palavra antes do trilho; o apagado com ari
   assert.match(exemplo, /setAttribute\('data-visivel', 'true'\)/);
 });
 
-test('package.json 3.29.0 sem export novo; README com a tag, a seção, a marcação nova e o contrato', () => {
-  assert.equal(pacote.version, '3.29.0');
+// Desde a v3.30.0, a versão e a tag ficam com o teste da versão mais nova.
+test('package.json sem export novo; README com a seção, a marcação nova e o contrato', () => {
   assert.equal(Object.keys(pacote.exports).length, 32);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.29\.0"/);
   assert.match(leiame, /### Interruptor revisto \(v3\.29\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* `\.ov-interruptor` \(`margin: 0` → `margin: 0 -4px 0 0`; `padding: 0 6px 0 4px` → `padding: 0 4px 0 6px`\)/);
   assert.match(leiame, /\*\*Por que a v3\.29\.0 é minor:\*\*/);

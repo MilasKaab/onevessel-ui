@@ -13,7 +13,10 @@ import { extname, join, normalize } from 'node:path';
 
 import { problemasDeBase, regras, semComentario } from '../scripts/css-regras.mjs';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.31.0, o janelas.css é lido pela fixture da v3.30.0 (os bytes
+// da tag, fixos): o texto do Toast e a ação embaixo nascem na v3.31.0.
+const FIXTURAS_V3300 = { 'css/janelas.css': 'test/fixtures/janelas-v3.30.0.css' };
+const url = (p) => new URL(`../${FIXTURAS_V3300[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const pacote = JSON.parse(ler('package.json'));
@@ -138,10 +141,10 @@ test('exemplo: o título de seção dentro de uma Gaveta, nos dois temas, escrit
   assert.doesNotMatch(secao, /@[a-z0-9-]+\.[a-z]/i, 'nenhum e-mail');
 });
 
-test('package.json 3.30.0 sem export novo; README com a tag, a seção, o exemplo em Janelas e a regra da caixa normal', () => {
-  assert.equal(pacote.version, '3.30.0');
-  assert.equal(Object.keys(pacote.exports).length, 32);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.30\.0"/);
+// Desde a v3.31.0, a versão e a tag ficam com o teste da versão mais nova, e
+// o toast-acao.js fica fora da conta de exports: nasce na v3.31.0.
+test('package.json sem export novo; README com a seção, o exemplo em Janelas e a regra da caixa normal', () => {
+  assert.equal(Object.keys(pacote.exports).filter((k) => k !== './js/toast-acao.js').length, 32);
   assert.match(leiame, /### Título de seção da Gaveta e da Folha \(v3\.30\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* nenhuma regra muda de valor nem de seletor; nenhum token muda/);
   assert.match(leiame, /\*\*Por que a v3\.30\.0 é minor:\*\*/);

@@ -68,11 +68,15 @@ const DA_V3250 = {
   'tailwind/preset.js': '9adaa96a15e4741e0aa5c9386bc87dd894159e7e04774ae854a5b0c04eb4af0a',
 };
 
+// Desde a v3.31.0, o toast-acao.js (e a entrada dele em exports) fica fora
+// da conta desta versão: nasce na v3.31.0.
+const DA_V3310 = ['js/toast-acao.js', 'js/toast-acao.d.ts'];
+
 test('os CSS, o tokens.json, o preset e os js/ de antes com os bytes da v3.25.0; só os três nascem', () => {
   for (const [arquivo, sha] of Object.entries(DA_V3250)) assert.equal(sha256(arquivo), sha, arquivo);
   const css = readdirSync(url('css')).filter((n) => n.endsWith('.css')).map((n) => `css/${n}`).sort();
   assert.deepEqual(css, Object.keys(DA_V3250).filter((a) => a.startsWith('css/')).sort(), 'nenhum CSS nasce nem some');
-  const js = readdirSync(url('js')).filter((n) => /\.(js|d\.ts)$/.test(n)).map((n) => `js/${n}`).sort();
+  const js = readdirSync(url('js')).filter((n) => /\.(js|d\.ts)$/.test(n)).map((n) => `js/${n}`).filter((n) => !DA_V3310.includes(n)).sort();
   const esperados = [...Object.keys(DA_V3250).filter((a) => a.startsWith('js/')), ...NOVOS.flatMap((n) => [`js/${n}.js`, `js/${n}.d.ts`])].sort();
   assert.deepEqual(js, esperados, 'os js/ são os de antes e os três novos');
 });
@@ -94,7 +98,7 @@ for (const nome of NOVOS) {
 
 // Desde a v3.27.0, a versão e a tag ficam com o teste da versão mais nova.
 test('package.json com os três exports novos depois do filtro-nucleo; README com a seção e um exemplo de cada', () => {
-  const chaves = Object.keys(pacote.exports);
+  const chaves = Object.keys(pacote.exports).filter((k) => k !== './js/toast-acao.js');
   assert.equal(chaves.length, 32);
   const i = chaves.indexOf('./js/filtro-nucleo.js');
   assert.deepEqual(chaves.slice(i + 1, i + 4), NOVOS.map((n) => `./js/${n}.js`));

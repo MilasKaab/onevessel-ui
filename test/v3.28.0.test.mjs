@@ -247,11 +247,15 @@ const DA_V3270 = {
   'js/toast-nucleo.js': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
 };
 
+// Desde a v3.31.0, o toast-acao.js (e a entrada dele em exports) fica fora
+// da conta desta versão: nasce na v3.31.0.
+const DA_V3310 = ['js/toast-acao.js', 'js/toast-acao.d.ts'];
+
 test('os outros CSS, os tokens, o preset e todo js/ com os bytes da v3.27.0; as fixtures da tag', () => {
   for (const [arquivo, sha] of Object.entries(DA_V3270)) assert.equal(sha256(arquivo), sha, arquivo);
   const css = readdirSync(url('css')).filter((n) => n.endsWith('.css')).map((n) => `css/${n}`).sort();
   assert.deepEqual(css, [...Object.keys(DA_V3270).filter((a) => a.startsWith('css/')), 'css/controles.css', 'css/janelas.css'].sort(), 'nenhum CSS nasce nem some');
-  const js = readdirSync(url('js')).map((n) => `js/${n}`).sort();
+  const js = readdirSync(url('js')).map((n) => `js/${n}`).filter((n) => !DA_V3310.includes(n)).sort();
   assert.deepEqual(js, Object.keys(DA_V3270).filter((a) => a.startsWith('js/')).sort(), 'nenhum js/ nasce nem some');
   const FIXTURES = {
     'controles-v3.27.0.css': '1614ecf3ff82d9f5ac941cff8c4ad766dce33edbb673667b1e18c40b301da492',
@@ -291,7 +295,7 @@ test('exemplo: o interruptor nos dois temas, sobre a superfície e a elevada (li
 
 // Desde a v3.29.0, a versão e a tag ficam com o teste da versão mais nova.
 test('package.json sem export novo; README com a seção, o interruptor em Controles e o pé em Janelas', () => {
-  assert.equal(Object.keys(pacote.exports).length, 32);
+  assert.equal(Object.keys(pacote.exports).filter((k) => k !== './js/toast-acao.js').length, 32);
   assert.match(leiame, /### Interruptor, o pé do Diálogo que quebra e "Tentar novamente" \(v3\.28\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* nenhuma regra muda de valor nem de seletor/);
   assert.match(leiame, /\*\*Por que a v3\.28\.0 é minor:\*\*/);

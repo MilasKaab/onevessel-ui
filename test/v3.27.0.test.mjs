@@ -228,11 +228,15 @@ const DA_V3260 = {
   'js/toast-nucleo.js': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
 };
 
+// Desde a v3.31.0, o toast-acao.js (e a entrada dele em exports) fica fora
+// da conta desta versão: nasce na v3.31.0.
+const DA_V3310 = ['js/toast-acao.js', 'js/toast-acao.d.ts'];
+
 test('os outros CSS, o preset e todo js/ com os bytes da v3.26.0 (nada em js/, nem o comentário do camada.js); as fixtures da tag', () => {
   for (const [arquivo, sha] of Object.entries(DA_V3260)) assert.equal(sha256(arquivo), sha, arquivo);
   const css = readdirSync(url('css')).filter((n) => n.endsWith('.css')).map((n) => `css/${n}`).sort();
   assert.deepEqual(css, [...Object.keys(DA_V3260).filter((a) => a.startsWith('css/')), 'css/controles.css', 'css/janelas.css', 'css/tokens.css'].sort(), 'nenhum CSS nasce nem some');
-  const js = readdirSync(url('js')).map((n) => `js/${n}`).sort();
+  const js = readdirSync(url('js')).map((n) => `js/${n}`).filter((n) => !DA_V3310.includes(n)).sort();
   assert.deepEqual(js, Object.keys(DA_V3260).filter((a) => a.startsWith('js/')).sort(), 'nenhum js/ nasce nem some');
   const FIXTURES = {
     'controles-v3.26.0.css': 'af238d42d9e6a8393bd92ab8a3e24f7146932e3dd101c800b4303edb552ae4c5',
@@ -263,7 +267,7 @@ test('exemplo: a Gaveta com e sem rodapé nos dois temas, e a fileira de três b
 
 // Desde a v3.28.0, a versão e a tag ficam com o teste da versão mais nova.
 test('package.json sem export novo; README com a seção, a Gaveta em Janelas e o RP3 em Controles', () => {
-  assert.equal(Object.keys(pacote.exports).length, 32);
+  assert.equal(Object.keys(pacote.exports).filter((k) => k !== './js/toast-acao.js').length, 32);
   assert.match(leiame, /### Gaveta e o ícone do botão que não encolhe \(v3\.27\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* nenhuma regra muda de valor/);
   assert.match(leiame, /\*\*Por que a v3\.27\.0 é minor:\*\*/);

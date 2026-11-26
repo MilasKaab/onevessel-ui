@@ -1,7 +1,8 @@
 /* OneVessel — janelas (v3.5): Diálogo, Toast, Painel lateral, Gaveta
    (v3.27.0), rodapé e alturas da Folha móvel, e o .ov-btn-perigo (só dentro
    do Diálogo). Desde a v3.28.0, o pé do Diálogo que quebra (MJ22); desde a
-   v3.30.0, o título de seção da Gaveta e da Folha (.ov-titulo-secao).
+   v3.30.0, o título de seção da Gaveta e da Folha (.ov-titulo-secao); desde
+   a v3.31.0, o texto do Toast e a ação embaixo (.ov-toast-texto).
    Importável sozinho, como a casca: depende de tokens.css e de casca.css
    (véu .ov-veu, .ov-folha, .ov-folha-alca, @keyframes ovSobe e ovFade).
    Sem regra de html, body, a, button, tamanho de fonte base ou impressão;
@@ -66,6 +67,21 @@
 .ov-toast[data-tipo="erro"] .ov-toast-linha > svg { color: var(--ov-toast-erro); }
 .ov-toast-acao { margin-left: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ov-toast-acao); font-weight: 600; cursor: pointer; }
 .ov-toast-acao:focus-visible { text-decoration: underline; }
+/* O texto (v3.31.0): .ov-toast-texto, o elemento do texto dentro da linha.
+   Quebra em qualquer ponto, para nome de arquivo longo não vazar. */
+.ov-toast-texto { min-width: 0; overflow-wrap: anywhere; }
+/* A ação embaixo (v3.31.0; janelas-e-avisos.md, regra 6): a ação fica ao
+   lado do texto quando ele cabe em até duas linhas com ela ao lado; passou
+   de duas, o app põe data-acao="embaixo" na .ov-toast-linha (a medida é do
+   js/toast-acao.js, porque CSS não conta linhas). A linha dobra: o texto
+   ocupa a largura toda depois do ícone e as .ov-toast-acao descem, juntas
+   e alinhadas à direita; o X de dispensar (data-dispensar) fica no alto, à
+   direita do texto. O ::before é a quebra entre as duas linhas. Sem a
+   marca, a linha é a de antes. */
+.ov-toast-linha[data-acao="embaixo"] { flex-wrap: wrap; row-gap: 0; justify-content: flex-end; }
+.ov-toast-linha[data-acao="embaixo"]::before { content: ""; order: 1; flex-basis: 100%; }
+.ov-toast-linha[data-acao="embaixo"] > .ov-toast-texto { flex: 1 1 0; padding: 6px 0; }
+.ov-toast-linha[data-acao="embaixo"] > .ov-toast-acao:not([data-dispensar]) { order: 2; margin-left: 0; }
 /* Barra de tempo: o span vai de 100% a 0 em --ov-toast-duracao e pausa com
    o mouse ou o foco no toast. O temporizador do app pausa nos mesmos
    eventos, senão a barra e o fechamento se desencontram. */

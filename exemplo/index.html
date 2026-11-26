@@ -147,6 +147,19 @@
   .interruptor-tabela-ex .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .tabela-interruptor .situacao { text-align: right; }
   .tabela-interruptor td.situacao { padding-top: 6px; padding-bottom: 6px; }
+  /* Toast com a ação embaixo (v3.31.0). Cada faixa tem a largura da pilha
+     numa tela: 288 (320 - 32), 383 (415 - 32) e 440 (computador). A pilha
+     sai da posição fixa só aqui, para as três ficarem lado a lado. */
+  .toast-acao-ex { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .toast-acao-ex > h2 { margin: 0 0 var(--ov-esp-4); }
+  .toast-acao-ex .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .toast-acao-faixas { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--ov-esp-6); }
+  .toast-acao-faixa { max-width: 100%; }
+  .toast-acao-faixa[data-largura="320"] { width: 288px; }
+  .toast-acao-faixa[data-largura="415"] { width: 383px; }
+  .toast-acao-faixa[data-largura="computador"] { width: 440px; }
+  .toast-acao-faixa .ov-legenda { margin: 0 0 var(--ov-esp-2); }
+  .toast-acao-faixa .ov-toasts { position: static; transform: none; width: auto; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -2079,6 +2092,142 @@
   </div>
 </section>
 
+<section class="toast-acao-ex">
+  <h2 class="ov-titulo-1">Toast com a ação embaixo (v3.31.0)</h2>
+  <p class="ov-legenda">A ação fica ao lado do texto quando ele cabe em até duas linhas com ela ao lado; passou de duas, desce para baixo do texto, alinhada à direita (<code class="ov-codigo">data-acao="embaixo"</code> na <code class="ov-codigo">.ov-toast-linha</code>, posto pela medida do <code class="ov-codigo">js/toast-acao.js</code>, ligada nesta página). O texto vai no <code class="ov-codigo">.ov-toast-texto</code> e quebra em qualquer ponto. O X de dispensar (<code class="ov-codigo">data-dispensar</code>) fica no alto. Cada coluna tem a largura da pilha naquela tela (a <code class="ov-codigo">.ov-toasts</code> sai da posição fixa só aqui); "Trocar os textos" troca o texto de todos e a medida refaz. Dados fictícios.</p>
+  <p><button class="ov-btn ov-btn-secundario" type="button" id="toast-acao-trocar">Trocar os textos</button></p>
+  <p class="ov-rotulo moldura-rotulo">Tema escuro</p>
+  <div class="controles-moldura" data-theme="escuro">
+    <div class="toast-acao-faixas">
+      <div class="toast-acao-faixa" data-largura="320">
+        <p class="ov-legenda">320px de tela (pilha de 288)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+      <div class="toast-acao-faixa" data-largura="415">
+        <p class="ov-legenda">415px de tela (pilha de 383)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+      <div class="toast-acao-faixa" data-largura="computador">
+        <p class="ov-legenda">Computador (pilha de 440)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <p class="ov-rotulo moldura-rotulo">Tema claro</p>
+  <div class="controles-moldura" data-theme="claro">
+    <div class="toast-acao-faixas">
+      <div class="toast-acao-faixa" data-largura="320">
+        <p class="ov-legenda">320px de tela (pilha de 288)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+      <div class="toast-acao-faixa" data-largura="415">
+        <p class="ov-legenda">415px de tela (pilha de 383)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+      <div class="toast-acao-faixa" data-largura="computador">
+        <p class="ov-legenda">Computador (pilha de 440)</p>
+          <div class="ov-toasts">
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Item removido do carrinho.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">3 contagens aprovadas e enviadas para o almoxarifado.</span><button class="ov-toast-acao" type="button">Desfazer</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" role="status">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="ov-toast-texto">Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens).</span><button class="ov-toast-acao" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Tirar do carrinho</button></div>
+              <div class="ov-toast-tempo"><span></span></div>
+            </div>
+            <div class="ov-toast" data-tipo="erro" role="alert">
+              <div class="ov-toast-linha"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="ov-toast-texto">Não consegui gerar o arquivo do pedido.</span><button type="button" class="ov-toast-acao">Tentar novamente</button><button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script type="module">
   // Glifos Lucide (traço 2, currentColor) para a amostra da casca. O semáforo
   // é o do Paradas, com a geometria do livro da marca.
@@ -2275,6 +2424,23 @@
       it.querySelector('.ov-interruptor-palavra').textContent = ligado ? 'Ativo' : 'Inativo'
     })
   }
+
+  // Toast com a ação embaixo (v3.31.0): a medida do pacote em cada linha,
+  // como o app faz no seu Toast. "Trocar os textos" troca o texto e a
+  // medida refaz sozinha (o MutationObserver dela).
+  import('../js/toast-acao.js').then(({ medirAcaoDoToast }) => {
+    for (const linha of document.querySelectorAll('.toast-acao-ex .ov-toast-linha')) medirAcaoDoToast(linha)
+    const OUTROS = ['Pedido gerado: Pedido_BRAM_POWER_2026-11-26_revisado_pelo_almoxarifado.xlsx (12 itens).', 'Item removido.', '1 contagem aprovada.', 'Não consegui gerar o arquivo.']
+    document.getElementById('toast-acao-trocar').addEventListener('click', () => {
+      for (const pilha of document.querySelectorAll('.toast-acao-ex .ov-toasts')) {
+        pilha.querySelectorAll('.ov-toast-texto').forEach((texto, i) => {
+          const atual = texto.textContent
+          texto.textContent = texto.dataset.outro ?? OUTROS[i]
+          texto.dataset.outro = atual
+        })
+      }
+    })
+  })
 
   // Amostras de cor lidas do próprio tokens.css.
   const nomes = [

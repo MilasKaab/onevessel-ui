@@ -140,7 +140,8 @@ test('exemplo: todo interruptor com a palavra antes do trilho; o apagado com ari
 
 // Desde a v3.30.0, a versão e a tag ficam com o teste da versão mais nova.
 test('package.json sem export novo; README com a seção, a marcação nova e o contrato', () => {
-  assert.equal(Object.keys(pacote.exports).length, 32);
+  // Desde a v3.31.0, o toast-acao.js fica fora da conta: nasce na v3.31.0.
+  assert.equal(Object.keys(pacote.exports).filter((k) => k !== './js/toast-acao.js').length, 32);
   assert.match(leiame, /### Interruptor revisto \(v3\.29\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* `\.ov-interruptor` \(`margin: 0` → `margin: 0 -4px 0 0`; `padding: 0 6px 0 4px` → `padding: 0 4px 0 6px`\)/);
   assert.match(leiame, /\*\*Por que a v3\.29\.0 é minor:\*\*/);

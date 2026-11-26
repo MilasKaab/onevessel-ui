@@ -20,6 +20,10 @@ import { problemasDeBase, regras, seletores, semComentario } from '../scripts/cs
 // Desde a v3.26.0, os três núcleos novos de js/ (e as entradas deles em
 // exports) ficam fora da conta desta versão: nascem na v3.26.0.
 const DA_V3260 = ['barra-nucleo.js', 'embarcacao-nucleo.js', 'tema-nucleo.js'];
+// Desde a v3.31.0, o toast-acao.js (e a entrada dele em exports) também
+// fica fora da conta desta versão: nasce na v3.31.0.
+const DA_V3310 = ['toast-acao.js'];
+const FORA_DA_CONTA = [...DA_V3260, ...DA_V3310];
 
 // Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
 // bytes da tag, fixos): teste de versão passada compara fixture com fixture.
@@ -123,7 +127,7 @@ test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da
     texto: '95f98b2d6ba6e3215deb415ceaf8d22b65a7126b45ded877d3b7028dc3e2205d',
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
-  assert.deepEqual(readdirSync(url('js')).filter((n) => n.endsWith('.js') && !DA_V3260.includes(n)).map((n) => n.slice(0, -3)).sort(), Object.keys(JS).sort(), 'nenhum js nasce nem some');
+  assert.deepEqual(readdirSync(url('js')).filter((n) => n.endsWith('.js') && !FORA_DA_CONTA.includes(n)).map((n) => n.slice(0, -3)).sort(), Object.keys(JS).sort(), 'nenhum js nasce nem some');
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
   assert.equal(sha256('test/fixtures/janelas-v3.24.0.css'), 'ca9b305c456142c5fbca4c9d6d04f44d38ebcdb116251f99d7f1593ef5acc8e3');
   assert.equal(sha256('test/fixtures/janelas-v3.24.2.css'), 'b58dbd1036562b661422456fb185117d0286470ea02ec74494bb636e4d16fdae');
@@ -133,7 +137,7 @@ test('os outros CSS, o tokens.json e os js com os bytes da v3.24.0; a fixture da
 // ---------- Versão e README ----------
 
 test('package.json sem export novo; README com a seção, a alterada pelo nome e o que muda na tela', () => {
-  assert.equal(Object.keys(pacote.exports).filter((k) => !DA_V3260.some((n) => k === `./js/${n}`)).length, 29);
+  assert.equal(Object.keys(pacote.exports).filter((k) => !FORA_DA_CONTA.some((n) => k === `./js/${n}`)).length, 29);
   assert.match(leiame, /### Painel do modo foco alinhado ao topo da lista \(v3\.24\.1\)/);
   assert.match(leiame, /\*\*Alterada pelo nome\*\*[^\n]*`margin: 8px 8px 8px 0` → `margin: 0 8px 8px 0`/);
   assert.match(leiame, /\*\*Por que a v3\.24\.1 é patch:\*\*/);

@@ -21,6 +21,10 @@ import { dataHora, dataHoraCurta } from '../js/datas.js';
 // Desde a v3.26.0, os três núcleos novos de js/ (e as entradas deles em
 // exports) ficam fora da conta desta versão: nascem na v3.26.0.
 const DA_V3260 = ['barra-nucleo.js', 'embarcacao-nucleo.js', 'tema-nucleo.js'];
+// Desde a v3.31.0, o toast-acao.js (e a entrada dele em exports) também
+// fica fora da conta desta versão: nasce na v3.31.0.
+const DA_V3310 = ['toast-acao.js'];
+const FORA_DA_CONTA = [...DA_V3260, ...DA_V3310];
 
 // Desde a v3.25.0, estes arquivos são lidos pelas fixtures da v3.24.3 (os
 // bytes da tag, fixos): teste de versão passada compara fixture com fixture.
@@ -138,7 +142,7 @@ test('os outros CSS, o tokens.json e os outros js com os bytes da v3.23.0; as fi
     'toast-nucleo': 'e647098ae7813e085e5094afd28775442ec1241e75a7106c43a0c8fb23226dce',
   };
   for (const [nome, sha] of Object.entries(JS)) assert.equal(sha256(`js/${nome}.js`), sha, nome);
-  const js = readdirSync(url('js')).filter((n) => n.endsWith('.js') && !DA_V3260.includes(n)).map((n) => n.slice(0, -3)).sort();
+  const js = readdirSync(url('js')).filter((n) => n.endsWith('.js') && !FORA_DA_CONTA.includes(n)).map((n) => n.slice(0, -3)).sort();
   assert.deepEqual(js, [...Object.keys(JS), 'datas'].sort(), 'nenhum js nasce nem some; só o datas muda');
   const FIXTURES = {
     'controles-v3.23.0.css': 'c56d3e940bd8045e11217414606972c15c5740ceefa906c4c658590e6f95da92',
@@ -253,7 +257,7 @@ test('nenhum outro js/ produz ou espera a vírgula entre data e hora', () => {
 // ---------- Versão, README e exemplo ----------
 
 test('package.json sem export novo; README com a seção, a alterada pelo nome e os contratos', () => {
-  assert.equal(Object.keys(pacote.exports).filter((k) => !DA_V3260.some((n) => k === `./js/${n}`)).length, 29);
+  assert.equal(Object.keys(pacote.exports).filter((k) => !FORA_DA_CONTA.some((n) => k === `./js/${n}`)).length, 29);
   assert.match(leiame, /### Data sem vírgula, botão na linha de campos e Salvando esmaecido \(v3\.24\.0\)/);
   assert.match(leiame, /\*\*Alterada pelo nome\*\*[^\n]*`dataHoraCurta`/);
   assert.match(leiame, /\*\*Por que a v3\.24\.0 é minor:\*\*/);

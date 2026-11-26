@@ -24,7 +24,7 @@ Este repositório é a única fonte das cores, tipografia, espaçamentos, CSS de
 | `icons/` | `plataforma/`: os ícones do PWA da OneVessel (192, 512, maskable, apple-touch-icon e o SVG de origem); `bordo/`, `paradas/` e `materiais/`: só o `icone.svg` de cada módulo, que não é instalável (v3.14.0) |
 | `marca/` | O logo horizontal da BRAM Offshore (`bram-offshore-horizontal.png`, 2425×1073, fundo transparente), para o timbre dos relatórios (v3.10.0) |
 | `manifestos/` | O `plataforma.webmanifest`, modelo do manifesto do PWA da OneVessel, o único instalável (desde a v3.14.0; os dos módulos saíram) |
-| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha; desde a v3.20.0, o plural, as datas e os teclados das abas, da lista de cards, do menu e do "+ Filtro"; desde a v3.26.0, o tema, o cookie do navio e a barra inferior. ESM puro, sem dependência (nem de React), com `.d.ts` |
+| `js/` | O comportamento que os apps repetiam linha a linha (D1): o núcleo da paleta de comandos, o foco preso dos diálogos e, desde a v3.6.0, o núcleo do Toast, o teclado do Painel lateral, a pilha de camadas modais e o registro de alterações, e, desde a v3.8.0, o teclado da linha da tabela; desde a v3.15.0, a lateral recolhida por escolha; desde a v3.20.0, o plural, as datas e os teclados das abas, da lista de cards, do menu e do "+ Filtro"; desde a v3.26.0, o tema, o cookie do navio e a barra inferior; desde a v3.31.0, a medida da ação do Toast. ESM puro, sem dependência (nem de React), com `.d.ts` |
 | `exemplo/` | Página de conferência com tudo aplicado nos dois temas, inclusive a casca |
 | `scripts/conferir.mjs` | `npm run conferir`: confere a divisão entre `casca.css`, `janelas.css`, `telas.css`, `controles.css`, `relatorio.css`, `previa.css`, `onevessel.css` e `impressao.css` (o `relatorio.css` só com `.rel-*`, sem base e importando o `previa.css`; o `previa.css` só com a barra e a área, sem `@page` e, no papel, só escondendo; o `impressao.css` só com `.rel-*` e `@page` com nome, sem `visibility` nem `position: absolute`; e que todo CSS está em `exports`), que nenhum CSS tem `outline: none` (sem exceção desde a v3.12.0), que nenhum nome antigo de app sobrou e que `js/` só importa caminho relativo, tem um `.d.ts` por `.js` e está todo em `exports` |
 | `test/` | `npm run testar`: os testes de `js/`, sem DOM, e os da divisão do CSS (`css.test.mjs`: o que saiu do `onevessel.css` na v3.5.0 mora no `janelas.css`, o `.ov-estado` da v3.6.0 no `casca.css` e as telas da v3.7.0 no `telas.css`, com os mesmos valores; na v3.8.0, toda regra do `telas.css` da v3.7.0 com os mesmos valores, mais o miolo do item e o cartão que estica; na v3.9.0, toda regra do `casca.css` e do `janelas.css` da v3.8.0 igual, fora a lista que ganhou o recuo lateral, e nela a fórmula da v3.8.0 com o recuo em 0; e o contraste dos estados novos nos dois temas, pelos tokens; e `relatorio.test.mjs`, da v3.10.0: o `onevessel.css` com o que importa igual ao da v3.9.0 fora as três regras alteradas pelo nome, o `relatorio.css` e o `impressao.css` sem seletor global, `th` com 8,5pt ou mais, as duas páginas com nome e o logo pelo sha256; `temas.test.mjs`, da v3.10.1: o `tokens.css` com `color-scheme: dark` na raiz e no escuro e `light` no claro; e `v3.11.0.test.mjs`: toda regra dos CSS da v3.10.1 igual, fora as alteradas pelo nome (a sombra do cartão no claro, a alça, o campo da paleta e o hover do primário), o que nasceu exatamente pela lista, os valores das classes novas, o `previa.css` e o contraste do hover do primário, do cartão aberto e da paleta; e `v3.12.0.test.mjs`: toda regra dos CSS da v3.11.0 igual, fora as alteradas pelo nome (o campo, o foco do campo, o botão no toque e o hover do indicador), o que nasceu exatamente pela lista, o `controles.css` importável sozinho e importado por último pelo `onevessel.css`, nenhum `outline: none`, o cartão clicável, os alvos de toque e o contraste do campo e do realce; e `v3.13.0.test.mjs`: toda regra dos CSS da v3.12.0 igual, sem alterada nenhuma, o que nasceu exatamente pela lista (com a barra de ações em massa no toque pelo nome), o campo de linha no computador e no toque, o `textarea`, o ícone do erro, o `controles.css` importável sozinho e o exemplo; e `v3.14.0.test.mjs`: `manifestos/` e `icons/` com exatamente os 9 arquivos que ficam, com o sha256 da v3.13.0, os módulos sem manifesto nem PNG, o `gerar-icones.mjs` com PNG só para a plataforma e o exemplo; e `v3.15.0.test.mjs`: toda regra do `casca.css` da v3.14.0 igual, o que nasceu exatamente pela lista, a lateral recolhida por escolha com as mesmas declarações da de abaixo de 1024px (sem a margem), nenhuma `transition`, o botão escondido abaixo de 1024px, o núcleo (ler, gravar, alternar, aplicar, armazenamento quebrado, evento de outra aba) e o exemplo; e `v3.15.1.test.mjs`: toda regra do `casca.css` da v3.15.0 igual, fora as alteradas pelo nome (o `data-fixo` e o botão), nenhuma nascida, os dois blocos de recolhido ainda iguais, o botão com texto, o rodapé na ordem e, com o Chromium do Playwright instalado, os centros dos ícones medidos no exemplo recolhido (iguais, com 1px de tolerância, a 1280px pelo atributo e a 900px pela largura). Desde a v3.11.0, os testes das versões anteriores comparam fixture com fixture). Roda `node --test "test/*.test.mjs"`, com o glob do próprio Node: no Node 24, `node --test test/` não abre pasta |
@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.30.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.31.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -188,11 +188,11 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 <!-- Toasts: no layout, sobrevivem à troca de tela -->
 <div class="ov-toasts">                               <!-- data-com-barra com a .ov-acoes-massa na tela -->
   <div class="ov-toast" role="status">
-    <div class="ov-toast-linha"><svg …/>3 contagens aprovadas<button class="ov-toast-acao">Desfazer</button></div>
+    <div class="ov-toast-linha"><svg …/><span class="ov-toast-texto">3 contagens aprovadas</span><button class="ov-toast-acao">Desfazer</button></div>
     <div class="ov-toast-tempo"><span></span></div>
   </div>
   <div class="ov-toast" data-tipo="erro" role="alert">
-    <div class="ov-toast-linha"><svg …/>Não consegui encerrar a TT.<button class="ov-toast-acao">Tentar novamente</button></div>
+    <div class="ov-toast-linha"><svg …/><span class="ov-toast-texto">Não consegui encerrar a TT.</span><button class="ov-toast-acao">Tentar novamente</button><button class="ov-toast-acao" data-dispensar aria-label="Dispensar"><svg …/></button></div>
   </div>
 </div>
 
@@ -232,6 +232,7 @@ Desde a v3.5.0 (D3 da F4). A Bordo e o Paradas importam `tokens.css`, `casca.css
 - **Pé que não cabe** (v3.28.0, MJ22): no Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda; onde cabem, nada muda. É pela largura dos rótulos, não da tela: o `.ov-dialogo-acoes` tem a largura do que leva (`fit-content`, encostado à direita) e cresce até a do Diálogo; passou dela, os botões quebram com `flex-wrap: wrap-reverse` (o último do HTML, a ação, fica em cima) e cada um cresce até a linha (`flex: 1 0 auto`). A ordem no HTML continua Cancelar, ação; o app não faz nada. "Cancelar" + "Tentar novamente" (245px) quebram a 320 (238 úteis) e cabem a partir de 328px de tela. Um botão só não quebra: se o rótulo passa da largura, vaza, como antes. O Diálogo de formulário não muda (640px; abaixo de 768, o rodapé da Folha).
 - **`ov-btn-perigo`** só existe dentro do Diálogo e traz **só as cores** (`--ov-erro` e `--ov-sobre-erro`). A base do botão (altura, padding, fonte) é o `ov-btn` do `controles.css` (v3.12.0): o `janelas.css` não o importa, como não importa a casca (a soma do `onevessel.css` repetiria as regras); o app importa os dois.
 - **Toast**: centro inferior no computador; com a barra de ações em massa na tela, o app põe `data-com-barra` na `.ov-toasts` e a pilha sobe para 96px. Abaixo de 768px, logo abaixo da barra superior (`--ov-barra-superior` + área segura + 12px), entrando de cima. Sem `data-tipo` (ou `"sucesso"`) o ícone vai em `--ov-toast-sucesso`; `data-tipo="erro"` usa `--ov-toast-erro` e o CSS esconde a barra de tempo. O máximo de 3 é do app.
+- **Texto e ação embaixo** (v3.31.0; `janelas-e-avisos.md`, regra 6): o texto vai num elemento próprio, `.ov-toast-texto`, que quebra em qualquer ponto (`overflow-wrap: anywhere`, `min-width: 0`): nome de arquivo longo não vaza. A ação fica ao lado do texto quando ele cabe em até duas linhas com ela ao lado; passou de duas, a ação desce para baixo do texto, alinhada à direita. Quem decide é a medida do `js/toast-acao.js` (`medirAcaoDoToast`), que põe `data-acao="embaixo"` na `.ov-toast-linha`; com a marca, o texto ocupa a largura toda depois do ícone e as `.ov-toast-acao` descem juntas. O X de dispensar leva `data-dispensar` e fica no alto, à direita do texto (decidido pelo Salim em 26/11); ele não conta como ação. Sem a marca, a linha é a da v3.30.0. Ver "Toast com a ação embaixo (v3.31.0)".
 - **Barra de tempo**: anda de 100% a 0 em `--ov-toast-duracao` (8s, em `tokens.css`; o app pode trocar a variável) e **pausa com `:hover` e `:focus-within`** no toast. O temporizador do núcleo do toast (`js/toast-nucleo.js` desde a v3.6.0) pausa e retoma **nos mesmos eventos** (`mouseenter`/`mouseleave`, `focusin`/`focusout` do toast), senão a barra e o fechamento se desencontram.
 - **Painel lateral**: não é modal no computador. **Abaixo de 1024px vira Folha móvel de 90%** (`data-altura="cheia"` no painel dá a tela inteira) e passa a ser modal: **o app põe o `.ov-veu` antes dele e prende o foco** enquanto a folha estiver aberta.
 - **Painel dentro de uma coluna** (v3.25.0), para a tela que reserva ao painel uma coluna fixa ao lado de outra área (os Conveses da Bordo: a planta e a coluna de 380px, a exceção do Painel lateral no `componentes.md`). Com `data-coluna` no `.ov-painel`, a partir de 1024px, o painel ocupa a largura e a altura do contêiner que o app montou (`width` e `height` 100%), com a borda inteira em `--ov-borda`, os cantos `--ov-raio-lg` e `overflow: hidden` (o corpo rola por dentro e o canto recorta). A célula, a largura dela e a altura da área ao lado continuam do app (C1 de 16/10). Abaixo de 1024px é a Folha, como todo painel. Sem `!important`: o app tira os utilitários com `!` que fazia isso.
@@ -788,6 +789,56 @@ A Gaveta do pacote (ML7) e o RP3, decididos em 23/11 (`implementacao.md`, "RP4 e
 - **O que muda na tela dos apps ao adotar:** a Gaveta só aparece onde o app a puser. O ícone de todo `.ov-btn` com texto deixa de encolher: onde a fileira é estreita (no Paradas, os três botões do card da atividade em `grid-cols-3`), o ícone volta, e abaixo de ~450px de fileira o rótulo mais longo passa a vazar da borda do botão em vez de o ícone sumir.
 - **Adoção:** o **Materiais** usa a Gaveta na F4, que decide quais das janelas dele viram Gaveta e quais viram Diálogo. O **Paradas** mede os cards reais (painel aberto a 1024, tablet) no PR de adoção e decide a fileira de três botões (GV12). A **Bordo** e a **plataforma** só sobem a tag.
 
+### Toast com a ação embaixo (v3.31.0)
+
+A regra de 26/11 (`janelas-e-avisos.md`, regra 6, "Toast com ação, onde fica a ação"; registro em `implementacao.md`, "#41 (F4-5.4) em revisão … Toast com ação em tela estreita decidido"): **a ação fica ao lado do texto quando o texto cabe em até duas linhas com a ação ao lado; passou de duas, a ação desce para baixo do texto, alinhada à direita.** A 320px, o "Pedido gerado: Pedido_…xlsx (5 itens)." com "Tirar do carrinho" ficava em 5 linhas numa coluna estreita.
+
+```html
+<div class="ov-toast-linha" data-acao="embaixo">        <!-- a marca é da medida, não do app -->
+  <svg …/>                                               <!-- o ícone, primeiro -->
+  <span class="ov-toast-texto">Pedido gerado: …xlsx (5 itens).</span>
+  <button type="button" class="ov-toast-acao">Tirar do carrinho</button>   <!-- desce -->
+  <button type="button" class="ov-toast-acao" data-dispensar aria-label="Dispensar"><svg …/></button>  <!-- o X fica no alto -->
+</div>
+```
+
+- **`.ov-toast-texto`** (`janelas.css`, classe nova): `min-width: 0; overflow-wrap: anywhere`. Hoje nenhum app tem classe do pacote no texto: o Materiais usa `mat-toast-texto`, a Bordo e o Paradas `min-w-0 flex-1` e a plataforma um `span` sem classe. Todos precisam dela (ver a adoção).
+- **`data-acao="embaixo"`** na `.ov-toast-linha`: a linha dobra (`flex-wrap: wrap`, `row-gap: 0`, `justify-content: flex-end`; o `::before` com `flex-basis: 100%` é a quebra), o texto cresce até a borda (`flex: 1 1 0`, `padding: 6px 0`) e as `.ov-toast-acao` que não são o X descem (`order: 2`, `margin-left: 0`), juntas, à direita. O X (`data-dispensar`) fica no alto, à direita do texto, e não conta como ação: um erro só com o X nunca dobra.
+- **`js/toast-acao.js`** (módulo novo, com DOM; o `toast-nucleo.js` continua puro e não muda): `medirAcaoDoToast(linha)` liga a medida numa `.ov-toast-linha` e devolve a limpeza. Mede o `.ov-toast-texto` **sem a marca**, na largura que ele tem com a ação ao lado, mesmo com a ação já embaixo (tira a marca, lê a altura e repõe na mesma tarefa, antes de a pessoa ver): medir na largura de cada estado faria o Toast oscilar. Mais de duas linhas (`line-height` computado × 2, com 1px de folga; `passaDeDuasLinhas`) põe a marca. Mede de novo quando a largura da linha muda (`ResizeObserver`; a altura que a própria marca muda não conta), quando o texto ou os filhos da linha mudam (`MutationObserver`; ação que some tira a marca) e quando as fontes chegam. Sem `.ov-toast-acao` (fora o X) ou sem `.ov-toast-texto` na hora da chamada, não faz nada. A limpeza desliga os observadores e deixa a marca como está. Também exporta `MARCA` (`"data-acao"`) e `EMBAIXO` (`"embaixo"`); tipos em `toast-acao.d.ts`.
+- **A conta desconta o recuo e a borda do texto**: com movimento reduzido, o `onevessel.css` dá `transition-duration: .01ms` a tudo, e, tirada a marca, o recuo de 6px do texto ainda está saindo (transição) na hora da leitura. Os testes rodam nos dois modos de movimento.
+- **Medido no Chromium** (Toast de 288 a 320px de tela, 383 a 415, 440 no computador): "Item removido do carrinho." + "Desfazer" fica ao lado em todas. "Pedido gerado: Pedido_BRAM_POWER_2026-11-26.xlsx (5 itens)." + "Tirar do carrinho" desce a 320 e **continua embaixo no computador**: no Toast de 440, com a ação ao lado, o texto tem 220px e ocupa 3 linhas (242px e também 3 linhas sem o ícone do botão). "Não consegui gerar o arquivo do pedido." + "Tentar novamente" + X desce a 320 e volta para o lado a 1280 (2 linhas). De 320 a 1280 e de volta, de 4 em 4px, a marca troca no máximo uma vez em cada sentido.
+
+**Como cada app chama.** No React, num `useLayoutEffect` (roda antes da pintura), com a limpeza, no componente de cada Toast, com a presença da ação nas dependências (a função não faz nada sem ação na hora da chamada):
+
+```jsx
+import { useLayoutEffect, useRef } from "react";
+import { medirAcaoDoToast } from 'onevessel-ui/js/toast-acao.js'
+
+function LinhaDoToast({ icone, texto, acao, erro, aoExecutar, aoDispensar }) {
+  const linha = useRef(null);
+  useLayoutEffect(() => medirAcaoDoToast(linha.current), [Boolean(acao)]);
+  return (
+    <div className="ov-toast-linha" ref={linha}>
+      {icone}
+      <span className="ov-toast-texto">{texto}</span>
+      {acao && <button type="button" className="ov-toast-acao" onClick={aoExecutar}>{acao.rotulo}</button>}
+      {erro && <button type="button" className="ov-toast-acao" data-dispensar aria-label="Dispensar" title="Dispensar" onClick={aoDispensar}>…</button>}
+    </div>
+  );
+}
+```
+
+O texto que muda depois (o mesmo Toast com outra frase) é medido de novo sozinho. Num `.map` de toasts, a linha vira um componente próprio (o gancho não vai dentro do laço). Fora do React: `const limpar = medirAcaoDoToast(linha)` depois de pôr a linha no DOM, e `limpar()` ao tirá-la.
+
+- **Alteradas pelo nome:** nenhuma regra muda de valor nem de seletor; nenhum token muda. Nascem `.ov-toast-texto`, `.ov-toast-linha[data-acao="embaixo"]`, o `::before` dela, `… > .ov-toast-texto` e `… > .ov-toast-acao:not([data-dispensar])`, logo depois do `.ov-toast-acao:focus-visible`.
+- **Por que a v3.31.0 é minor:** classe, regras e módulo novos (`js/toast-acao.js`, com entrada nova em `exports`); nenhum valor de antes muda; o `toast-nucleo.js` não muda.
+- **O que muda na tela dos apps ao adotar:** nada, até o app pôr o `.ov-toast-texto` e chamar a medida. Depois, o Toast cujo texto passa de duas linhas com a ação ao lado mostra a ação embaixo, à direita, inclusive no computador (o "Pedido gerado" do Materiais); o nome de arquivo longo quebra em vez de vazar; o X do erro fica no alto.
+- **Adoção** (um PR por app, depois do merge e da tag; o pacote não muda código de app). O que cada um precisa, lido no código de hoje:
+  - **Materiais** (`src/janelas/Toast.jsx`, com a 5.5): trocar `mat-toast-texto` por `ov-toast-texto` (e tirar a regra própria dela, se houver); `data-dispensar` no botão "Dispensar"; tirar a linha do `.map` para um componente com `useRef` e o `useLayoutEffect`. O rótulo do "Tirar do carrinho" (com o ícone de 16px) não muda.
+  - **Bordo** (`src/components/janelas/toast.tsx`): `ov-toast-texto` no lugar de `min-w-0 flex-1` no `span` do texto; `data-dispensar` no X; a linha num componente com o gancho. A ação e o "Recarregar" (`BotaoRecarregar`) são duas `.ov-toast-acao` e descem juntas; a dependência do efeito é a presença de qualquer uma (`comAcao || recarregar`).
+  - **Paradas** (`src/components/janelas/Toast.jsx`): o mesmo da Bordo (`min-w-0 flex-1` → `ov-toast-texto`, `data-dispensar` no X, componente com o gancho; a ação e o "Recarregar" descem juntos).
+  - **Plataforma** (`src/Toasts.jsx`): `className="ov-toast-texto"` no `span` sem classe; `data-dispensar` no X, e o `style={{ marginLeft: 0 }}` dele pode ficar (só vale sem a marca); a linha num componente com o gancho.
+
 ### Título de seção da Gaveta e da Folha (v3.30.0)
 
 A exceção nova do livro da marca (26/11, seção de texto): caixa alta só em siglas e no título de seção de Gaveta ou Folha (`implementacao.md`, "[Materiais F4] Ajustes do item da requisição (5.2.1), título de seção da suíte…"). Só o `janelas.css`, ao lado da Gaveta e da Folha, que são as duas janelas onde ele vale.
@@ -969,7 +1020,7 @@ Os utilitários próprios do app (`bg-painel`, `text-texto`) continuam funcionan
 
 ## js/
 
-Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha (D1; desde a v3.4.0). ESM puro, sem DOM e sem importar pacote nenhum; os tipos vêm junto, para TypeScript strict.
+Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha (D1; desde a v3.4.0). ESM puro, sem DOM (fora o `toast-acao.js`, desde a v3.31.0, que mede o Toast na tela) e sem importar pacote nenhum; os tipos vêm junto, para TypeScript strict.
 
 | Arquivo | O que é |
 | --- | --- |
@@ -990,6 +1041,7 @@ Comportamento sem framework que a Bordo e o Paradas tinham igual, linha a linha 
 | `js/tema-nucleo.js` | O tema da suíte (v3.26.0, MC17): `CHAVE_TEMA` (`ov-tema`), `lerPreferenciaTema`, `gravarPreferenciaTema`, `temaEfetivo`, `ehTema` e `migrarTemaAntigo` (a chave antiga, o mapa e quais valores migram, do app) |
 | `js/embarcacao-nucleo.js` | O cookie do navio (v3.26.0, MC17): `lerIdDeEmbarcacao`, `embarcacaoDoCookie` (o id num texto de cookies), `cookieDeEmbarcacao` (o texto do `document.cookie`), `OPCOES_DO_COOKIE_EMBARCACAO` (as do `cookies().set` do Next), `idsNoEscopo` e `idNoEscopo`. A regra D4 (qual navio abrir) fica no app |
 | `js/barra-nucleo.js` | A barra inferior do celular (v3.26.0, MC17): `destinosDaBarra(secoes, { foraDoTurno, naBarra })`, `DESTINOS_NA_BARRA` (4) e `SECOES_NA_BARRA` (3) |
+| `js/toast-acao.js` | Onde fica a ação do Toast (v3.31.0): `medirAcaoDoToast(linha)` põe ou tira `data-acao="embaixo"` na `.ov-toast-linha` e devolve a limpeza; `passaDeDuasLinhas`, `MARCA` e `EMBAIXO`. **O único de `js/` com DOM** (recebe o elemento); ver "Toast com a ação embaixo (v3.31.0)" |
 
 ```js
 import { abrir, digitar, teclar, anuncio } from 'onevessel-ui/js/paleta-nucleo.js'
@@ -1009,6 +1061,7 @@ import { menuDoFiltro, TODOS_EM_USO, NADA_PARA_FILTRAR } from 'onevessel-ui/js/f
 import { lerPreferenciaTema, gravarPreferenciaTema, temaEfetivo } from 'onevessel-ui/js/tema-nucleo.js'
 import { embarcacaoDoCookie, cookieDeEmbarcacao, idNoEscopo } from 'onevessel-ui/js/embarcacao-nucleo.js'
 import { destinosDaBarra } from 'onevessel-ui/js/barra-nucleo.js'
+import { medirAcaoDoToast } from 'onevessel-ui/js/toast-acao.js'
 ```
 
 Desde a v3.20.0, os seis da rodada de UX (plural, datas e os quatro de teclado); o contrato e um exemplo de cada estão em **Texto, datas e teclado (v3.20.0)**.

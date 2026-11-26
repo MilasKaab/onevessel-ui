@@ -14,7 +14,10 @@ import { extname, join, normalize } from 'node:path';
 
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
-const url = (p) => new URL(`../${p}`, import.meta.url);
+// Desde a v3.29.0, o controles.css é lido pela fixture da v3.28.0 (os bytes
+// da tag, fixos): o interruptor muda na v3.29.0.
+const FIXTURAS_V3280 = { 'css/controles.css': 'test/fixtures/controles-v3.28.0.css' };
+const url = (p) => new URL(`../${FIXTURAS_V3280[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');
 const pacote = JSON.parse(ler('package.json'));
@@ -276,16 +279,14 @@ test('exemplo: o interruptor nos dois temas, sobre a superfície e a elevada (li
   assert.equal(botoes.length, 16);
   for (const b of botoes) assert.match(b, /aria-label="Ativo"/);
   assert.equal(botoes.filter((b) => /aria-busy="true"/.test(b)).length, 4);
-  assert.equal(botoes.filter((b) => / disabled title="/.test(b)).length, 4);
   assert.equal(botoes.filter((b) => /aria-checked="false"/.test(b)).length, 8);
-  assert.doesNotMatch(secao, /aria-disabled/);
-  assert.equal((secao.match(/<span class="ov-interruptor-trilho" aria-hidden="true"><\/span><span class="ov-interruptor-palavra" aria-hidden="true">/g) ?? []).length, 16);
+  // Desde a v3.29.0, a ordem (palavra antes do trilho) e o apagado
+  // (aria-disabled no lugar do disabled) ficam com o teste da v3.29.0.
 });
 
-test('package.json 3.28.0 sem export novo; README com a tag, a seção, o interruptor em Controles e o pé em Janelas', () => {
-  assert.equal(pacote.version, '3.28.0');
+// Desde a v3.29.0, a versão e a tag ficam com o teste da versão mais nova.
+test('package.json sem export novo; README com a seção, o interruptor em Controles e o pé em Janelas', () => {
   assert.equal(Object.keys(pacote.exports).length, 32);
-  assert.match(leiame, /npm i "onevessel-ui@github:MilasKaab\/onevessel-ui#v3\.28\.0"/);
   assert.match(leiame, /### Interruptor, o pé do Diálogo que quebra e "Tentar novamente" \(v3\.28\.0\)/);
   assert.match(leiame, /\*\*Alteradas pelo nome:\*\* nenhuma regra muda de valor nem de seletor/);
   assert.match(leiame, /\*\*Por que a v3\.28\.0 é minor:\*\*/);

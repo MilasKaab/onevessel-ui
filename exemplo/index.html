@@ -131,10 +131,19 @@
   .interruptor-ex .controles-moldura + .moldura-rotulo, .interruptor-ex .moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   .interruptor-ex .moldura { height: 360px; }
   .fundos-interruptor { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--ov-esp-4); }
-  .fundo-interruptor { display: flex; flex-direction: column; align-items: flex-start; gap: var(--ov-esp-2); padding: var(--ov-esp-4); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-md); }
+  .fundo-interruptor { display: flex; flex-direction: column; align-items: stretch; gap: var(--ov-esp-2); padding: var(--ov-esp-4); border: 1px solid var(--ov-borda); border-radius: var(--ov-raio-md); }
   .fundo-interruptor[data-fundo="superficie"] { background: var(--ov-superficie); }
   .fundo-interruptor[data-fundo="elevada"] { background: var(--ov-superficie-elevada); }
   .fundo-interruptor .ov-legenda { margin: var(--ov-esp-2) 0 0; }
+  /* v3.29.0: a linha do painel com os valores alinhados à direita, como no
+     painel do local do Materiais (T8); a palavra na linha de base do rótulo. */
+  .painel-interruptor { align-items: baseline; font: var(--ov-fonte-corpo); }
+  .painel-interruptor dd { text-align: end; }
+  .interruptor-tabela-ex { padding: 0 var(--ov-esp-6) var(--ov-esp-8); }
+  .interruptor-tabela-ex > h2 { margin: 0 0 var(--ov-esp-4); }
+  .interruptor-tabela-ex .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
+  .tabela-interruptor .situacao { text-align: right; }
+  .tabela-interruptor td.situacao { padding-top: 6px; padding-bottom: 6px; }
   .topo { display: flex; align-items: center; justify-content: space-between; gap: var(--ov-esp-4); padding: var(--ov-esp-4) var(--ov-esp-6); border-bottom: 1px solid var(--ov-borda); }
 </style>
 </head>
@@ -1831,31 +1840,63 @@
 </section>
 
 <section class="interruptor-ex">
-  <h2 class="ov-titulo-1">Interruptor e o pé do Diálogo que quebra (v3.28.0)</h2>
-  <p class="ov-legenda">O interruptor (<code class="ov-codigo">.ov-interruptor</code>, MJ18) liga e desliga o ativo/inativo de um cadastro, gravando na hora. É um <code class="ov-codigo">&lt;button role="switch"&gt;</code> com o nome fixo no <code class="ov-codigo">aria-label</code> e o estado no <code class="ov-codigo">aria-checked</code>; o trilho e a palavra são <code class="ov-codigo">aria-hidden</code>, e a palavra é do app. 36 &times; 20 no computador, 44 &times; 24 no toque (alvo de 48). Aqui o clique só troca o <code class="ov-codigo">aria-checked</code> e a palavra (o papel do app). No Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda (MJ22). Dados fictícios.</p>
+  <h2 class="ov-titulo-1">Interruptor e o pé do Diálogo que quebra (v3.28.0; interruptor revisto na v3.29.0)</h2>
+  <p class="ov-legenda">O interruptor (<code class="ov-codigo">.ov-interruptor</code>, MJ18) liga e desliga o ativo/inativo de um cadastro, gravando na hora. É um <code class="ov-codigo">&lt;button role="switch"&gt;</code> com o nome fixo no <code class="ov-codigo">aria-label</code> e o estado no <code class="ov-codigo">aria-checked</code>; o trilho e a palavra são <code class="ov-codigo">aria-hidden</code>, e a palavra é do app. 36 &times; 20 no computador, 44 &times; 24 no toque (alvo de 48). Desde a v3.29.0 a palavra vem antes do trilho, alinhada à direita, e o trilho termina na borda direita da linha, como os outros valores; o apagado é <code class="ov-codigo">aria-disabled</code> (recebe o foco) e o motivo fica na linha de baixo, à direita, sob o controle. Aqui o clique só troca o <code class="ov-codigo">aria-checked</code> e a palavra (o papel do app); no apagado, mostra o motivo (<code class="ov-codigo">data-visivel="true"</code>). No Diálogo de confirmação, quando os dois botões não cabem lado a lado, a ação vai para cima e o Cancelar embaixo, os dois com a largura toda (MJ22). Dados fictícios.</p>
 
     <p class="ov-rotulo moldura-rotulo">Interruptor · tema escuro</p>
     <div class="controles-moldura" data-theme="escuro">
       <div class="fundos-interruptor">
         <div class="fundo-interruptor" data-fundo="superficie">
-          <p class="ov-legenda">Ligado e desligado · sobre a superfície (painel, tabela)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
+          <p class="ov-legenda">Ligado · sobre a superfície (painel, tabela)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E3</dd></div>
+            <div><dt>Saldo</dt><dd>12 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Desligado</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E4</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
           <p class="ov-legenda">Gravando (<code class="ov-codigo">aria-busy</code>)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
-          <p class="ov-legenda">Desabilitado pela regra (<code class="ov-codigo">disabled</code>; motivo no <code class="ov-codigo">title</code> e, no toque, abaixo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" disabled title="Há saldo neste local. Transfira antes de desativar." aria-describedby="it-motivo-superficie-escuro"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <p class="ov-motivo" id="it-motivo-superficie-escuro">Há saldo neste local. Transfira antes de desativar.</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E5</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Apagado pela regra (<code class="ov-codigo">aria-disabled</code>; motivo no <code class="ov-codigo">title</code> e sob o controle: no toque, sempre; no computador, ao clicar ou apertar Espaço)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1</dd></div>
+            <div><dt>Saldo</dt><dd>—</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há endereços ativos dentro deste. Desative-os antes." aria-describedby="it-motivo-superficie-escuro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-superficie-escuro">Há endereços ativos dentro deste. Desative-os antes.</p></dd></div>
+          </dl>
         </div>
         <div class="fundo-interruptor" data-fundo="elevada">
-          <p class="ov-legenda">Ligado e desligado · sobre a superfície elevada (Folha, Gaveta, Diálogo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
+          <p class="ov-legenda">Ligado · sobre a superfície elevada (Folha, Gaveta, Diálogo)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E3</dd></div>
+            <div><dt>Saldo</dt><dd>12 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Desligado</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E4</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
           <p class="ov-legenda">Gravando (<code class="ov-codigo">aria-busy</code>)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
-          <p class="ov-legenda">Desabilitado pela regra (<code class="ov-codigo">disabled</code>; motivo no <code class="ov-codigo">title</code> e, no toque, abaixo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" disabled title="Há saldo neste local. Transfira antes de desativar." aria-describedby="it-motivo-elevada-escuro"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <p class="ov-motivo" id="it-motivo-elevada-escuro">Há saldo neste local. Transfira antes de desativar.</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E5</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Apagado pela regra (<code class="ov-codigo">aria-disabled</code>; motivo no <code class="ov-codigo">title</code> e sob o controle: no toque, sempre; no computador, ao clicar ou apertar Espaço)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1</dd></div>
+            <div><dt>Saldo</dt><dd>—</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há endereços ativos dentro deste. Desative-os antes." aria-describedby="it-motivo-elevada-escuro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-elevada-escuro">Há endereços ativos dentro deste. Desative-os antes.</p></dd></div>
+          </dl>
         </div>
       </div>
     </div>
@@ -1875,24 +1916,56 @@
     <div class="controles-moldura" data-theme="claro">
       <div class="fundos-interruptor">
         <div class="fundo-interruptor" data-fundo="superficie">
-          <p class="ov-legenda">Ligado e desligado · sobre a superfície (painel, tabela)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
+          <p class="ov-legenda">Ligado · sobre a superfície (painel, tabela)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E3</dd></div>
+            <div><dt>Saldo</dt><dd>12 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Desligado</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E4</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
           <p class="ov-legenda">Gravando (<code class="ov-codigo">aria-busy</code>)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
-          <p class="ov-legenda">Desabilitado pela regra (<code class="ov-codigo">disabled</code>; motivo no <code class="ov-codigo">title</code> e, no toque, abaixo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" disabled title="Há saldo neste local. Transfira antes de desativar." aria-describedby="it-motivo-superficie-claro"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <p class="ov-motivo" id="it-motivo-superficie-claro">Há saldo neste local. Transfira antes de desativar.</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E5</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Apagado pela regra (<code class="ov-codigo">aria-disabled</code>; motivo no <code class="ov-codigo">title</code> e sob o controle: no toque, sempre; no computador, ao clicar ou apertar Espaço)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1</dd></div>
+            <div><dt>Saldo</dt><dd>—</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há endereços ativos dentro deste. Desative-os antes." aria-describedby="it-motivo-superficie-claro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-superficie-claro">Há endereços ativos dentro deste. Desative-os antes.</p></dd></div>
+          </dl>
         </div>
         <div class="fundo-interruptor" data-fundo="elevada">
-          <p class="ov-legenda">Ligado e desligado · sobre a superfície elevada (Folha, Gaveta, Diálogo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
+          <p class="ov-legenda">Ligado · sobre a superfície elevada (Folha, Gaveta, Diálogo)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E3</dd></div>
+            <div><dt>Saldo</dt><dd>12 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Desligado</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E4</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
           <p class="ov-legenda">Gravando (<code class="ov-codigo">aria-busy</code>)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span></button>
-          <p class="ov-legenda">Desabilitado pela regra (<code class="ov-codigo">disabled</code>; motivo no <code class="ov-codigo">title</code> e, no toque, abaixo)</p>
-          <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" disabled title="Há saldo neste local. Transfira antes de desativar." aria-describedby="it-motivo-elevada-claro"><span class="ov-interruptor-trilho" aria-hidden="true"></span><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span></button>
-          <p class="ov-motivo" id="it-motivo-elevada-claro">Há saldo neste local. Transfira antes de desativar.</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1-E5</dd></div>
+            <div><dt>Saldo</dt><dd>0 un</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></dd></div>
+          </dl>
+          <p class="ov-legenda">Apagado pela regra (<code class="ov-codigo">aria-disabled</code>; motivo no <code class="ov-codigo">title</code> e sob o controle: no toque, sempre; no computador, ao clicar ou apertar Espaço)</p>
+          <dl class="ov-dados painel-interruptor">
+            <div><dt>Endereço</dt><dd>CV-P1</dd></div>
+            <div><dt>Saldo</dt><dd>—</dd></div>
+            <div><dt>Situação</dt><dd><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há endereços ativos dentro deste. Desative-os antes." aria-describedby="it-motivo-elevada-claro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-elevada-claro">Há endereços ativos dentro deste. Desative-os antes.</p></dd></div>
+          </dl>
         </div>
       </div>
     </div>
@@ -1908,6 +1981,39 @@
         </div>
       </div>
     </div>
+</section>
+
+<section class="interruptor-tabela-ex">
+  <h2 class="ov-titulo-1">Interruptor na tabela (v3.29.0)</h2>
+  <p class="ov-legenda">A coluna Situação alinhada à direita: o trilho termina onde terminam os outros valores da coluna, e o motivo do apagado fica sob o controle, na mesma célula. Dados fictícios.</p>
+  <p class="ov-rotulo moldura-rotulo">Setores · tema escuro</p>
+  <div class="controles-moldura" data-theme="escuro">
+    <div class="ov-cartao">
+      <table class="ov-tabela tabela-interruptor" aria-label="Setores · tema escuro">
+        <thead><tr><th>Setor</th><th class="num">Pessoas</th><th class="situacao">Situação</th></tr></thead>
+        <tbody>
+            <tr><td>Rádio</td><td class="num">0</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+            <tr><td>Convés</td><td class="num">3</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há 3 pessoas neste setor. Troque o setor delas antes de desativar." aria-describedby="it-motivo-tabela-escuro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-tabela-escuro">Há 3 pessoas neste setor. Troque o setor delas antes de desativar.</p></td></tr>
+            <tr><td>Máquinas</td><td class="num">0</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+            <tr><td>Cozinha</td><td class="num">1</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="ov-rotulo moldura-rotulo">Setores · tema claro</p>
+  <div class="controles-moldura" data-theme="claro">
+    <div class="ov-cartao">
+      <table class="ov-tabela tabela-interruptor" aria-label="Setores · tema claro">
+        <thead><tr><th>Setor</th><th class="num">Pessoas</th><th class="situacao">Situação</th></tr></thead>
+        <tbody>
+            <tr><td>Rádio</td><td class="num">0</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+            <tr><td>Convés</td><td class="num">3</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-disabled="true" title="Há 3 pessoas neste setor. Troque o setor delas antes de desativar." aria-describedby="it-motivo-tabela-claro"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button><p class="ov-motivo" id="it-motivo-tabela-claro">Há 3 pessoas neste setor. Troque o setor delas antes de desativar.</p></td></tr>
+            <tr><td>Máquinas</td><td class="num">0</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="false" aria-label="Ativo"><span class="ov-interruptor-palavra" aria-hidden="true">Inativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+            <tr><td>Cozinha</td><td class="num">1</td><td class="situacao"><button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo" aria-busy="true"><span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span><span class="ov-interruptor-trilho" aria-hidden="true"></span></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
 <script type="module">
@@ -2092,9 +2198,14 @@
   })
 
   // Interruptor: o papel do app na amostra, só trocar o aria-checked e a
-  // palavra (sem gravação). O desabilitado e o gravando não trocam.
-  for (const it of document.querySelectorAll('.interruptor-ex .ov-interruptor')) {
+  // palavra (sem gravação). O gravando não troca; o apagado (aria-disabled,
+  // v3.29.0) não troca e mostra o motivo, também no computador.
+  for (const it of document.querySelectorAll('.interruptor-ex .ov-interruptor, .interruptor-tabela-ex .ov-interruptor')) {
     it.addEventListener('click', () => {
+      if (it.getAttribute('aria-disabled') === 'true') {
+        document.getElementById(it.getAttribute('aria-describedby'))?.setAttribute('data-visivel', 'true')
+        return
+      }
       if (it.getAttribute('aria-busy') === 'true') return
       const ligado = it.getAttribute('aria-checked') !== 'true'
       it.setAttribute('aria-checked', String(ligado))

@@ -41,7 +41,7 @@ Fora disso ficam os **formulários oficiais** (NORMAM-08/DPC, ANVISA): reproduze
 ## Instalar num app
 
 ```bash
-npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.28.0"
+npm i "onevessel-ui@github:MilasKaab/onevessel-ui#v3.29.0"
 ```
 
 Use sempre uma **tag de versão**. Quando a design system mudar, sai uma tag nova e cada app atualiza quando quiser — nunca no meio de outra entrega.
@@ -262,11 +262,24 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 
 <textarea class="ov-campo" id="motivo" rows="3"></textarea>
 
-<!-- Interruptor (v3.28.0): nome fixo, estado no aria-checked, palavra do app -->
-<button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo">
-  <span class="ov-interruptor-trilho" aria-hidden="true"></span>
-  <span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span>
-</button>
+<!-- Interruptor (v3.29.0): nome fixo, estado no aria-checked, palavra do app
+     antes do trilho, num contêiner alinhado à direita (a dd, a td) -->
+<dd style="text-align: right">
+  <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo">
+    <span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span>
+    <span class="ov-interruptor-trilho" aria-hidden="true"></span>
+  </button>
+</dd>
+
+<!-- Interruptor apagado pela regra (v3.29.0): aria-disabled, motivo logo depois -->
+<dd style="text-align: right">
+  <button type="button" role="switch" class="ov-interruptor" aria-checked="true" aria-label="Ativo"
+          aria-disabled="true" title="Há endereços ativos dentro deste. Desative-os antes." aria-describedby="motivo-cv-p1">
+    <span class="ov-interruptor-palavra" aria-hidden="true">Ativo</span>
+    <span class="ov-interruptor-trilho" aria-hidden="true"></span>
+  </button>
+  <p class="ov-motivo" id="motivo-cv-p1">Há endereços ativos dentro deste. Desative-os antes.</p>
+</dd>
 
 <!-- Campo de linha: a célula editada dentro da linha da tabela -->
 <td><input class="ov-campo" data-densidade="linha" aria-label="Camarote de João Pereira"></td>
@@ -276,8 +289,8 @@ Desde a v3.12.0 (V17: PV-2, PV-3, BV-4, BV-9, BV-10). Botões e campo saíram do
 - **Campo**: 44px no computador e **48px no toque** (v3.19.0, C30; até a v3.18.2, 44 em qualquer tela), texto de 16px, borda `ov-borda-controle`, fundo `ov-superficie-recuada` (o do livro para o campo dentro de cartão, e o mesmo fora dele: no cartão fica recuado, na página um tom acima). **Foco: o anel único do livro** (`outline: 2px solid var(--ov-foco)`, recuo 2px), sem halo e sem trocar a borda; o `outline: none` saiu. Erro: `aria-invalid="true"` põe a borda em `ov-erro`.
 - **Rótulo** (`.ov-label`): 14px/500 em `ov-texto`; `small` dentro dele para "(opcional)". Ajuda em `.ov-ajuda` e erro em `.ov-erro-campo`, os dois em 13px.
 - **Ícone ao lado do texto** (v3.27.0, RP3): `.ov-btn > svg { flex: none; }`. Numa trilha que pode ficar menor que o botão (o `grid-cols-3` do Tailwind é `repeat(3, minmax(0, 1fr))`), o ícone encolhia até sumir antes do texto; agora fica com o tamanho dele, e onde o rótulo não cabe é o texto que passa da borda: a largura do botão é do app. O `.ov-btn-icone svg` (18px) fica como estava.
-- **Interruptor** (v3.28.0, MJ18; T1 a T6 de 26/11): liga e desliga o ativo/inativo de um cadastro, gravando na hora. **Só CSS**, sem núcleo JS: é um `<button type="button" role="switch">`, e Espaço e Enter vêm dele. Trilho 36 × 20 (44 × 24 no toque, alvo de 48), borda `ov-borda-controle` nos dois estados; desligado, fundo `ov-superficie-recuada` e bolinha `ov-neutro`; ligado, fundo `ov-acao` e bolinha `ov-sobre-acao`. A bolinha fica centrada, com 2px de folga nos quatro lados nos dois tamanhos e nos dois estados. A palavra fica à direita, 14/20 peso 500, com a largura de "Inativo" reservada. Hover `ov-linha-hover`, foco no anel único em volta do trilho e da palavra, 120 ms; com movimento reduzido, a bolinha salta; nas cores forçadas, a bolinha aparece pela borda transparente.
-  - **O contrato do app:** o `aria-checked` (`"true"` ligado, `"false"` desligado); o **nome fixo** no `aria-label` ("Ativo" ou "Ativa"), e o trilho e a palavra `aria-hidden` (o leitor diz "Ativo, interruptor, ligado / desligado"); **a palavra é do app**, no gênero do registro (Ativo/Inativo, Ativa/Inativa). **No clique**, o app troca o `aria-checked` e a palavra na hora e põe `aria-busy="true"` enquanto grava (trilho a .6, cursor `progress`), ignorando clique, Espaço e Enter até a resposta; gravou, tira o `aria-busy` e mostra o Toast com Desfazer; falhou, volta ao estado de antes e mostra o Toast de erro com "Tentar novamente" (servidor) ou "Recarregar" (concorrência). O foco fica no interruptor. **Desabilitado pela regra**: `disabled` nativo, como o `.ov-btn` (o Tab pula), o motivo no `title` e num `.ov-motivo` logo abaixo, ligado pelo `aria-describedby` (escrito só no toque). Sem a função, o app não desenha o interruptor: no lugar, a palavra em texto.
+- **Interruptor** (v3.28.0, MJ18; T1 a T6 de 26/11): liga e desliga o ativo/inativo de um cadastro, gravando na hora. **Só CSS**, sem núcleo JS: é um `<button type="button" role="switch">`, e Espaço e Enter vêm dele. Trilho 36 × 20 (44 × 24 no toque, alvo de 48), borda `ov-borda-controle` nos dois estados; desligado, fundo `ov-superficie-recuada` e bolinha `ov-neutro`; ligado, fundo `ov-acao` e bolinha `ov-sobre-acao`. A bolinha fica centrada, com 2px de folga nos quatro lados nos dois tamanhos e nos dois estados. A palavra vem **antes** do trilho (v3.29.0, T8), 14/20 peso 500, alinhada à direita dentro da largura reservada de "Inativo" (a reserva sobra à esquerda). O trilho termina **exatamente** na borda direita do conteúdo, como os outros valores alinhados à direita: o botão tem 4px de folga do lado do trilho (`padding: 0 4px 0 6px`) e devolve os mesmos 4px numa margem negativa (`margin-right: -4px`), então o fundo do hover e o anel passam 4px da linha, por cima do padding da célula. Hover `ov-linha-hover`, foco no anel único em volta do trilho e da palavra, 120 ms; com movimento reduzido, a bolinha salta; nas cores forçadas, a bolinha aparece pela borda transparente.
+  - **O contrato do app:** o `aria-checked` (`"true"` ligado, `"false"` desligado); o **nome fixo** no `aria-label` ("Ativo" ou "Ativa"), e o trilho e a palavra `aria-hidden` (o leitor diz "Ativo, interruptor, ligado / desligado"); **a palavra é do app**, no gênero do registro (Ativo/Inativo, Ativa/Inativa). **No clique**, o app troca o `aria-checked` e a palavra na hora e põe `aria-busy="true"` enquanto grava (trilho a .6, cursor `progress`), ignorando clique, Espaço e Enter até a resposta; gravou, tira o `aria-busy` e mostra o Toast com Desfazer; falhou, volta ao estado de antes e mostra o Toast de erro com "Tentar novamente" (servidor) ou "Recarregar" (concorrência). O foco fica no interruptor. **Apagado pela regra** (v3.29.0, T3 revisto no T7): **`aria-disabled="true"`**, não o `disabled` (o `disabled` nativo continua funcionando, mas não é mais o recomendado: o clique dele não chega ao app). Fica com a aparência do apagado (trilho e palavra a .6, `cursor: not-allowed`, sem hover), **recebe o foco** com o anel inteiro, e clique, Espaço e Enter chegam ao app, que **não grava** e **mostra o motivo**. O motivo vai no `title` e num `.ov-motivo` **logo depois do botão, no mesmo contêiner** (a dd, a td), com `id` próprio apontado pelo `aria-describedby`: fica na linha de baixo, alinhado à direita, sob o controle, e quebra em linhas mesmo na célula da tabela. No toque, sempre visível; **no computador, o app põe `data-visivel="true"` no `.ov-motivo`** no clique, Espaço ou Enter do apagado (o pacote não esconde: o motivo mostrado fica visível até a regra deixar de valer, quando a tela recarrega, ou até a pessoa sair da tela). Não ponha `aria-busy` num apagado. Sem a função, o app não desenha o interruptor: no lugar, a palavra em texto.
   - **Não use** para Sim/Não de formulário que grava no Salvar (`.ov-segmentado`), para filtro (botão com `aria-pressed`), nem para o que pede Diálogo num dos sentidos ou tira a linha da lista.
 - **Ícone do erro** (v3.13.0): o `CircleAlert` do Lucide, 16px, `aria-hidden`, como primeiro filho do `.ov-erro-campo`; o `svg` filho direto não encolhe quando o texto quebra e fica centrado na primeira linha de 18px.
 - **`textarea.ov-campo`** (v3.13.0): a altura vem do `rows` do app (`height: auto`), com o mínimo de 44px; padding de 9px em cima e embaixo, que põe a primeira linha de 16/24 na mesma altura do texto do input; `resize: vertical`.
@@ -769,6 +782,19 @@ A Gaveta do pacote (ML7) e o RP3, decididos em 23/11 (`implementacao.md`, "RP4 e
 - **Por que a v3.27.0 é minor:** classes, regras, keyframe e token novos; nenhum valor de antes muda, nenhum JS nem `exports` muda.
 - **O que muda na tela dos apps ao adotar:** a Gaveta só aparece onde o app a puser. O ícone de todo `.ov-btn` com texto deixa de encolher: onde a fileira é estreita (no Paradas, os três botões do card da atividade em `grid-cols-3`), o ícone volta, e abaixo de ~450px de fileira o rótulo mais longo passa a vazar da borda do botão em vez de o ícone sumir.
 - **Adoção:** o **Materiais** usa a Gaveta na F4, que decide quais das janelas dele viram Gaveta e quais viram Diálogo. O **Paradas** mede os cards reais (painel aberto a 1024, tablet) no PR de adoção e decide a fileira de três botões (GV12). A **Bordo** e a **plataforma** só sobem a tag.
+
+### Interruptor revisto (v3.29.0)
+
+O interruptor revisto pelo T3, o T7 e o T8 de 26/11 (`implementacao.md`, "[Materiais F4] F4-5: T7–T10 decididos…"; a regra de uso em `componentes.md`, Interruptor). Só o `controles.css`; botões e Diálogo ficam como estão.
+
+- **Palavra antes do trilho** (T8): a ordem vem do HTML (`.ov-interruptor-palavra` primeiro), não de `order` no CSS: a ordem de leitura e a de foco ficam iguais à da tela. A palavra alinha à direita dentro da reserva de "Inativo". A folga do botão do lado do trilho (4px) volta numa margem negativa igual, e o trilho termina na borda direita do conteúdo (medido: 0px a 1280 e a 375, ligado e desligado, na dd e na td).
+- **Apagado por `aria-disabled="true"`** (T3 revisto, só para o interruptor): trilho e palavra a .6, `cursor: not-allowed`, sem hover. O .6 vai nos filhos, não no botão, para o anel do foco não esmaecer (o botão agora recebe foco). O `:disabled` continua com a regra de antes.
+- **Motivo sob comando do app**: `.ov-interruptor + .ov-motivo[data-visivel="true"]` aparece em qualquer ponteiro; no toque, o `.ov-motivo` continua sempre visível. Mostrado, fica até a regra deixar de valer (a tela recarrega) ou a pessoa sair da tela; o pacote não esconde.
+- **Motivo sob o controle**: `.ov-interruptor + .ov-motivo` alinhado à direita, com `white-space: normal` (a td da `.ov-tabela` é `nowrap`).
+- **Alteradas pelo nome:** `.ov-interruptor` (`margin: 0` → `margin: 0 -4px 0 0`; `padding: 0 6px 0 4px` → `padding: 0 4px 0 6px`); o hover, `.ov-interruptor:hover:not(:disabled):not([aria-busy="true"])` → `…:not([aria-disabled="true"])` (mesma declaração); `.ov-interruptor-palavra` (ganha `text-align: end`). Nascem `.ov-interruptor[aria-disabled="true"]`, `.ov-interruptor[aria-disabled="true"] > *`, `.ov-interruptor + .ov-motivo` e `.ov-interruptor + .ov-motivo[data-visivel="true"]`.
+- **Por que a v3.29.0 é minor:** regras novas (as quatro acima); as que mudam de valor ou de seletor estão na lista; nenhum JS nem `exports` muda.
+- **O que muda na tela dos apps ao adotar:** nada em quem não usa o interruptor (nenhum app usa ainda). Quem adotar escreve a palavra antes do trilho, o contêiner alinhado à direita, o `aria-disabled` no apagado e o `data-visivel` no motivo ao clicar.
+- **Adoção:** o **Materiais** estreia na F4-5 (endereço e setores). Bordo, Paradas e plataforma, um caso por vez, depois.
 
 ### Interruptor, o pé do Diálogo que quebra e "Tentar novamente" (v3.28.0)
 

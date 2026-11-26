@@ -15,8 +15,13 @@ import { extname, join, normalize } from 'node:path';
 import { problemasDeBase, regras, seletores, semComentario } from '../scripts/css-regras.mjs';
 
 // Desde a v3.29.0, o controles.css é lido pela fixture da v3.28.0 (os bytes
-// da tag, fixos): o interruptor muda na v3.29.0.
-const FIXTURAS_V3280 = { 'css/controles.css': 'test/fixtures/controles-v3.28.0.css' };
+// da tag, fixos): o interruptor muda na v3.29.0. Desde a v3.30.0, o
+// janelas.css é lido pela fixture da v3.29.0 (os mesmos bytes da v3.28.0):
+// o título de seção nasce na v3.30.0.
+const FIXTURAS_V3280 = {
+  'css/controles.css': 'test/fixtures/controles-v3.28.0.css',
+  'css/janelas.css': 'test/fixtures/janelas-v3.29.0.css',
+};
 const url = (p) => new URL(`../${FIXTURAS_V3280[p] ?? p}`, import.meta.url);
 const ler = (p) => readFileSync(url(p), 'utf8');
 const sha256 = (p) => createHash('sha256').update(readFileSync(url(p))).digest('hex');

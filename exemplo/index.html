@@ -120,6 +120,9 @@
   .gaveta-ex .moldura { height: 560px; }
   .gaveta-ex .moldura + .moldura-rotulo, .gaveta-ex .controles-moldura + .moldura-rotulo { margin-top: var(--ov-esp-6); }
   @media (max-width: 767px) { .gaveta-ex .moldura { height: 100vh; } }
+  /* Título de seção (v3.30.0): as molduras da Gaveta, sem a fileira de botões. */
+  .titulo-secao-ex .moldura { height: 420px; }
+  @media (max-width: 767px) { .titulo-secao-ex .moldura { height: 100vh; } }
   .fileira-btn { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 100%; }
   .fileira-btn > .ov-btn { width: 100%; }
   /* Interruptor e o pé do Diálogo que quebra (v3.28.0). As caixas fazem o
@@ -1835,6 +1838,66 @@
         <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="triangle-alert"></i>Marcar crítico</button>
         <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="pencil"></i>Editar atividade</button>
         <button class="ov-btn ov-btn-secundario" type="button"><i data-icone="x"></i>Cancelar atividade</button>
+      </div>
+    </div>
+</section>
+
+<section class="gaveta-ex titulo-secao-ex">
+  <h2 class="ov-titulo-1">Título de seção da Gaveta e da Folha (v3.30.0)</h2>
+  <p class="ov-legenda">O título de seção (<code class="ov-codigo">.ov-titulo-secao</code>): 11/16, peso 700, letras espaçadas (<code class="ov-codigo">.12em</code>), na cor secundária, com 8px embaixo. É a única caixa alta do livro fora das siglas, e só dentro de Gaveta ou Folha. Vale para qualquer elemento (h2, h3, div); o texto vai em caixa normal no HTML (<code class="ov-codigo">&lt;h3 class="ov-titulo-secao"&gt;Informações principais&lt;/h3&gt;</code>) e só o CSS põe em maiúsculas. Dados fictícios.</p>
+
+    <p class="ov-rotulo moldura-rotulo">Gaveta com títulos de seção · tema escuro · abaixo de 768px, folha de 90% com alça (<code class="ov-codigo">data-altura="detalhe"</code>)</p>
+    <div class="moldura" data-theme="escuro">
+      <div class="janelas-lista">Lista de requisições…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" data-altura="detalhe" role="dialog" aria-modal="true" aria-labelledby="ts-escuro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Item da requisição</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h2 class="ov-titulo-3" id="ts-escuro">Válvula de esfera 2 pol.</h2>
+          <div>
+            <h3 class="ov-titulo-secao">Informações principais</h3>
+            <dl class="ov-dados">
+              <dt>Requisição</dt><dd>RQ-0388</dd>
+              <dt>Quantidade</dt><dd>4 peças</dd>
+              <dt>Código</dt><dd>MT-0215</dd>
+            </dl>
+          </div>
+          <div>
+            <h3 class="ov-titulo-secao">Entrega</h3>
+            <dl class="ov-dados">
+              <dt>Previsão</dt><dd>21/10</dd>
+              <dt>Local</dt><dd>Paiol 1</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="ov-rotulo moldura-rotulo">Gaveta com títulos de seção · tema claro · abaixo de 768px, folha de 90% com alça (<code class="ov-codigo">data-altura="detalhe"</code>)</p>
+    <div class="moldura" data-theme="claro">
+      <div class="janelas-lista">Lista de requisições…</div>
+      <div class="ov-veu"></div>
+      <div class="ov-gaveta" data-altura="detalhe" role="dialog" aria-modal="true" aria-labelledby="ts-claro">
+        <div class="ov-folha-alca" aria-hidden="true"></div>
+        <div class="ov-painel-cab"><b>Item da requisição</b><span style="flex:1"></span><button class="ov-btn ov-btn-fantasma ov-btn-icone" type="button" aria-label="Fechar" title="Fechar"><i data-icone="x"></i></button></div>
+        <div class="ov-painel-corpo">
+          <h2 class="ov-titulo-3" id="ts-claro">Válvula de esfera 2 pol.</h2>
+          <div>
+            <h3 class="ov-titulo-secao">Informações principais</h3>
+            <dl class="ov-dados">
+              <dt>Requisição</dt><dd>RQ-0388</dd>
+              <dt>Quantidade</dt><dd>4 peças</dd>
+              <dt>Código</dt><dd>MT-0215</dd>
+            </dl>
+          </div>
+          <div>
+            <h3 class="ov-titulo-secao">Entrega</h3>
+            <dl class="ov-dados">
+              <dt>Previsão</dt><dd>21/10</dd>
+              <dt>Local</dt><dd>Paiol 1</dd>
+            </dl>
+          </div>
+        </div>
       </div>
     </div>
 </section>
